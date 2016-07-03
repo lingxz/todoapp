@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div ng-app="TodoApp">
+    {{ todoList }}
+    <div ng-view>
+    </div>
+    </div>
+    <script src="../static/script.js"></script>
+{% endblock %}
