@@ -94,6 +94,7 @@ def initdb_command():
 
 @app.route('/')
 def show_tasks():
+    print "CALLING ROUTE"
     db = get_db()
     query = """SELECT * FROM Tasks"""
     cur = db.execute(query)

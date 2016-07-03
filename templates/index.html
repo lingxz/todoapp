@@ -1,18 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
-    <div ng-app="TodoApp" class="container-fluid col-md-10 col-md-offset-1">
+    <div ng-app="TodoApp" ng-controller="mainController" class="container-fluid col-md-10 col-md-offset-1">
         <div class="form-group">
             <form ng-submit="addTask()"
-        style="margin-top:30px;">
-        <h3>Add a new task</h3>
+                  style="margin-top:30px;">
+                <h3>Add a new task</h3>
 
-        <div class="form-group">
-          <input type="text"
-            class="form-control"
-            placeholder="New Task..."
-            ng-model="newtask"></input>
+                <div class="form-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="New Task..."
+                           ng-model="newtask">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Add</button>
-      </form>
-    </div>
 {% endblock %}
