@@ -1,9 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
-    <div ng-app="TodoApp">
-    {{ todoList }}
-    <div ng-view>
+    <div ng-app="TodoApp" class="container-fluid col-md-10 col-md-offset-1">
+        <div class="form-group">
+            <form ng-submit="addTask()"
+        style="margin-top:30px;">
+        <h3>Add a new task</h3>
+
+        <div class="form-group">
+          <input type="text"
+            class="form-control"
+            placeholder="New Task..."
+            ng-model="newtask"></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
     </div>
-    </div>
-    <script src="../static/script.js"></script>
 {% endblock %}
