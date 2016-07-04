@@ -94,18 +94,57 @@ def initdb_command():
 
 @app.route('/')
 def show_tasks():
+    return render_template("index.html")
+
+
+def get_tasks():
     print "CALLING ROUTE"
     db = get_db()
     query = """SELECT * FROM Tasks"""
     cur = db.execute(query)
     tasks = cur.fetchall()
-    content = ""
-    if tasks:
-        task_id = tasks[0]
-        content = tasks[1]
-        duedate = tasks[2]
-    return render_template("index.html",
-                           content=content)
+    return tasks
+
+
+@app.route('/retrieve', methods=['GET'])
+def retrieve_tasks():
+    tasks = get_tasks()
+    todolist = []
+    for task in tasks:
+        taskitem = {
+            'id': task[0],
+            'content': task[1],
+            'duedate': task[2]
+        }
+        todolist.append(taskitem)
+    return json.dumps(todolist)
+
+
+@app.route('/add', methods=['POST'])
+def add_task():
+    db = get_db()
+
+    data = request.json['content']
+    # Use ? ? to prevent SQL injection
+    # TODO: strip the content in the 'text' field
+    db.execute('INSERT INTO Tasks (content) VALUES (?)', [data])
+    db.commit()
+    flash('New entry was successfully posted')
+    return 'OK'
+
+# @app.route('/add', methods=['POST'])
+# def add_entry():
+#     if not session.get('logged_in'):
+#         abort(401)
+#     db = get_db()
+#     # Use ? ? to prevent SQL injection
+#
+#     # TODO: Strip the content in the 'text' field
+#     db.execute('INSERT INTO entries (title, text) VALUES (?, ?)',
+#                [request.form['title'], request.form['text']])
+#     db.commit()
+#     flash('New entry was successfully posted')
+#     return redirect(url_for('show_entries'))
 
 
 if __name__ == "__main__":

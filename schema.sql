@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS entries;
 DROP TABLE IF EXISTS Tasks;
 CREATE TABLE Tasks (
-  id         TEXT PRIMARY KEY,
-  content    TEXT NOT NULL,
-  duedate       TIMESTAMP
+  postid    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  content   TEXT    NOT NULL,
+  duedate           TIMESTAMP
 );

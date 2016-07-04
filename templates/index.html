@@ -15,4 +15,10 @@
                 <button type="submit" class="btn btn-primary">Add</button>
             </form>
         </div>
+
+
+        <div class="list-group">
+            <a href="#" class="list-group-item" ng-repeat="task in tasks">{[task.content]}</a>
+        </div>
+    </div>
 {% endblock %}

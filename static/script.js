@@ -1,20 +1,48 @@
-var app = angular.module("TodoApp", []);
+var todoapp = angular.module("TodoApp", []);
 
-app.config(['$interpolateProvider', function($interpolateProvider) {
+todoapp.config(['$interpolateProvider', function($interpolateProvider) {
     $interpolateProvider.startSymbol('{[');
     $interpolateProvider.endSymbol(']}');
 }]);
 
-app.controller("mainController", [
+todoapp.controller("mainController", [
     '$scope',
     '$http',
     function ($scope, $http) {
         $scope.tasks = [{content:"asdf"}, {content:"hello"}];
         $scope.newtask = "";
+        $scope.retrieveNr = 10;
         $scope.addTask = function () {
-            $scope.tasks.unshift({content:$scope.newtask});
+            if (!$scope.newtask) {
+                return
+            } else {
+                $http({
+                    url: '/add',
+                    method: "POST",
+                    data: {content: $scope.newtask, duedate: 2015} //TODO: add input date
+                }).then(function(response){
+                    $scope.retrieveLastNItems($scope.retrieveNr);
+                    $scope.newtask = ""
+                }, function(error){
+                    console.log(error)
+                })
+            }
             $scope.newtask = ""
-        }
+        };
+
+        // TODO: get n tasks only
+        $scope.retrieveLastNItems = function(n) {
+            $http({
+                method: 'GET',
+                url: '/retrieve'
+            }).then(function(response){
+                $scope.tasks = response.data;
+                console.log("mm", $scope.tasks);
+            }, function(error){
+                console.log(error);
+            });
+        };
+        $scope.retrieveLastNItems($scope.retrieveNr)
     }
 ]);
 
