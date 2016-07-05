@@ -1,6 +1,9 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+from flask_wtf import Form
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import DataRequired, Email
 import os
 import sqlite3
 import string
@@ -26,9 +29,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
-
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 
 class User(db.Model):
@@ -81,6 +81,34 @@ class Task(db.Model):
         return '<Content %s>' % self.content
 
 db.create_all()
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+class LoginForm(Form):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('remember_me', default=False)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Given *user_id*, return the associated User object.
+    """
+    return User.query.get(user_id)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """For GET requests, display the login form.
+    For POSTS, login the current user by processing the form
+    """
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.get()
+    # haven't finish
+
 
 def connect_db():
     """Connects to the specific database."""
