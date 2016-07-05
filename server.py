@@ -1,21 +1,78 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask_sqlalchemy import SQLAlchemy
 import os
 import sqlite3
 import string
 import random
 import json
+import datetime
+
+
+# app = Flask(__name__)
+# app.config.from_object(__name__)
+#
+# # Load default config and override config from an environment variable
+# app.config.update(dict(
+#     DATABASE=os.path.join(app.root_path, 'database.db'),
+#     SECRET_KEY='development key',
+#     USERNAME='admin',
+#     PASSWORD='default'
+# ))
+# app.config.from_envvar('SERVER_SETTINGS', silent=True)
+
 
 app = Flask(__name__)
-app.config.from_object(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
 
-# Load default config and override config from an environment variable
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'database.db'),
-    SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='default'
-))
-app.config.from_envvar('SERVER_SETTINGS', silent=True)
+
+class User(db.Model):
+    __tablename__='user'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, nullable=True)
+    username = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    authenticated = db.Column(db.Boolean, default=False)
+    tasks = db.relationship('Task', backref="user", cascade="all, delete-orphan", lazy='dynamic')
+    # one to many mapping between user and tasks, deletes all tasks when user is deleted
+
+    def is_active(self):
+        """True, as all users are active."""
+        return True
+
+    def get_id(self):
+        """Return the email address to satisfy Flask-Login's requirements."""
+        return self.email
+
+    def is_authenticated(self):
+        """Return True if the user is authenticated."""
+        return self.authenticated
+
+    def is_anonymous(self):
+        """True, as anonymous users are supported."""
+        return True
+
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    content = db.Column(db.Text)
+    done = db.Column(db.Boolean, default=False)
+    start_date = db.Column(db.DateTime, default=datetime.datetime.now())
+    due_date = db.Column(db.DateTime, nullable=True)
+    parent_task = db.Column(db.Integer, nullable=True)  # stores the parent task id
+    sub_tasks = db.relationship('Task', backref='parent', lazy='dynamic')
+    # is this storing the object or the id?
+    # should all sub tasks be deleted if parent is deleted?
+
+    def __init__(self, content):
+        self.content = content
+        self.done = False
+
+    def __repr__(self):
+        return '<Content %s>' % self.content
 
 
 def connect_db():
@@ -69,7 +126,8 @@ def initdb_command():
 #     flash('New entry was successfully posted')
 #     return redirect(url_for('show_entries'))
 #
-#
+
+
 # @app.route('/login', methods=['GET', 'POST'])
 # def login():
 #     """Storing as plaintext for simplicity now, Werkzeug has security helpers"""
@@ -141,6 +199,24 @@ def add_task():
 
     return 'OK'
 
+
+@app.route('/register', methods=['POST'])
+def register():
+    db = get_db()
+    json_data = request.json
+    user = User(
+        email=json_data['email'],
+        username=json_data['username'],
+        password=json_data['password'])
+
+    # try:
+    #     db.session.add(user)
+    #     db.session.commit()
+    #     status = 'success'
+    # except:
+    #     status = 'this user is already registered'
+    # db.session.close()
+    # return jsonify({'result': status})
 
 if __name__ == "__main__":
     app.run(debug=True)
