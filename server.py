@@ -1,5 +1,6 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 import os
 import sqlite3
 import string
@@ -26,9 +27,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 
 class User(db.Model):
-    __tablename__='user'
+    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, nullable=True)
@@ -63,9 +67,11 @@ class Task(db.Model):
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())
     due_date = db.Column(db.DateTime, nullable=True)
     parent_task = db.Column(db.Integer, nullable=True)  # stores the parent task id
-    sub_tasks = db.relationship('Task', backref='parent', lazy='dynamic')
+    # sub_tasks = db.relationship('Task', backref='parent', lazy='dynamic')
     # is this storing the object or the id?
+    # this sub_task thing doesn't work
     # should all sub tasks be deleted if parent is deleted?
+    # need to add category
 
     def __init__(self, content):
         self.content = content
@@ -74,6 +80,7 @@ class Task(db.Model):
     def __repr__(self):
         return '<Content %s>' % self.content
 
+db.create_all()
 
 def connect_db():
     """Connects to the specific database."""
@@ -172,31 +179,26 @@ def get_tasks(num_tasks):
 @app.route('/retrieve', methods=['POST'])
 def retrieve_tasks():
     """Swap to a post request because you are sending data"""
-    num_tasks = request.json['numTasks']
-    tasks = get_tasks(num_tasks)
+    tasks = Task.query.all()
     todo_list = []
     for task in tasks:
         task_item = {
-            'id': task[0],
-            'content': task[1],
-            'duedate': task[2]
+            'id': task.id,
+            'content': task.content,
+            'duedate': 'bla' # placeholder
         }
         todo_list.append(task_item)
-
     return json.dumps(todo_list)
 
 
 @app.route('/add', methods=['POST'])
 def add_task():
-    db = get_db()
-
     data = request.json['content']
-    print data
-    # Use ? ? to prevent SQL injection
-    # TODO: strip the content in the 'text' field
-    db.execute('INSERT INTO tasks (content) VALUES (?)', [data])
-    db.commit()
-
+    if not data:
+        return redirect('/')
+    task = Task(data)
+    db.session.add(task)
+    db.session.commit()
     return 'OK'
 
 
