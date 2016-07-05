@@ -1,6 +1,6 @@
 var todoapp = angular.module("TodoApp", []);
 
-todoapp.config(['$interpolateProvider', function($interpolateProvider) {
+todoapp.config(['$interpolateProvider', function ($interpolateProvider) {
     $interpolateProvider.startSymbol('{[');
     $interpolateProvider.endSymbol(']}');
 }]);
@@ -9,7 +9,7 @@ todoapp.controller("mainController", [
     '$scope',
     '$http',
     function ($scope, $http) {
-        $scope.tasks = [{content:"asdf"}, {content:"hello"}];
+        $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
         $scope.retrieveNr = 10;
         $scope.addTask = function () {
@@ -20,10 +20,10 @@ todoapp.controller("mainController", [
                     url: '/add',
                     method: "POST",
                     data: {content: $scope.newtask, duedate: 2015} //TODO: add input date
-                }).then(function(response){
+                }).then(function (response) {
                     $scope.retrieveLastNItems($scope.retrieveNr);
                     $scope.newtask = ""
-                }, function(error){
+                }, function (error) {
                     console.log(error)
                 })
             }
@@ -31,17 +31,19 @@ todoapp.controller("mainController", [
         };
 
         // TODO: get n tasks only
-        $scope.retrieveLastNItems = function(n) {
+        $scope.retrieveLastNItems = function (n) {
             $http({
-                method: 'GET',
-                url: '/retrieve'
-            }).then(function(response){
+                method: 'POST',
+                url: '/retrieve',
+                data: {numTasks: $scope.retrieveNr}
+            }).then(function (response) {
                 $scope.tasks = response.data;
                 console.log("mm", $scope.tasks);
-            }, function(error){
+            }, function (error) {
                 console.log(error);
             });
         };
+
         $scope.retrieveLastNItems($scope.retrieveNr)
     }
 ]);

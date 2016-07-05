@@ -54,6 +54,7 @@ def initdb_command():
     init_db()
     print 'Initialized the database.'
 
+
 # @app.route('/add', methods=['POST'])
 # def add_entry():
 #     if not session.get('logged_in'):
@@ -97,27 +98,34 @@ def show_tasks():
     return render_template("index.html")
 
 
-def get_tasks():
-    print "CALLING ROUTE"
+def get_tasks(num_tasks):
     db = get_db()
-    query = """SELECT * FROM Tasks"""
+
+    # This is a workaround because they refused to let me use parameterised query with the limit
+    # Also note that the tasks are sorted in the correct order here, rather than at the frontend
+    # I assume you want the newest task to appear at the top of the list
+    query = 'SELECT * FROM tasks ORDER BY postid DESC LIMIT ' + str(num_tasks)
+
     cur = db.execute(query)
     tasks = cur.fetchall()
     return tasks
 
 
-@app.route('/retrieve', methods=['GET'])
+@app.route('/retrieve', methods=['POST'])
 def retrieve_tasks():
-    tasks = get_tasks()
-    todolist = []
+    """Swap to a post request because you are sending data"""
+    num_tasks = request.json['numTasks']
+    tasks = get_tasks(num_tasks)
+    todo_list = []
     for task in tasks:
-        taskitem = {
+        task_item = {
             'id': task[0],
             'content': task[1],
             'duedate': task[2]
         }
-        todolist.append(taskitem)
-    return json.dumps(todolist)
+        todo_list.append(task_item)
+
+    return json.dumps(todo_list)
 
 
 @app.route('/add', methods=['POST'])
@@ -125,26 +133,13 @@ def add_task():
     db = get_db()
 
     data = request.json['content']
+    print data
     # Use ? ? to prevent SQL injection
     # TODO: strip the content in the 'text' field
-    db.execute('INSERT INTO Tasks (content) VALUES (?)', [data])
+    db.execute('INSERT INTO tasks (content) VALUES (?)', [data])
     db.commit()
-    flash('New entry was successfully posted')
-    return 'OK'
 
-# @app.route('/add', methods=['POST'])
-# def add_entry():
-#     if not session.get('logged_in'):
-#         abort(401)
-#     db = get_db()
-#     # Use ? ? to prevent SQL injection
-#
-#     # TODO: Strip the content in the 'text' field
-#     db.execute('INSERT INTO entries (title, text) VALUES (?, ?)',
-#                [request.form['title'], request.form['text']])
-#     db.commit()
-#     flash('New entry was successfully posted')
-#     return redirect(url_for('show_entries'))
+    return 'OK'
 
 
 if __name__ == "__main__":

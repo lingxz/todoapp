@@ -16,9 +16,8 @@
             </form>
         </div>
 
-
         <div class="list-group">
-            <a href="#" class="list-group-item" ng-repeat="task in tasks.slice().reverse()">{[task.content]}</a>
+            <a href="#" class="list-group-item" ng-repeat="task in tasks.slice()">{[task.content]}</a>
         </div>
     </div>
 {% endblock %}
