@@ -8,7 +8,7 @@ var todoApp = angular.module("todoApp", ['ngRoute']);
 todoApp.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'static/partials/home.html',
+            templateUrl: 'static/partials/show_tasks.html',
             controller: 'mainController',
             access: {restricted: true}
         })
@@ -51,6 +51,10 @@ todoApp.run(function ($rootScope, $location, $route, AuthService) {
                 });
         });
 });
+
+todoApp.run(['$route', function ($route) {
+    $route.reload();
+}]);
 
 // todoApp.controller("mainController", [
 //     '$scope',
