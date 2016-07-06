@@ -19,7 +19,13 @@ todoapp.controller("mainController", [
                 $http({
                     url: '/add',
                     method: "POST",
-                    data: {content: $scope.newtask, duedate: 2015} //TODO: add input date
+                    headers: {
+                    'X-CSRFToken': csrftoken
+                    },
+                    data: {
+                        content: $scope.newtask,
+                        duedate: 2015
+                    } //TODO: add input date
                 }).then(function (response) {
                     $scope.retrieveLastNItems($scope.retrieveNr);
                     $scope.newtask = ""
@@ -35,7 +41,12 @@ todoapp.controller("mainController", [
             $http({
                 method: 'POST',
                 url: '/retrieve',
-                data: {numTasks: $scope.retrieveNr}
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    numTasks: $scope.retrieveNr
+                }
             }).then(function (response) {
                 $scope.tasks = response.data;
                 console.log("mm", $scope.tasks);

@@ -4,7 +4,8 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
-from project.forms import LoginForm
+from project.forms import LoginForm, RegistrationForm
+from flask_wtf.csrf import CsrfProtect
 
 # config
 app = Flask(__name__)
@@ -12,6 +13,9 @@ app.config.from_object(BaseConfig)
 
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
+
+# Protection for app
+CsrfProtect(app)
 
 # Import after to avoid circular dependency
 from project.models import Task, User
@@ -35,10 +39,25 @@ def login():
     For POSTS, login the current user by processing the form
     """
     form = LoginForm(request.form)
+    print("LOGIN METHOD", request.method, request.form, form.errors)
     if request.method == "POST" and form.validate():
-        print("POST REQ FORM")
+        print("TO DO - LOGIN")
         return 'OK'
     return render_template("login.html", form=form)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """
+    For GET requests, display the registration form.
+    For POSTS, create the relevant account
+    """
+    form = RegistrationForm(request.form)
+    print("REGISTER METHOD", request.method, request.form, form.errors)
+    if request.method == "POST" and form.validate():
+        print("TO DO - REGISTER")
+        return 'OK'
+    return render_template("register.html", form=form)
 
 
 # @app.route('/add', methods=['POST'])
@@ -82,13 +101,14 @@ def login():
 
 @app.route('/')
 def show_tasks():
-    return render_template("index.html")
+    return render_template("tasks.html")
 
 
 @app.route('/retrieve', methods=['POST'])
 def retrieve_tasks():
     """Swap to a post request because you are sending data"""
 
+    print("HELLO WORLD")
     # Support for the reverse query here
     tasks = Task.query.order_by(Task.id.desc()).limit(10)
     todo_list = []

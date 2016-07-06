@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% block body %}
+    <div ng-app="TodoApp" ng-controller="mainController" class="container-fluid col-md-10 col-md-offset-1">
+        <div class="form-group">
+            <form ng-submit="addTask()"
+                  style="margin-top:30px;">
+                <h3>Add a new task</h3>
+
+                <div class="form-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="New Task..."
+                           ng-model="newtask">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+
+        <div class="list-group">
+            <a href="#" class="list-group-item" ng-repeat="task in tasks.slice()">{[task.content]}</a>
+        </div>
+    </div>
+{% endblock %}

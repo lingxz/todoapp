@@ -1,23 +1,32 @@
-{% extends "layout.html" %}
-{% block body %}
-    <div ng-app="TodoApp" ng-controller="mainController" class="container-fluid col-md-10 col-md-offset-1">
-        <div class="form-group">
-            <form ng-submit="addTask()"
-                  style="margin-top:30px;">
-                <h3>Add a new task</h3>
+<html>
+<head>
+    <title>Todo App</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
-                <div class="form-group">
-                    <input type="text"
-                           class="form-control"
-                           placeholder="New Task..."
-                           ng-model="newtask">
-                </div>
-                <button type="submit" class="btn btn-primary">Add</button>
-            </form>
-        </div>
+    <!-- Static imports -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
-        <div class="list-group">
-            <a href="#" class="list-group-item" ng-repeat="task in tasks.slice()">{[task.content]}</a>
-        </div>
-    </div>
-{% endblock %}
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-XYCjB+hFAjSbgf9yKUgbysEjaVLOXhCgATTEBpCqT1R3jvG5LGRAK5ZIyRbH5vpX" crossorigin="anonymous">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}"
+    </script>
+
+</head>
+
+
+<body>
+
+{% include "nav.html" %}
+
+<div class="container-fluid col-md-10 col-md-offset-1">
+    {% block body %}{% endblock %}
+</div>
+</body>
+</html>
