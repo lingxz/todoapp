@@ -1,12 +1,10 @@
 import json
 from flask import Flask, request, redirect, render_template
 from flask_login import LoginManager
-from flask_wtf import Form
-from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import DataRequired, Email
-from flask.ext.bcrypt import Bcrypt
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
+from project.forms import LoginForm
 
 # config
 app = Flask(__name__)
@@ -23,12 +21,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-class LoginForm(Form):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('remember_me', default=False)
-
-
 @login_manager.user_loader
 def load_user(user_id):
     """Given *user_id*, return the associated User object.
@@ -38,13 +30,15 @@ def load_user(user_id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """For GET requests, display the login form.
+    """
+    For GET requests, display the login form.
     For POSTS, login the current user by processing the form
     """
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.get()
-        # haven't finish
+    form = LoginForm(request.form)
+    if request.method == "POST" and form.validate():
+        print("POST REQ FORM")
+        return 'OK'
+    return render_template("login.html", form=form)
 
 
 # @app.route('/add', methods=['POST'])
