@@ -9,6 +9,7 @@ todoApp.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'static/partials/home.html',
+            controller: 'mainController',
             access: {restricted: true}
         })
         .when('/login', {

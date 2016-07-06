@@ -124,8 +124,6 @@ def index():
 @app.route('/retrieve', methods=['POST'])
 def retrieve_tasks():
     """Swap to a post request because you are sending data"""
-
-    print("HELLO WORLD")
     # Support for the reverse query here
     tasks = Task.query.order_by(Task.id.desc()).limit(10)
     todo_list = []
