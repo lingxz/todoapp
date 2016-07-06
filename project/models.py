@@ -5,22 +5,31 @@ from project import db, bcrypt
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, nullable=True)
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String, nullable=False, unique=True)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
-    tasks = db.relationship('Task', backref="user", cascade="all, delete-orphan", lazy='dynamic')
+
+    # tasks = db.relationship('tasks', backref="users", cascade="all, delete-orphan", lazy='dynamic')
 
     # one to many mapping between user and tasks, deletes all tasks when user is deleted
+
+    def __init__(self, email, password, username, admin=False):
+        self.email = email
+        self.password = bcrypt.generate_password_hash(str(password))
+        self.registered_on = datetime.datetime.now()
+        self.username = username
+        self.admin = admin
 
     def is_active(self):
         """True, as all users are active."""
         return True
 
     def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.email
+        return self.id
 
     def is_authenticated(self):
         """Return True if the user is authenticated."""
@@ -30,10 +39,15 @@ class User(db.Model):
         """True, as anonymous users are supported."""
         return True
 
+    def __repr__(self):
+        return '<User {0}>'.format(self.email)
+
 
 class Task(db.Model):
+    __tablename__ = "tasks"
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     content = db.Column(db.Text)
     done = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())

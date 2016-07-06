@@ -1,11 +1,10 @@
 import json
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, jsonify, session
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
 from project.forms import LoginForm, RegistrationForm
-from flask_wtf.csrf import CsrfProtect
 
 # config
 app = Flask(__name__)
@@ -13,9 +12,6 @@ app.config.from_object(BaseConfig)
 
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
-
-# Protection for app
-CsrfProtect(app)
 
 # Import after to avoid circular dependency
 from project.models import Task, User
@@ -32,32 +28,53 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
-    """
-    For GET requests, display the login form.
-    For POSTS, login the current user by processing the form
-    """
-    form = LoginForm(request.form)
-    print("LOGIN METHOD", request.method, request.form, form.errors)
-    if request.method == "POST" and form.validate():
-        print("TO DO - LOGIN")
-        return 'OK'
-    return render_template("login.html", form=form)
+    json_data = request.json
+    user = User.query.filter_by(email=json_data['email']).first()
+    if user and bcrypt.check_password_hash(
+            user.password, json_data['password']):
+        session['logged_in'] = True
+        status = True
+    else:
+        status = False
+    return jsonify({'result': status})
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/api/register', methods=['POST'])
 def register():
     """
-    For GET requests, display the registration form.
     For POSTS, create the relevant account
     """
-    form = RegistrationForm(request.form)
-    print("REGISTER METHOD", request.method, request.form, form.errors)
-    if request.method == "POST" and form.validate():
-        print("TO DO - REGISTER")
-        return 'OK'
-    return render_template("register.html", form=form)
+    json_data = request.json
+    user = User(
+        email=json_data['email'],
+        username=json_data['username'],
+        password=json_data['password']
+    )
+    try:
+        db.session.add(user)
+        db.session.commit()
+        status = 'success'
+    except:
+        status = 'this user is already registered'
+    db.session.close()
+    return jsonify({'result': status})
+
+
+@app.route('/api/logout')
+def logout():
+    session.pop('logged_in', None)
+    return jsonify({'result': 'success'})
+
+
+@app.route('/api/status')
+def status():
+    if session.get('logged_in'):
+        if session['logged_in']:
+            return jsonify({'status': True})
+    else:
+        return jsonify({'status': False})
 
 
 # @app.route('/add', methods=['POST'])
@@ -100,8 +117,8 @@ def register():
 
 
 @app.route('/')
-def show_tasks():
-    return render_template("tasks.html")
+def index():
+    return app.send_static_file('index.html')
 
 
 @app.route('/retrieve', methods=['POST'])
