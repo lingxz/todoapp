@@ -1,7 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
-import datetime
+# project / models.py
 
-db = SQLAlchemy()
+import datetime
+from project import db, bcrypt
 
 
 class User(db.Model):

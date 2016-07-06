@@ -2,34 +2,23 @@ import json
 from flask import Flask, request, redirect, render_template
 from flask_login import LoginManager
 from flask_wtf import Form
-from models.models import db, User, Task
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Email
+from flask.ext.bcrypt import Bcrypt
+from flask.ext.sqlalchemy import SQLAlchemy
+from project.config import BaseConfig
 
-# app = Flask(__name__)
-# app.config.from_object(__name__)
-#
-# # Load default config and override config from an environment variable
-# app.config.update(dict(
-#     DATABASE=os.path.join(app.root_path, 'database.db'),
-#     SECRET_KEY='development key',
-#     USERNAME='admin',
-#     PASSWORD='default'
-# ))
-# app.config.from_envvar('SERVER_SETTINGS', silent=True)
-
-
+# config
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config.from_object(BaseConfig)
 
-# Hotfix for DB issue
-db.init_app(app)
-db.app = app
+bcrypt = Bcrypt(app)
+db = SQLAlchemy(app)
 
-# Creates the database
-db.create_all()
+# Import after to avoid circular dependency
+from project.models import Task, User
 
+# login stuff
 login_manager = LoginManager()
 login_manager.init_app(app)
 

@@ -1,5 +1,5 @@
 import os
-import server
+import __init__
 import unittest
 import tempfile
 
@@ -8,19 +8,19 @@ class ServerTestCase(unittest.TestCase):
     """A more complex test suite - https://github.com/pallets/flask/tree/master/examples/minitwit/"""
     def setUp(self):
         """Create a new test client, init a new DB"""
-        self.db_fd, server.app.config['DATABASE'] = tempfile.mkstemp()
+        self.db_fd, __init__.app.config['DATABASE'] = tempfile.mkstemp()
 
         """Disable error catching during request handling, better error reports
         when performing test requests against the application"""
-        server.app.config['TESTING'] = True
-        self.app = server.app.test_client()
-        with server.app.app_context():
-            server.init_db()
+        __init__.app.config['TESTING'] = True
+        self.app = __init__.app.test_client()
+        with __init__.app.app_context():
+            __init__.init_db()
 
     def tearDown(self):
         """Deletes the DB after the test completes"""
         os.close(self.db_fd)
-        os.unlink(server.app.config['DATABASE'])
+        os.unlink(__init__.app.config['DATABASE'])
 
     def test_empty_db(self):
         """Assert that an empty database is empty"""
