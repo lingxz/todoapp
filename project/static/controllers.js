@@ -2,8 +2,8 @@
  * Created by mark on 7/6/16.
  */
 angular.module('todoApp').controller('loginController',
-    ['$scope', '$location', 'AuthService',
-        function ($scope, $location, AuthService) {
+    ['$scope', '$rootScope', '$location', 'AUTH_EVENTS', 'AuthService',
+        function ($scope, $rootScope, $location, AUTH_EVENTS, AuthService) {
 
             $scope.login = function () {
 
@@ -15,12 +15,14 @@ angular.module('todoApp').controller('loginController',
                 AuthService.login($scope.loginForm.email, $scope.loginForm.password)
                 // handle success
                     .then(function () {
+                        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                         $location.path('/');
                         $scope.disabled = false;
                         $scope.loginForm = {};
                     })
                     // handle error
                     .catch(function () {
+                        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                         $scope.error = true;
                         $scope.errorMessage = "Invalid username and/or password";
                         $scope.disabled = false;
@@ -31,14 +33,15 @@ angular.module('todoApp').controller('loginController',
         }]);
 
 angular.module('todoApp').controller('logoutController',
-    ['$scope', '$location', 'AuthService',
-        function ($scope, $location, AuthService) {
+    ['$scope', '$rootScope', '$location', 'AUTH_EVENTS', 'AuthService',
+        function ($scope, $rootScope, $location, AUTH_EVENTS, AuthService) {
 
             $scope.logout = function () {
 
                 // call logout from service
                 AuthService.logout()
                     .then(function () {
+                        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
                         $location.path('/login');
                     });
 
@@ -118,12 +121,27 @@ todoApp.controller("mainController", [
                 }
             }).then(function (response) {
                 $scope.tasks = response.data;
-                console.log("mm", $scope.tasks);
             }, function (error) {
                 console.log(error);
             });
         };
 
         $scope.retrieveLastNItems($scope.retrieveNr)
+    }
+]);
+
+todoApp.controller("navController", [
+    '$scope',
+    '$rootScope',
+    'AUTH_EVENTS',
+    'AuthService',
+    function ($scope, $rootScope, AUTH_EVENTS, AuthService) {
+        $scope.loggedIn = AuthService.isLoggedIn();
+        $rootScope.$on(AUTH_EVENTS.loginSuccess, function (next, current) {
+            $scope.loggedIn = true;
+        });
+        $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (next, current) {
+            $scope.loggedIn = false;
+        })
     }
 ]);
