@@ -4,7 +4,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
-from project.forms import LoginForm, RegistrationForm
+# from project.forms import LoginForm, RegistrationForm
 
 # config
 app = Flask(__name__)

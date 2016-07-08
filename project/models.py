@@ -13,7 +13,7 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
 
-    # tasks = db.relationship('tasks', backref="users", cascade="all, delete-orphan", lazy='dynamic')
+    tasks = db.relationship('Task', backref="users", cascade="all, delete-orphan", lazy='dynamic')
 
     # one to many mapping between user and tasks, deletes all tasks when user is deleted
 
@@ -52,12 +52,9 @@ class Task(db.Model):
     done = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())
     due_date = db.Column(db.DateTime, nullable=True)
-    parent_task = db.Column(db.Integer, nullable=True)  # stores the parent task id
+    category = db.Column(db.Text, nullable=True)
+    children = db.relationship("Task", backref=db.backref('parent', remote_side=[id]))
 
-    # sub_tasks = db.relationship('Task', backref='parent', lazy='dynamic')
-    # is this storing the object or the id?
-    # this sub_task thing doesn't work
-    # should all sub tasks be deleted if parent is deleted?
     # need to add category
 
     def __init__(self, content):
