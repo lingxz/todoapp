@@ -53,9 +53,9 @@ class Task(db.Model):
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())
     due_date = db.Column(db.DateTime, nullable=True)
     category = db.Column(db.Text, nullable=True)
-    children = db.relationship("Task", backref=db.backref('parent', remote_side=[id]))
 
-    # need to add category
+    parent_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
+    sub_tasks = db.relationship("Task", backref=db.backref('parent', remote_side=[id]))
 
     def __init__(self, content):
         self.content = content
