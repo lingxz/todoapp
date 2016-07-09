@@ -11,4 +11,8 @@ angular.module('todoApp')
         all: '*',
         admin: 'admin',
         guest: 'guest'
+    })
+    .constant('USER_PREFERENCES', {
+        showCompletedTasks: 'show-completed-tasks',
+        hideCompletedTasks: 'hide-completed-tasks'
     });

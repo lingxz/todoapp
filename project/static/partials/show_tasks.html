@@ -14,7 +14,7 @@
     </div>
 
     <div class="list-group">
-        <a href="" class="list-group-item" ng-repeat="task in tasks.slice()">
+        <a href="" class="list-group-item" ng-repeat="task in tasks.slice()" ng-hide="task.done && !showCompleted">
             <span ng-class="{'done-text':task.done}">
                 {{task.content}}
             </span>
@@ -23,8 +23,10 @@
                    ng-show="task.due_date"
                    uib-tooltip="{{task.due_date}}"
                    tooltip-placement="top">alarm</i>
+
                 <i class="material-icons" ng-click="markAsDone(task)">done</i>
-                <!--clear all subtasks, do this when we actually have subtasks-->
+
+                <!--clear all subtasks button, do this when we actually have subtasks-->
                 <i class="material-icons">done_all</i>
             </span>
         </a>

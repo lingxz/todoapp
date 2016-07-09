@@ -85,9 +85,11 @@ angular.module('todoApp').controller('registerController',
 
 todoApp.controller("mainController", [
     '$scope',
+    '$rootScope',
     '$http',
     'AuthService',
-    function ($scope, $http, AuthService) {
+    'USER_PREFERENCES',
+    function ($scope, $rootScope, $http, AuthService, USER_PREFERENCES) {
         $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
         $scope.retrieveNr = 10;
@@ -128,6 +130,7 @@ todoApp.controller("mainController", [
                 console.log(error);
             });
         };
+
         $scope.markAsDone = function (task) {
             $http({
                 method: 'POST',
@@ -148,6 +151,14 @@ todoApp.controller("mainController", [
             });
         };
 
+        $scope.showCompleted = true;  //TODO: need to change default
+        $rootScope.$on(USER_PREFERENCES.showCompletedTasks, function (next, current) {
+            $scope.showCompleted = true;
+        });
+        $rootScope.$on(USER_PREFERENCES.hideCompletedTasks, function (next, current) {
+           $scope.showCompleted = false;
+        });
+
         $scope.retrieveLastNItems($scope.retrieveNr)
     }
 ]);
@@ -157,7 +168,8 @@ todoApp.controller("navController", [
     '$rootScope',
     'AUTH_EVENTS',
     'AuthService',
-    function ($scope, $rootScope, AUTH_EVENTS, AuthService) {
+    'USER_PREFERENCES',
+    function ($scope, $rootScope, AUTH_EVENTS, AuthService, USER_PREFERENCES) {
         $scope.loggedIn = AuthService.isLoggedIn();
         $scope.currentUser = AuthService.getCurrentUser();
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function (next, current) {
@@ -167,6 +179,18 @@ todoApp.controller("navController", [
         $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (next, current) {
             $scope.loggedIn = false;
             $scope.currentUser = AuthService.getCurrentUser();
-        })
+        });
+
+        $scope.showCompleted = true; // TODO: need to store user preference, cannot always default to true
+        $scope.toggleCompleted = function () {
+            if ($scope.showCompleted) {
+                $rootScope.$broadcast(USER_PREFERENCES.hideCompletedTasks);
+                $scope.showCompleted = false;
+            } else {
+                $rootScope.$broadcast(USER_PREFERENCES.showCompletedTasks);
+                $scope.showCompleted = true;
+            }
+        };
+
     }
 ]);
