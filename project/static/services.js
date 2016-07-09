@@ -2,14 +2,23 @@
  * Created by mark on 7/6/16.
  */
 angular.module('todoApp').factory('AuthService',
-    ['$q', '$timeout', '$http',
-        function ($q, $timeout, $http) {
+    ['$q', '$timeout', '$http', '$window',
+        function ($q, $timeout, $http, $window) {
+            var tokenName = 'webapp-token';
 
-            // create user variable
-            var user = null;
+            function saveToken(token) {
+                $window.localStorage[tokenName] = token;
+            }
+
+            function getToken() {
+                return $window.localStorage[tokenName];
+            }
+
 
             function isLoggedIn() {
-                if (user) {
+                var token = getToken();
+
+                if (token) {
                     return true;
                 } else {
                     return false;
@@ -26,16 +35,14 @@ angular.module('todoApp').factory('AuthService',
                 // handle success
                     .success(function (data, status) {
                         if (status === 200 && data.result) {
-                            user = true;
+                            saveToken(data.token);
                             deferred.resolve();
                         } else {
-                            user = false;
                             deferred.reject();
                         }
                     })
                     // handle error
                     .error(function (data) {
-                        user = false;
                         deferred.reject();
                     });
 
@@ -50,18 +57,21 @@ angular.module('todoApp').factory('AuthService',
                 var deferred = $q.defer();
 
                 // send a get request to the server
-                $http.get('/api/logout')
+                $http({
+                    method: 'GET',
+                    url: '/api/logout',
+                    headers: {Authorization: 'Bearer ' + getToken()}
+                })
                 // handle success
                     .success(function (data) {
-                        user = false;
+                        // Clear all parameters
+                        $window.localStorage.removeItem(tokenName);
                         deferred.resolve();
                     })
                     // handle error
                     .error(function (data) {
-                        user = false;
                         deferred.reject();
                     });
-
                 // return promise object
                 return deferred.promise;
 
@@ -96,20 +106,8 @@ angular.module('todoApp').factory('AuthService',
 
             }
 
-            function getUserStatus() {
-                return $http.get('/api/status')
-                // handle success
-                    .success(function (data) {
-                        if (data.status) {
-                            user = true;
-                        } else {
-                            user = false;
-                        }
-                    })
-                    // handle error
-                    .error(function (data) {
-                        user = false;
-                    });
+            function getCurrentUser() {
+                return "currentuser - todo";
             }
 
             // return available functions for use in controllers
@@ -118,7 +116,8 @@ angular.module('todoApp').factory('AuthService',
                 login: login,
                 logout: logout,
                 register: register,
-                getUserStatus: getUserStatus
+                getCurrentUser: getCurrentUser,
+                getToken: getToken
             });
 
         }]);

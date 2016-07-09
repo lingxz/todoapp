@@ -4,6 +4,11 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
+import jwt
+from jwt import DecodeError, ExpiredSignature
+from datetime import datetime, timedelta
+from functools import wraps
+
 # from project.forms import LoginForm, RegistrationForm
 
 # config
@@ -16,16 +21,50 @@ db = SQLAlchemy(app)
 # Import after to avoid circular dependency
 from project.models import Task, User
 
-# login stuff
-login_manager = LoginManager()
-login_manager.init_app(app)
+
+# Token creation
+def create_token(user):
+    payload = {
+        # data
+        'id': user.id,
+        'username': user.username,
+        # issued at
+        'iat': datetime.utcnow(),
+        # expiry
+        'exp': datetime.utcnow() + timedelta(days=1)
+    }
+
+    token = jwt.encode(payload, BaseConfig.SECRET_KEY, algorithm='HS256')
+    return token.decode('unicode_escape')
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    """Given *user_id*, return the associated User object.
-    """
-    return User.query.get(user_id)
+def parse_token(req):
+    token = req.headers.get('Authorization').split()[1]
+    return jwt.decode(token, BaseConfig.SECRET_KEY, algorithms='HS256')
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not request.headers.get('Authorization'):
+            response = jsonify(message='Missing authorization header')
+            response.status_code = 401
+            return response
+
+        try:
+            payload = parse_token(request)
+        except DecodeError:
+            response = jsonify(message='Token is invalid')
+            response.status_code = 401
+            return response
+        except ExpiredSignature:
+            response = jsonify(message='Token has expired')
+            response.status_code = 401
+            return response
+
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 @app.route('/api/login', methods=['POST'])
@@ -35,10 +74,10 @@ def login():
     if user and bcrypt.check_password_hash(
             user.password, json_data['password']):
         session['logged_in'] = True
-        status = True
+        token = create_token(user)
+        return jsonify({'result': True, "token": token, "username": user.username})
     else:
-        status = False
-    return jsonify({'result': status})
+        return jsonify({'result': False, "token": -1})
 
 
 @app.route('/api/register', methods=['POST'])
@@ -63,57 +102,19 @@ def register():
 
 
 @app.route('/api/logout')
+@login_required
 def logout():
     session.pop('logged_in', None)
     return jsonify({'result': 'success'})
 
 
-@app.route('/api/status')
-def status():
-    if session.get('logged_in'):
-        if session['logged_in']:
-            return jsonify({'status': True})
-    else:
-        return jsonify({'status': False})
-
-
-# @app.route('/add', methods=['POST'])
-# def add_entry():
-#     if not session.get('logged_in'):
-#         abort(401)
-#     db = get_db()
-#     # Use ? ? to prevent SQL injection
-#
-#     # TODO: Strip the content in the 'text' field
-#     db.execute('INSERT INTO entries (title, text) VALUES (?, ?)',
-#                [request.form['title'], request.form['text']])
-#     db.commit()
-#     flash('New entry was successfully posted')
-#     return redirect(url_for('show_entries'))
-#
-
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     """Storing as plaintext for simplicity now, Werkzeug has security helpers"""
-#     error = None
-#     if request.method == 'POST':
-#         if request.form['username'] != app.config['USERNAME']:
-#             error = 'Invalid username'
-#         elif request.form['password'] != app.config['PASSWORD']:
-#             error = 'Invalid password'
-#         else:
-#             session['logged_in'] = True
-#             flash('You were logged in')
-#             return redirect(url_for('show_entries'))
-#     return render_template('login.html', error=error)
-#
-#
-# @app.route('/logout')
-# def logout():
-#     session.pop('logged_in', None)
-#     flash('You were logged out')
-#     return redirect(url_for('show_entries'))
+# @app.route('/api/status')
+# def status():
+#     if session.get('logged_in'):
+#         if session['logged_in']:
+#             return jsonify({'status': True})
+#     else:
+#         return jsonify({'status': False})
 
 
 @app.route('/')
@@ -122,6 +123,7 @@ def index():
 
 
 @app.route('/retrieve', methods=['POST'])
+@login_required
 def retrieve_tasks():
     """Swap to a post request because you are sending data"""
     # Support for the reverse query here
@@ -138,6 +140,7 @@ def retrieve_tasks():
 
 
 @app.route('/add', methods=['POST'])
+@login_required
 def add_task():
     data = request.json['content']
     if not data:

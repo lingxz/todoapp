@@ -86,7 +86,8 @@ angular.module('todoApp').controller('registerController',
 todoApp.controller("mainController", [
     '$scope',
     '$http',
-    function ($scope, $http) {
+    'AuthService',
+    function ($scope, $http, AuthService) {
         $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
         $scope.retrieveNr = 10;
@@ -97,6 +98,7 @@ todoApp.controller("mainController", [
                 $http({
                     url: '/add',
                     method: "POST",
+                    headers: {Authorization: 'Bearer ' + AuthService.getToken()},
                     data: {
                         content: $scope.newtask,
                         duedate: 2015
@@ -116,6 +118,7 @@ todoApp.controller("mainController", [
             $http({
                 method: 'POST',
                 url: '/retrieve',
+                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
                 data: {
                     numTasks: $scope.retrieveNr
                 }
@@ -137,11 +140,14 @@ todoApp.controller("navController", [
     'AuthService',
     function ($scope, $rootScope, AUTH_EVENTS, AuthService) {
         $scope.loggedIn = AuthService.isLoggedIn();
+        $scope.currentUser = AuthService.getCurrentUser();
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function (next, current) {
             $scope.loggedIn = true;
+            $scope.currentUser = AuthService.getCurrentUser();
         });
         $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (next, current) {
             $scope.loggedIn = false;
+            $scope.currentUser = AuthService.getCurrentUser();
         })
     }
 ]);

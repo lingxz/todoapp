@@ -38,6 +38,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li ng-hide="loggedIn"><a href="#/register">Register</a></li>
                 <li ng-hide="loggedIn"><a href="#/login">Login</a></li>
+                <li ng-show="loggedIn"><a href="#/">{{ currentUser }}</a></li>
                 <li ng-show="loggedIn"><a ng-controller="logoutController" ng-click='logout()'>Logout</a></li>
             </ul>
         </div>
