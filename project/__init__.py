@@ -133,7 +133,8 @@ def retrieve_tasks():
         task_item = {
             'id': task.id,
             'content': task.content,
-            'duedate': 'bla'  # placeholder
+            'duedate': 'bla',  # placeholder
+            'done': task.done
         }
         todo_list.append(task_item)
     return json.dumps(todo_list)
@@ -149,6 +150,23 @@ def add_task():
     db.session.add(task)
     db.session.commit()
     return 'OK'
+
+
+@app.route('/markdone', methods=['POST'])
+@login_required
+def mark_as_done():
+    id = request.json['id']
+    if not id:
+        return redirect('/')
+    current_task = Task.query.filter_by(id=id).first()
+    if current_task.done:
+        current_task.done = False
+        db.session.commit()
+        return json.dumps({'done': False})
+    else:
+        current_task.done = True
+        db.session.commit()
+        return json.dumps({'done': True})
 
 
 if __name__ == "__main__":

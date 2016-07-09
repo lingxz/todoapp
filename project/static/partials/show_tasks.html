@@ -10,11 +10,17 @@
                        placeholder="New Task..."
                        ng-model="newtask">
             </div>
-            <button type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>
 
     <div class="list-group">
-        <a href="" class="list-group-item" ng-repeat="task in tasks.slice()">{{ task.content }}</a>
+        <a href="" class="list-group-item" ng-repeat="task in tasks.slice()">
+            <span ng-class="{'done-text':task.done}">
+                {{task.content}}
+            </span>
+            <span class="pull-right" ng-click="markAsDone(task)" ng-class="{'done-text':task.done}">
+                <i class="material-icons">done</i>
+            </span>
+        </a>
     </div>
 </div>
