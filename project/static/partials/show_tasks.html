@@ -19,7 +19,10 @@
                 {{task.content}}
             </span>
             <span class="pull-right" ng-class="{'done-text':task.done}">
-                <i class="material-icons" ng-show="task.due_date">alarm</i>
+                <i class="material-icons"
+                   ng-show="task.due_date"
+                   uib-tooltip="{{task.due_date}}"
+                   tooltip-placement="top">alarm</i>
                 <i class="material-icons" ng-click="markAsDone(task)">done</i>
                 <!--clear all subtasks, do this when we actually have subtasks-->
                 <i class="material-icons">done_all</i>
