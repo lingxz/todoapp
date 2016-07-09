@@ -18,8 +18,12 @@ angular.module('todoApp').factory('AuthService',
             function isLoggedIn() {
                 var token = getToken();
 
+                // return token ? true : false;
+
                 if (token) {
-                    return true;
+                    var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+                    return payload.exp > Date.now() / 1000;
                 } else {
                     return false;
                 }
