@@ -114,6 +114,21 @@ angular.module('todoApp').factory('AuthService',
                 return "currentuser - todo";
             }
 
+            function getUserPreference(user) { // should this be in another service?
+                $http({
+                    method: 'POST',
+                    url: '/api/user_preferences',
+                    headers: {Authorization: 'Bearer ' + getToken()},
+                    data: {user: user}
+                })
+                .success(function (response) {
+                    return response.data
+                })
+                .error(function (error) {
+                    console.log(error);
+                });
+            }
+
             // return available functions for use in controllers
             return ({
                 isLoggedIn: isLoggedIn,
@@ -121,7 +136,8 @@ angular.module('todoApp').factory('AuthService',
                 logout: logout,
                 register: register,
                 getCurrentUser: getCurrentUser,
-                getToken: getToken
+                getToken: getToken,
+                getUserPreference: getUserPreference
             });
 
         }]);

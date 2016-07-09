@@ -184,6 +184,13 @@ def mark_as_done():
         db.session.commit()
         return json.dumps({'done': True})
 
+@app.route('/api/user_preferences', methods=['POST'])
+@login_required
+def get_user_preferences():
+    id = request.json['user']['id']
+    show_completed_task = User.query.filter_by(id=id).first().show_completed_task
+    return json.dumps({'show_completed_task': show_completed_task})
+
 
 if __name__ == "__main__":
     app.run(debug=True)

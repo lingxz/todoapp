@@ -12,6 +12,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
+    show_completed_task = db.Column(db.Boolean, default=True)
 
     tasks = db.relationship('Task', backref="users", cascade="all, delete-orphan", lazy='dynamic')
 
