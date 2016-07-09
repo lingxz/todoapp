@@ -6,8 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
 import jwt
 from jwt import DecodeError, ExpiredSignature
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from functools import wraps
+import dateutil.parser as dparser
 
 # from project.forms import LoginForm, RegistrationForm
 
@@ -130,10 +131,15 @@ def retrieve_tasks():
     tasks = Task.query.order_by(Task.id.desc()).limit(10)
     todo_list = []
     for task in tasks:
+        if task.due_date:
+            # convert datetime object to string before sending
+            due_date = task.due_date.strftime("%d/%m/%Y %H:%M:%S")
+        else:
+            due_date = None
         task_item = {
             'id': task.id,
             'content': task.content,
-            'duedate': 'bla',  # placeholder
+            'due_date': due_date,
             'done': task.done
         }
         todo_list.append(task_item)
@@ -146,7 +152,17 @@ def add_task():
     data = request.json['content']
     if not data:
         return redirect('/')
-    task = Task(data)
+    try:
+        dt = dparser.parse(data, fuzzy=True)
+        if dt.time() == time():  # if time is 0:0:0, then no time was given
+            # if no time was given, time defaults to 9am
+            dt = dt.replace(hour=9, minute=0)
+        content = data
+    except ValueError:
+        dt = None
+        content = data
+
+    task = Task(content, dt)
     db.session.add(task)
     db.session.commit()
     return 'OK'

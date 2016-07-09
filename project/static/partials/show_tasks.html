@@ -18,8 +18,11 @@
             <span ng-class="{'done-text':task.done}">
                 {{task.content}}
             </span>
-            <span class="pull-right" ng-click="markAsDone(task)" ng-class="{'done-text':task.done}">
-                <i class="material-icons">done</i>
+            <span class="pull-right" ng-class="{'done-text':task.done}">
+                <i class="material-icons" ng-show="task.due_date">alarm</i>
+                <i class="material-icons" ng-click="markAsDone(task)">done</i>
+                <!--clear all subtasks, do this when we actually have subtasks-->
+                <i class="material-icons">done_all</i>
             </span>
         </a>
     </div>
