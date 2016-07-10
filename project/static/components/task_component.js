@@ -19,16 +19,15 @@ function TaskController($scope, $http, $timeout, AuthService) {
     };
 
     var timeout = null;
-    var saveTask = function () {
-        task = this.task;
-        console.log(task);  // doesn't work!!!
+    var saveTask = function (newVal) {
+        var task = $scope.ctrl.task;
         $http({
             method: 'POST',
             url: '/edit_task',
             headers: {Authorization: 'Bearer ' + AuthService.getToken()},
             data: {
                 id: task.id,
-                content: task.content
+                content: newVal
             }
         })
     };
@@ -38,7 +37,7 @@ function TaskController($scope, $http, $timeout, AuthService) {
             if (timeout) {
                 $timeout.cancel(timeout)
             }
-            timeout = $timeout(saveTask, 1000); // saves updates every 1 second
+            timeout = $timeout(saveTask(newVal), 1000); // saves updates every 1 second
         }
     };
     $scope.$watch('ctrl.task.content', debounceSaveUpdates);
@@ -84,6 +83,6 @@ angular.module('todoApp')
                     }
                     ngModel.$setViewValue(html);
                 }
-        }
+            }
         };
     });
