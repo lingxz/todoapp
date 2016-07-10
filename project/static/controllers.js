@@ -132,26 +132,6 @@ todoApp.controller("mainController", [
             });
         };
 
-        $scope.markAsDone = function (task) {
-            $http({
-                method: 'POST',
-                url: '/markdone',
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    id: task.id
-                }
-            }).then(function (response) {
-                task.done = response.data.done;
-                $scope.tasks.forEach(function (t) {
-                    if (t.id === task.id) {
-                        t.done = response.data.done;
-                    }
-                })
-            }, function (error) {
-                console.log(error);
-            });
-        };
-
         $scope.showCompleted = true;  //TODO: need to change default
         $rootScope.$on(USER_PREFERENCES.showCompletedTasks, function (next, current) {
             $scope.showCompleted = true;
