@@ -137,41 +137,9 @@ todoApp.controller("mainController", [
             $scope.showCompleted = true;
         });
         $rootScope.$on(USER_PREFERENCES.hideCompletedTasks, function (next, current) {
-           $scope.showCompleted = false;
+            $scope.showCompleted = false;
         });
 
         $scope.retrieveLastNItems($scope.retrieveNr)
-    }
-]);
-
-todoApp.controller("navController", [
-    '$scope',
-    '$rootScope',
-    'AUTH_EVENTS',
-    'AuthService',
-    'USER_PREFERENCES',
-    function ($scope, $rootScope, AUTH_EVENTS, AuthService, USER_PREFERENCES) {
-        $scope.loggedIn = AuthService.isLoggedIn();
-        $scope.currentUser = AuthService.getCurrentUser();
-        $rootScope.$on(AUTH_EVENTS.loginSuccess, function (next, current) {
-            $scope.loggedIn = true;
-            $scope.currentUser = AuthService.getCurrentUser();
-        });
-        $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (next, current) {
-            $scope.loggedIn = false;
-            $scope.currentUser = AuthService.getCurrentUser();
-        });
-
-        $scope.showCompleted = true; // TODO: need to store user preference, cannot always default to true
-        $scope.toggleCompleted = function () {
-            if ($scope.showCompleted) {
-                $rootScope.$broadcast(USER_PREFERENCES.hideCompletedTasks);
-                $scope.showCompleted = false;
-            } else {
-                $rootScope.$broadcast(USER_PREFERENCES.showCompletedTasks);
-                $scope.showCompleted = true;
-            }
-        };
-
     }
 ]);
