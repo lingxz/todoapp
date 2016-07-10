@@ -5,9 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
 import jwt
 from jwt import DecodeError, ExpiredSignature
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 from functools import wraps
-import dateutil.parser as dparser
+import parsedatetime as pdt
 
 # config
 app = Flask(__name__)
@@ -141,13 +141,18 @@ def add_task():
     data = request.json['content']
     if not data:
         return redirect('/')
-    try:
-        dt = dparser.parse(data, fuzzy=True)
-        if dt.time() == time():  # if time is 0:0:0, then no time was given
-            # if no time was given, time defaults to 9am
-            dt = dt.replace(hour=9, minute=0)
-        content = data
-    except ValueError:
+
+    cal = pdt.Calendar()
+    date_time = cal.nlp(data)
+    if date_time:
+        # if datetime was given
+        dt = date_time[0][0]  # this defaults to 9am if no time was given
+        # here we try to remove datetime from string
+        date_string_start = date_time[0][2]
+        date_string_end = date_time[0][3]
+        content = data[:date_string_start].rstrip() + data[date_string_end:]
+
+    else:
         dt = None
         content = data
 
