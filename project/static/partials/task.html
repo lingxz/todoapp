@@ -1,4 +1,4 @@
-<span ng-class="{'done-text':ctrl.task.done}">
+<span contenteditable ng-model="ctrl.task.content" ng-class="{'done-text':ctrl.task.done}">
     {{ ctrl.task.content }}
 </span>
 
@@ -6,10 +6,11 @@
     <i class="material-icons"
        ng-show="ctrl.task.due_date"
        uib-tooltip="{{ ctrl.task.due_date }}"
-       tooltip-placement="top">alarm</i>
+       tooltip-placement="top"
+       style="cursor: pointer">alarm</i>
 
-    <i class="material-icons" ng-click="markAsDone(ctrl.task)">done</i>
+    <i class="material-icons" ng-click="markAsDone(ctrl.task)" style="cursor: pointer">done</i>
 
 <!--clear all subtasks button, do this when we actually have subtasks-->
-    <i class="material-icons">done_all</i>
+    <i class="material-icons" style="cursor: pointer">done_all</i>
 </span>

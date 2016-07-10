@@ -144,7 +144,7 @@ def add_task():
 
     cal = pdt.Calendar()
     date_time = cal.nlp(data)
-    if date_time:
+    if date_time and date_time[0][0] > datetime.now():  # if date is in the past, ignore date
         # if datetime was given
         dt = date_time[0][0]  # this defaults to 9am if no time was given
         # here we try to remove datetime from string
@@ -190,6 +190,15 @@ def get_user_preferences():
     show_completed_task = User.query.filter_by(id=id).first().show_completed_task
     return json.dumps({'show_completed_task': show_completed_task})
 
+@app.route('/edit_task', methods=['POST'])
+@login_required
+def edit_task():
+    id = request.json['id']
+    content = request.json['content']
+    current_task = Task.query.filter_by(id=id).first()
+    current_task.content = content
+    db.session.commit()
+    return 'OK'
 
 @app.route('/')
 def index():

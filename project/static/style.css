@@ -29,3 +29,5 @@ textarea.form-control {
     text-decoration: line-through;
 }
 
+[contenteditable]:focus {
+    outline: 0px solid transparent; }
