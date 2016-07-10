@@ -72,6 +72,7 @@ def login():
     if user and bcrypt.check_password_hash(
             user.password, json_data['password']):
         session['logged_in'] = True
+        session['user_id'] = user.id
         token = create_token(user)
         return jsonify({'result': True, "token": token, "username": user.username})
     else:
@@ -103,6 +104,7 @@ def register():
 @login_required
 def logout():
     session.pop('logged_in', None)
+    session.pop('user_id', None)
     return jsonify({'result': 'success'})
 
 
@@ -111,7 +113,11 @@ def logout():
 def retrieve_tasks():
     """Swap to a post request because you are sending data"""
     # Support for the reverse query here
-    tasks = Task.query.order_by(Task.id.desc()).limit(10)
+    tasks = Task.query.\
+        filter(Task.user_id == session['user_id']).\
+        order_by(Task.id.desc()).\
+        limit(10)
+
     todo_list = []
     for task in tasks:
         if task.due_date:
