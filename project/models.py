@@ -58,9 +58,10 @@ class Task(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
     sub_tasks = db.relationship("Task", backref=db.backref('parent', remote_side=[id]))
 
-    def __init__(self, content, due_date=None):
+    def __init__(self, content, user_id, due_date=None):
         self.content = content
         self.due_date = due_date
+        self.user_id = int(user_id)
         self.done = False
 
     def __repr__(self):

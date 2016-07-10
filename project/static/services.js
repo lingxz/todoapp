@@ -18,8 +18,6 @@ angular.module('todoApp').factory('AuthService',
             function isLoggedIn() {
                 var token = getToken();
 
-                // return token ? true : false;
-
                 if (token) {
                     var payload = JSON.parse($window.atob(token.split('.')[1]));
 
@@ -111,7 +109,27 @@ angular.module('todoApp').factory('AuthService',
             }
 
             function getCurrentUser() {
-                return "currentuser - todo";
+                 var token = getToken();
+
+                if (token) {
+                    var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+                    return payload.username;
+                } else {
+                    return false;
+                }
+            }
+
+            function getCurrentUserID() {
+                 var token = getToken();
+
+                if (token) {
+                    var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+                    return payload.id;
+                } else {
+                    return false;
+                }
             }
 
             function getUserPreference(user) { // should this be in another service?
@@ -121,12 +139,12 @@ angular.module('todoApp').factory('AuthService',
                     headers: {Authorization: 'Bearer ' + getToken()},
                     data: {user: user}
                 })
-                .success(function (response) {
-                    return response.data
-                })
-                .error(function (error) {
-                    console.log(error);
-                });
+                    .success(function (response) {
+                        return response.data
+                    })
+                    .error(function (error) {
+                        console.log(error);
+                    });
             }
 
             // return available functions for use in controllers
@@ -136,6 +154,7 @@ angular.module('todoApp').factory('AuthService',
                 logout: logout,
                 register: register,
                 getCurrentUser: getCurrentUser,
+                getCurrentUserID: getCurrentUserID,
                 getToken: getToken,
                 getUserPreference: getUserPreference
             });

@@ -1,6 +1,5 @@
 import json
-from flask import Flask, request, redirect, render_template, jsonify, session
-from flask_login import LoginManager
+from flask import Flask, request, redirect, jsonify, session
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
@@ -9,8 +8,6 @@ from jwt import DecodeError, ExpiredSignature
 from datetime import datetime, time, timedelta
 from functools import wraps
 import dateutil.parser as dparser
-
-# from project.forms import LoginForm, RegistrationForm
 
 # config
 app = Flask(__name__)
@@ -109,20 +106,6 @@ def logout():
     return jsonify({'result': 'success'})
 
 
-# @app.route('/api/status')
-# def status():
-#     if session.get('logged_in'):
-#         if session['logged_in']:
-#             return jsonify({'status': True})
-#     else:
-#         return jsonify({'status': False})
-
-
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
-
-
 @app.route('/retrieve', methods=['POST'])
 @login_required
 def retrieve_tasks():
@@ -162,7 +145,11 @@ def add_task():
         dt = None
         content = data
 
-    task = Task(content, dt)
+    task = Task(
+        content=content,
+        user_id=request.json['user_id'],
+        due_date=dt
+    )
     db.session.add(task)
     db.session.commit()
     return 'OK'
@@ -184,12 +171,18 @@ def mark_as_done():
         db.session.commit()
         return json.dumps({'done': True})
 
+
 @app.route('/api/user_preferences', methods=['POST'])
 @login_required
 def get_user_preferences():
     id = request.json['user']['id']
     show_completed_task = User.query.filter_by(id=id).first().show_completed_task
     return json.dumps({'show_completed_task': show_completed_task})
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 
 if __name__ == "__main__":

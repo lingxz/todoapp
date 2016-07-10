@@ -103,7 +103,8 @@ todoApp.controller("mainController", [
                     headers: {Authorization: 'Bearer ' + AuthService.getToken()},
                     data: {
                         content: $scope.newtask,
-                        duedate: 2015
+                        duedate: 2015,
+                        user_id: AuthService.getCurrentUserID()
                     } //TODO: add input date
                 }).then(function (response) {
                     $scope.retrieveLastNItems($scope.retrieveNr);
