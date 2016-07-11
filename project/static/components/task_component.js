@@ -3,6 +3,7 @@
  */
 
 function TaskController($scope, $http, $timeout, AuthService) {
+    $scope.isCollapsed = true;
     $scope.markAsDone = function (task) {
         $http({
             method: 'POST',
@@ -42,7 +43,7 @@ function TaskController($scope, $http, $timeout, AuthService) {
     };
     $scope.$watch('ctrl.task.content', debounceSaveUpdates);
 
-    $scope.addRow = function() {
+    $scope.addRow = function () {
         return
     }
 }
@@ -59,22 +60,23 @@ angular.module('todoApp')
 
 
 angular.module('todoApp')
-    .directive("contenteditable", function() {
+    .directive("contenteditable", function () {
         return {
             restrict: "A",
             require: "ngModel",
-            link: function(scope, element, attrs, ngModel) {
+            link: function (scope, element, attrs, ngModel) {
 
-                ngModel.$render = function() {
+                ngModel.$render = function () {
                     element.html(ngModel.$viewValue || "");
                 };
 
-                element.on("blur keyup change", function() {
+                element.on("blur keyup change", function () {
                     scope.$apply(read);
                 });
                 ngModel.$render();
 
                 function read() {
+                    console.log(element.html());
                     var html = element.html();
                     // When we clear the content editable the browser leaves a <br> behind
                     // If strip-br attribute is provided then we strip this out

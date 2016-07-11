@@ -1,4 +1,4 @@
-var todoApp = angular.module("todoApp", ['ngRoute', 'ui.bootstrap']);
+var todoApp = angular.module("todoApp", ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngAria']);
 
 // todoApp.config(['$interpolateProvider', function ($interpolateProvider) {
 //     $interpolateProvider.startSymbol('{[');
