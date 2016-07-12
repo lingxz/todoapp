@@ -1,5 +1,8 @@
 <div>
-    <div ng-click="isCollapsed = !isCollapsed">
+    <div>
+        <span class="pull-left">
+            <i class="material-icons" style="cursor: pointer" ng-click="isCollapsed = !isCollapsed">add</i> &nbsp;
+        </span>
         <!-- Are we able to not use span for this? -->
         <span contenteditable ng-model="ctrl.task.content" ng-class="{'done-text':ctrl.task.done}">
             {{ ctrl.task.content }}
