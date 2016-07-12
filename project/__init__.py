@@ -151,6 +151,8 @@ def add_task():
         date_string_start = date_time[0][2]
         date_string_end = date_time[0][3]
         content = data[:date_string_start].rstrip() + data[date_string_end:]
+        if not content.strip():
+            content = data
 
     else:
         dt = None
