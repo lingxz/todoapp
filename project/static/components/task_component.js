@@ -66,6 +66,19 @@ function TaskController($scope, $http, $timeout, AuthService) {
     $scope.getToday = function () {
         var today = new Date();
         return today;
+    };
+
+    $scope.removeDate = function () {
+        var task = $scope.ctrl.task;
+        task.due_date = null;
+        $http({
+            method: 'POST',
+            url: '/remove_date',
+            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+            data: {
+                id: task.id
+            }
+        })
     }
 }
 

@@ -213,6 +213,17 @@ def edit_date():
     db.session.commit()
     return new_date.strftime("%d/%m/%Y %H:%M:%S")
 
+
+@app.route('/remove_date', methods=['POST'])
+@login_required
+def remove_date():
+    id = request.json['id']
+    current_task = Task.query.filter_by(id=id).first()
+    current_task.due_date = None
+    db.session.commit()
+    return 'OK'
+
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
