@@ -20,7 +20,7 @@
 
             <!--TODO: minimum date not working-->
             <!--TODO: dropdown doesn't close properly after selecting, no idea why-->
-            <ul ng-click="isOpen=false" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 <datetimepicker data-ng-model="ctrl.newDate"
                                 min="ctrl.getToday()"
                                 data-on-set-time="onTimeSet(newDate, oldDate)"

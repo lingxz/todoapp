@@ -2,7 +2,7 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $http, $timeout, AuthService) {
+function TaskController($scope, $http, $timeout, AuthService, keyboardManager) {
     $scope.isCollapsed = true;
     $scope.markAsDone = function (task) {
         $http({
@@ -79,7 +79,21 @@ function TaskController($scope, $http, $timeout, AuthService) {
                 id: task.id
             }
         })
-    }
+    };
+
+    // trying the keyboard thing
+    $scope.logs = [];
+
+    var addLog = function(label) {
+        $scope.logs.push(label);
+    };
+
+    // bind ctrl + backspace
+    keyboardManager.bind('ctrl+enter', function () {
+        addLog('Callback ctrl+enter')
+    });
+
+    //TODO: figure out how to actually use this
 }
 
 angular.module('todoApp')
