@@ -9,7 +9,7 @@
         </span>
 
         <span class="pull-right" ng-class="{'done-text':ctrl.task.done}">
-            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
+            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="" ng-class="{'done-text':ctrl.task.done}">
                 <i class="material-icons"
                ng-show="ctrl.task.due_date"
                uib-tooltip="{{ ctrl.task.due_date }}"
