@@ -202,6 +202,17 @@ def edit_task():
     db.session.commit()
     return 'OK'
 
+@app.route('/edit_date', methods=['POST'])
+@login_required
+def edit_date():
+    id = request.json['id']
+    new_date = request.json['date']
+    new_date = datetime.strptime(new_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+    current_task = Task.query.filter_by(id=id).first()
+    current_task.due_date = new_date
+    db.session.commit()
+    return new_date.strftime("%d/%m/%Y %H:%M:%S")
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')

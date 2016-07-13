@@ -45,6 +45,27 @@ function TaskController($scope, $http, $timeout, AuthService) {
 
     $scope.addRow = function () {
         return
+    };
+
+    $scope.onTimeSet = function (newTime, oldTime) {
+        var task = $scope.ctrl.task;
+        // TODO: somewhere here it's sending the time that's one hour earlier, probably something to do with timezone
+        $http({
+            method: 'POST',
+            url: '/edit_date',
+            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+            data: {
+                id: task.id,
+                date: newTime
+            }
+        }).then(function (response) {
+            task.due_date = response.data;
+        })
+    };
+
+    $scope.getToday = function () {
+        var today = new Date();
+        return today;
     }
 }
 

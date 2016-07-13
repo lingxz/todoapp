@@ -7,12 +7,29 @@
         <span contenteditable ng-model="ctrl.task.content" ng-class="{'done-text':ctrl.task.done}">
             {{ ctrl.task.content }}
         </span>
+
         <span class="pull-right" ng-class="{'done-text':ctrl.task.done}">
-            <i class="material-icons"
+            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
+                <i class="material-icons"
                ng-show="ctrl.task.due_date"
                uib-tooltip="{{ ctrl.task.due_date }}"
                tooltip-placement="top"
                style="cursor: pointer">alarm</i>
+            </a>
+
+
+            <!--TODO: minimum date not working-->
+            <!--TODO: dropdown doesn't close properly after selecting, no idea why-->
+            <ul ng-click="isOpen=false" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker data-ng-model="ctrl.newDate"
+                                min="ctrl.getToday()"
+                                data-on-set-time="onTimeSet(newDate, oldDate)"
+                                data-datetimepicker-config="{ dropdownSelector: '.dropdown-toggle' }"></datetimepicker>
+                <!--TODO: center this button-->
+                <a class="text-center" href="">
+                    Remove alarm
+                </a>
+            </ul>
 
             <i class="material-icons" ng-click="markAsDone(ctrl.task)" style="cursor: pointer">done</i>
 
