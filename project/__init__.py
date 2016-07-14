@@ -113,16 +113,16 @@ def logout():
 def retrieve_tasks():
     """Swap to a post request because you are sending data"""
     # Support for the reverse query here
-    tasks = Task.query.\
-        filter(Task.user_id == session['user_id']).\
-        order_by(Task.id.desc()).\
+    tasks = Task.query. \
+        filter(Task.user_id == session['user_id']). \
+        order_by(Task.id.desc()). \
         limit(10)
 
     todo_list = []
     for task in tasks:
         if task.due_date:
             # convert datetime object to string before sending
-            due_date = task.due_date.strftime("%d/%m/%Y %H:%M:%S")
+            due_date = task.due_date.strftime("%Y/%m/%d %H:%M:%S")
         else:
             due_date = None
         task_item = {
@@ -192,6 +192,7 @@ def get_user_preferences():
     show_completed_task = User.query.filter_by(id=id).first().show_completed_task
     return json.dumps({'show_completed_task': show_completed_task})
 
+
 @app.route('/edit_task', methods=['POST'])
 @login_required
 def edit_task():
@@ -202,6 +203,7 @@ def edit_task():
     db.session.commit()
     return 'OK'
 
+
 @app.route('/edit_date', methods=['POST'])
 @login_required
 def edit_date():
@@ -211,7 +213,7 @@ def edit_date():
     current_task = Task.query.filter_by(id=id).first()
     current_task.due_date = new_date
     db.session.commit()
-    return new_date.strftime("%d/%m/%Y %H:%M:%S")
+    return new_date.strftime("%Y/%m/%d %H:%M:%S")
 
 
 @app.route('/remove_date', methods=['POST'])

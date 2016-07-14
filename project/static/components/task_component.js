@@ -50,6 +50,8 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager) {
     $scope.onTimeSet = function (newTime, oldTime) {
         var task = $scope.ctrl.task;
         // TODO: somewhere here it's sending the time that's one hour earlier, probably something to do with timezone
+        // My time has issues as well
+        console.log($scope.ctrl);
         $http({
             method: 'POST',
             url: '/edit_date',
@@ -64,7 +66,7 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager) {
     };
 
     $scope.getToday = function () {
-        var today = new Date();
+        var today = moment();
         return today;
     };
 
