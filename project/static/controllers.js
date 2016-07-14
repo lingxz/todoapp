@@ -99,6 +99,10 @@ todoApp.controller("mainController", [
             $scope.addTask("");
         });
 
+        $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
+            $scope.retrieveLastNItems($scope.retrieveNr)
+        });
+
         $scope.addTask = function (content) {
             $http({
                 url: '/add',

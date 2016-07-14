@@ -226,6 +226,16 @@ def remove_date():
     return 'OK'
 
 
+@app.route('/delete_task', methods=['POST'])
+@login_required
+def delete_task():
+    id = request.json['id']
+    current_task = db.session.query(Task).get(id)
+    db.session.delete(current_task)
+    db.session.commit()
+    return 'OK'
+
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')

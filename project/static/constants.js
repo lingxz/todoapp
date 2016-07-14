@@ -17,5 +17,6 @@ angular.module('todoApp')
         hideCompletedTasks: 'hide-completed-tasks'
     })
     .constant('TASK_EVENTS', {
-        addNewEmptyTask: 'add-new-empty-task'
+        addNewEmptyTask: 'add-new-empty-task',
+        refreshTaskList: 'refresh-task-list'
     });

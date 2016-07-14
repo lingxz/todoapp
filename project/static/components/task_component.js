@@ -2,7 +2,8 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $http, $timeout, AuthService, keyboardManager, TASK_EVENTS) {
+function TaskController($scope, $http, $timeout, AuthService, keyboardManager, TASK_EVENTS, hotkeys) {
+    var task = $scope.ctrl.task
     $scope.isCollapsed = true;
     $scope.markAsDone = function (task) {
         $http({
@@ -84,19 +85,29 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager, T
         $scope.$emit(TASK_EVENTS.addNewEmptyTask)
     };
 
-    // trying the keyboard thing
-    $scope.logs = [];
-
-    var addLog = function(label) {
-        $scope.logs.push(label);
+    $scope.deleteTask = function(){
+        var task = $scope.ctrl.task;
+        console.log("hello");
+        console.log(task.content);
+        $http({
+            method: 'POST',
+            url: '/delete_task',
+            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+            data: {
+                id: task.id
+            }
+        }).then(function (response) {
+            $scope.$emit(TASK_EVENTS.refreshTaskList)
+        })
     };
 
-    // bind ctrl + backspace
-    keyboardManager.bind('ctrl+enter', function () {
-        addLog('Callback ctrl+enter')
-    });
 
-    //TODO: figure out how to actually use this
+    hotkeys.bindTo($scope)
+        .add({
+            combo: 'ctrl+shift+backspace',
+            description: 'delete this task',
+            callback: $scope.deleteTask
+        });
 }
 
 angular.module('todoApp')
