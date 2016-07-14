@@ -31,3 +31,9 @@ textarea.form-control {
 
 [contenteditable]:focus {
     outline: 0px solid transparent; }
+
+table{
+    border: 1px solid black;
+    table-layout: fixed;
+    width: 200px;
+}

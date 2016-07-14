@@ -1,45 +1,48 @@
-<div>
-    <div class="clearfix">
-        <span class="pull-left">
-            <i class="material-icons" style="cursor: pointer" ng-click="isCollapsed = !isCollapsed">add</i> &nbsp;
-        </span>
-        <!-- Are we able to not use span for this? -->
-        <span ng-enter="newTask()" contenteditable ng-model="ctrl.task.content"
-              ng-class="{'done-text':ctrl.task.done}">
-            {{ ctrl.task.content }}
-        </span>
+<td class="pull-left">
+    <span>
+        <i class="material-icons" style="cursor: pointer" ng-click="isCollapsed = !isCollapsed">add</i> &nbsp;
+    </span>
+</td>
 
-        <span class="pull-right" ng-class="{'done-text':ctrl.task.done}">
-            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href=""
-               ng-class="{'done-text':ctrl.task.done}">
-                <i class="material-icons"
-                   ng-show="ctrl.task.due_date"
-                   uib-tooltip="{{ ctrl.task.due_date }}"
-                   tooltip-placement="top"
-                   style="cursor: pointer">alarm</i>
+<td style="width:650px">
+    <span ng-enter="newTask()" contenteditable ng-model="ctrl.task.content"
+          ng-class="{'done-text':ctrl.task.done}">
+        {{ ctrl.task.content }}
+    </span>
+</td>
+
+<td class="pull-right">
+    <span ng-class="{'done-text':ctrl.task.done}">
+        <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href=""
+           ng-class="{'done-text':ctrl.task.done}">
+            <i class="material-icons"
+               ng-show="ctrl.task.due_date"
+               uib-tooltip="{{ ctrl.task.due_date }}"
+               tooltip-placement="top"
+               style="cursor: pointer">alarm</i>
+        </a>
+
+
+        <!--TODO: minimum date not working-->
+        <!--TODO: dropdown doesn't close properly after selecting, no idea why-->
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="ctrl.task.due_date"
+                            minView="ctrl.getToday()"
+                            data-on-set-time="onTimeSet(newDate, oldDate)"
+                            data-datetimepicker-config="{ dropdownSelector: '.dropdown-toggle' }"></datetimepicker>
+            <!--TODO: center this button-->
+            <a class="text-center" href="" ng-click="removeDate()">
+                Remove alarm
             </a>
+        </ul>
 
+        <i class="material-icons" ng-click="markAsDone(ctrl.task)" style="cursor: pointer">done</i>
 
-            <!--TODO: minimum date not working-->
-            <!--TODO: dropdown doesn't close properly after selecting, no idea why-->
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <datetimepicker data-ng-model="ctrl.task.due_date"
-                                minView="ctrl.getToday()"
-                                data-on-set-time="onTimeSet(newDate, oldDate)"
-                                data-datetimepicker-config="{ dropdownSelector: '.dropdown-toggle' }"></datetimepicker>
-                <!--TODO: center this button-->
-                <a class="text-center" href="" ng-click="removeDate()">
-                    Remove alarm
-                </a>
-            </ul>
+        <!--clear all subtasks button, do this when we actually have subtasks-->
+        <i class="material-icons" style="cursor: pointer">done_all</i>
+    </span>
+</td>
 
-            <i class="material-icons" ng-click="markAsDone(ctrl.task)" style="cursor: pointer">done</i>
-
-            <!--clear all subtasks button, do this when we actually have subtasks-->
-            <i class="material-icons" style="cursor: pointer">done_all</i>
-        </span>
-    </div>
-    <div uib-collapse="isCollapsed">
-        Generate a list of subposts here
-    </div>
+<div uib-collapse="isCollapsed">
+    Generate a list of subposts here
 </div>

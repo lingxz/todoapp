@@ -1,4 +1,10 @@
-var todoApp = angular.module("todoApp", ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngAria', 'ui.bootstrap.datetimepicker']);
+var todoApp = angular.module("todoApp", [
+    'ngRoute',
+    'ui.bootstrap',
+    'ngAnimate',
+    'ngAria',
+    'ui.bootstrap.datetimepicker',
+    'smart-table']);
 
 // todoApp.config(['$interpolateProvider', function ($interpolateProvider) {
 //     $interpolateProvider.startSymbol('{[');
