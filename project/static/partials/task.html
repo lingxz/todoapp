@@ -6,8 +6,12 @@
 
 <td>
     <div ng-enter="newTask()" contenteditable ng-model="ctrl.task.content"
-          ng-class="{'done-text':ctrl.task.done}">
+         ng-class="{'done-text':ctrl.task.done}">
         {{ ctrl.task.content }}
+    </div>
+
+    <div uib-collapse="isCollapsed">
+        Generate a list of subposts here
     </div>
 </td>
 
@@ -42,8 +46,3 @@
         <i class="material-icons" style="cursor: pointer">done_all</i>
     </div>
 </td>
-
-
-<div uib-collapse="isCollapsed">
-    Generate a list of subposts here
-</div>

@@ -85,10 +85,9 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager, T
         $scope.$emit(TASK_EVENTS.addNewEmptyTask)
     };
 
-    $scope.deleteTask = function(){
+    $scope.deleteTask = function () {
         var task = $scope.ctrl.task;
-        console.log("hello");
-        console.log(task.content);
+        console.log($scope);
         $http({
             method: 'POST',
             url: '/delete_task',
