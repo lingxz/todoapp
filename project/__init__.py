@@ -139,8 +139,8 @@ def retrieve_tasks():
 @login_required
 def add_task():
     data = request.json['content']
-    if not data:
-        return redirect('/')
+    # if not data:
+    #     return redirect('/')
 
     cal = pdt.Calendar()
     date_time = cal.nlp(data)

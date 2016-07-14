@@ -15,4 +15,7 @@ angular.module('todoApp')
     .constant('USER_PREFERENCES', {
         showCompletedTasks: 'show-completed-tasks',
         hideCompletedTasks: 'hide-completed-tasks'
+    })
+    .constant('TASK_EVENTS', {
+        addNewEmptyTask: 'add-new-empty-task'
     });

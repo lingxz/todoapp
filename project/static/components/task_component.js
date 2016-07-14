@@ -2,7 +2,7 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $http, $timeout, AuthService, keyboardManager) {
+function TaskController($scope, $http, $timeout, AuthService, keyboardManager, TASK_EVENTS) {
     $scope.isCollapsed = true;
     $scope.markAsDone = function (task) {
         $http({
@@ -43,10 +43,6 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager) {
     };
     $scope.$watch('ctrl.task.content', debounceSaveUpdates);
 
-    $scope.addRow = function () {
-        return
-    };
-
     $scope.onTimeSet = function (newTime, oldTime) {
         var task = $scope.ctrl.task;
         // TODO: somewhere here it's sending the time that's one hour earlier, probably something to do with timezone
@@ -81,6 +77,11 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager) {
                 id: task.id
             }
         })
+    };
+
+    $scope.newTask = function () {
+        // only fire event to parent scope
+        $scope.$emit(TASK_EVENTS.addNewEmptyTask)
     };
 
     // trying the keyboard thing
@@ -126,7 +127,6 @@ angular.module('todoApp')
                 ngModel.$render();
 
                 function read() {
-                    console.log(element.html());
                     var html = element.html();
                     // When we clear the content editable the browser leaves a <br> behind
                     // If strip-br attribute is provided then we strip this out

@@ -89,30 +89,32 @@ todoApp.controller("mainController", [
     '$http',
     'AuthService',
     'USER_PREFERENCES',
-    function ($scope, $rootScope, $http, AuthService, USER_PREFERENCES) {
+    'TASK_EVENTS',
+    function ($scope, $rootScope, $http, AuthService, USER_PREFERENCES, TASK_EVENTS) {
         $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
         $scope.retrieveNr = 10;
-        $scope.addTask = function () {
-            if (!$scope.newtask) {
-                return
-            } else {
-                $http({
-                    url: '/add',
-                    method: "POST",
-                    headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                    data: {
-                        content: $scope.newtask,
-                        duedate: 2015,
-                        user_id: AuthService.getCurrentUserID()
-                    } //TODO: add input date
-                }).then(function (response) {
-                    $scope.retrieveLastNItems($scope.retrieveNr);
-                    $scope.newtask = ""
-                }, function (error) {
-                    console.log(error)
-                })
-            }
+
+        $scope.$on(TASK_EVENTS.addNewEmptyTask, function (next, current) {
+            $scope.addTask("");
+        });
+
+        $scope.addTask = function (content) {
+            $http({
+                url: '/add',
+                method: "POST",
+                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+                data: {
+                    content: content,
+                    duedate: 2015,
+                    user_id: AuthService.getCurrentUserID()
+                } //TODO: add input date
+            }).then(function (response) {
+                $scope.retrieveLastNItems($scope.retrieveNr);
+                $scope.newtask = ""
+            }, function (error) {
+                console.log(error)
+            });
             $scope.newtask = ""
         };
 
