@@ -10,37 +10,43 @@
         {{ ctrl.task.content }}
     </div>
 
-    <div uib-collapse="isCollapsed">
+    <div uib-collapse="isCollapsed" ng-class="{'done-text':ctrl.task.done}">
         Generate a list of subposts here
     </div>
 </td>
 
 <td class="pull-right">
     <div ng-class="{'done-text':ctrl.task.done}">
-        <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href=""
+        <i class="material-icons"
+           ng-show="ctrl.task.due_date"
+           uib-tooltip="{{ ctrl.task.due_date }}"
+           tooltip-placement="top"
+           style="cursor: pointer"
+           ng-click="callDateTimePicker()">alarm</i>
+        <!--<a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href=""
            ng-class="{'done-text':ctrl.task.done}">
             <i class="material-icons"
                ng-show="ctrl.task.due_date"
                uib-tooltip="{{ ctrl.task.due_date }}"
                tooltip-placement="top"
                style="cursor: pointer">alarm</i>
-        </a>
+        </a>-->
 
 
         <!--TODO: minimum date not working-->
         <!--TODO: dropdown doesn't close properly after selecting, no idea why-->
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <datetimepicker data-ng-model="ctrl.task.due_date"
+        <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <!--<datetimepicker data-ng-model="ctrl.task.due_date"
                             minView="ctrl.getToday()"
                             data-on-set-time="onTimeSet(newDate, oldDate)"
-                            data-datetimepicker-config="{ dropdownSelector: '.dropdown-toggle' }"></datetimepicker>
-            <!--TODO: center this button-->
-            <a class="text-center" href="" ng-click="removeDate()">
-                Remove alarm
-            </a>
-        </ul>
+                            data-datetimepicker-config="{ dropdownSelector: '.dropdown-toggle' }"></datetimepicker>-->
+        <!--TODO: center this button
+        <a class="text-center" href="" ng-click="removeDate()">
+            Remove alarm
+        </a>
+    </ul>-->
 
-        <i class="material-icons" ng-click="markAsDone(ctrl.task)" style="cursor: pointer">done</i>
+        <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done</i>
 
         <!--clear all subtasks button, do this when we actually have subtasks-->
         <i class="material-icons" style="cursor: pointer">done_all</i>

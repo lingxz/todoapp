@@ -3,9 +3,9 @@
  */
 
 function TaskController($scope, $http, $timeout, AuthService, keyboardManager, TASK_EVENTS, hotkeys) {
-    var task = $scope.ctrl.task
+    var task = $scope.ctrl.task;
     $scope.isCollapsed = true;
-    $scope.markAsDone = function (task) {
+    $scope.markAsDone = function () {
         $http({
             method: 'POST',
             url: '/markdone',
@@ -43,6 +43,11 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager, T
         }
     };
     $scope.$watch('ctrl.task.content', debounceSaveUpdates);
+
+    $scope.callDateTimePicker = function () {
+        console.log("trigger date time picker");
+        console.log(task.id);
+    };
 
     $scope.onTimeSet = function (newTime, oldTime) {
         var task = $scope.ctrl.task;
