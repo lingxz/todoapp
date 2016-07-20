@@ -2,7 +2,7 @@
  * Created by mark on 7/17/16.
  */
 
-function dateTimeBoxController($scope, $rootScope, TASK_EVENTS) {
+function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK_EVENTS) {
     // TODO: need to make datetimepicker opaque, now it's transparent
 
     $scope.visibility = "hidden";
@@ -11,15 +11,6 @@ function dateTimeBoxController($scope, $rootScope, TASK_EVENTS) {
     };
 
     cur_task = null;
-    $scope.$on(TASK_EVENTS.summonDatePicker, function (event, data) {
-        if ($scope.visibility === "hidden") {
-            $scope.showBox(data.cur_pos);
-            cur_task = data.task_id
-        } else if ($scope.visibility === "show" && data.task_id === cur_task) {
-            // if alarm button is clicked the second time, close box
-            $scope.hideBox()
-        }
-    });
 
     $scope.showBox = function (cur_position) {
         $scope.posx = cur_pos[0];
@@ -27,9 +18,47 @@ function dateTimeBoxController($scope, $rootScope, TASK_EVENTS) {
         $scope.visibility = "show";
     };
 
-    $scope.hideBox = function () {
+    $scope.closeBox = function () {
         $scope.visibility = "hidden"
-    }
+    };
+
+    $scope.$watch(DatetimeService.getCursorPos,
+        function (cur_pos, oldvalue) {
+            if (cur_pos){
+                task_id = DatetimeService.getCurTask();
+                if ($scope.visibility == "hidden") {
+                    $scope.showBox(cur_pos);
+                    cur_task = task_id
+                } else if ($scope.visibility === "show" && task_id === cur_task) {
+                    $scope.closeBox()
+                }
+            }
+        });
+
+    $scope.chosenTime = null;
+    $scope.$watch('chosenTime', function(){
+        if ($scope.chosenTime) {
+            // close box when user selects a time
+            $scope.closeBox();
+            $scope.setTime($scope.chosenTime);
+        }
+    });
+
+    $scope.setTime = function(newTime) { // should i edit task date here or from task controller?
+        $http({
+            method: 'POST',
+            url: '/edit_date',
+            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+            data: {
+                id: cur_task,
+                date: newTime
+            }
+        }).then(function (response) {
+            $scope.$emit(TASK_EVENTS.refreshTaskList)
+        }, function (error) {
+            console.log(error);
+        });
+    };
 
 }
 

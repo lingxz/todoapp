@@ -2,7 +2,7 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $rootScope, $http, $timeout, AuthService, keyboardManager, TASK_EVENTS, hotkeys) {
+function TaskController($scope, $http, $timeout, AuthService, DatetimeService, keyboardManager, TASK_EVENTS, hotkeys) {
     var task = $scope.ctrl.task;
     $scope.isCollapsed = true;
     $scope.markAsDone = function () {
@@ -46,33 +46,7 @@ function TaskController($scope, $rootScope, $http, $timeout, AuthService, keyboa
 
     $scope.callDateTimePicker = function (event) {
         cur_pos = [event.originalEvent.pageX - 300, event.originalEvent.pageY - 350];
-        $rootScope.$broadcast(TASK_EVENTS.summonDatePicker, {
-            cur_pos: cur_pos,
-            task_id: task.id
-        });
-    };
-
-    $scope.onTimeSet = function (newTime, oldTime) {
-        var task = $scope.ctrl.task;
-        // TODO: somewhere here it's sending the time that's one hour earlier, probably something to do with timezone
-        // My time has issues as well
-        console.log($scope.ctrl);
-        $http({
-            method: 'POST',
-            url: '/edit_date',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id,
-                date: newTime
-            }
-        }).then(function (response) {
-            task.due_date = response.data;
-        })
-    };
-
-    $scope.getToday = function () {
-        var today = moment();
-        return today;
+        DatetimeService.setCursorPos(cur_pos, task.id);
     };
 
     $scope.removeDate = function () {
