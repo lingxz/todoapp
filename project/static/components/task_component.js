@@ -2,7 +2,7 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $rootScope, $http, $timeout, AuthService, DatetimeService, keyboardManager, TASK_EVENTS, hotkeys) {
+function TaskController($scope, $rootScope, $http, $timeout, AuthService, keyboardManager, TASK_EVENTS, hotkeys) {
     var task = $scope.ctrl.task;
     $scope.isCollapsed = true;
     $scope.markAsDone = function () {
