@@ -35,3 +35,10 @@ textarea.form-control {
 .table{
     border: none;
 }
+
+.show {
+  display: block !important;
+}
+.hidden {
+  display: none !important;
+}

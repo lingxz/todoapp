@@ -18,5 +18,6 @@ angular.module('todoApp')
     })
     .constant('TASK_EVENTS', {
         addNewEmptyTask: 'add-new-empty-task',
-        refreshTaskList: 'refresh-task-list'
+        refreshTaskList: 'refresh-task-list',
+        summonDatePicker: 'summon-date-picker'
     });

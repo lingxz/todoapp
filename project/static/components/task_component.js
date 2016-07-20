@@ -2,7 +2,7 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $http, $timeout, AuthService, keyboardManager, TASK_EVENTS, hotkeys) {
+function TaskController($scope, $rootScope, $http, $timeout, AuthService, DatetimeService, keyboardManager, TASK_EVENTS, hotkeys) {
     var task = $scope.ctrl.task;
     $scope.isCollapsed = true;
     $scope.markAsDone = function () {
@@ -44,9 +44,12 @@ function TaskController($scope, $http, $timeout, AuthService, keyboardManager, T
     };
     $scope.$watch('ctrl.task.content', debounceSaveUpdates);
 
-    $scope.callDateTimePicker = function () {
-        console.log("trigger date time picker");
-        console.log(task.id);
+    $scope.callDateTimePicker = function (event) {
+        cur_pos = [event.originalEvent.pageX - 300, event.originalEvent.pageY - 350];
+        $rootScope.$broadcast(TASK_EVENTS.summonDatePicker, {
+            cur_pos: cur_pos,
+            task_id: task.id
+        });
     };
 
     $scope.onTimeSet = function (newTime, oldTime) {
