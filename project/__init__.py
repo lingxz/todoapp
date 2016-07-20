@@ -209,7 +209,7 @@ def edit_task():
 def edit_date():
     id = request.json['id']
     new_date = request.json['date']
-    new_date = datetime.strptime(new_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+    new_date = datetime.strptime(new_date, '%a %b %d %Y %H:%M:%S GMT%z (%Z)')
     current_task = Task.query.filter_by(id=id).first()
     current_task.due_date = new_date
     db.session.commit()

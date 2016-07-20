@@ -24,7 +24,7 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK
 
     $scope.$watch(DatetimeService.getCursorPos,
         function (cur_pos, oldvalue) {
-            if (cur_pos){
+            if (cur_pos) {
                 task_id = DatetimeService.getCurTask();
                 if ($scope.visibility == "hidden") {
                     $scope.showBox(cur_pos);
@@ -36,7 +36,7 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK
         });
 
     $scope.chosenTime = null;
-    $scope.$watch('chosenTime', function(){
+    $scope.$watch('chosenTime', function () {
         if ($scope.chosenTime) {
             // close box when user selects a time
             $scope.closeBox();
@@ -44,14 +44,15 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK
         }
     });
 
-    $scope.setTime = function(newTime) { // should i edit task date here or from task controller?
+    $scope.setTime = function (newTime) { // should i edit task date here or from task controller?
+        console.log(newTime);
         $http({
             method: 'POST',
             url: '/edit_date',
             headers: {Authorization: 'Bearer ' + AuthService.getToken()},
             data: {
                 id: cur_task,
-                date: newTime
+                date: newTime.toString()
             }
         }).then(function (response) {
             $scope.$emit(TASK_EVENTS.refreshTaskList)
