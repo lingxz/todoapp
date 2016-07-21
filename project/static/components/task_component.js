@@ -69,7 +69,6 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
 
     $scope.deleteTask = function () {
         var task = $scope.ctrl.task;
-        console.log($scope);
         $http({
             method: 'POST',
             url: '/delete_task',

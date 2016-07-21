@@ -42,3 +42,24 @@ textarea.form-control {
 .hidden {
   display: none !important;
 }
+
+.fixed-width-26 {
+    width: 26px;
+}
+
+.fixed-width-80 {
+    width: 80px;
+}
+
+.fluid-column {
+    float:left;
+    width: calc(100% - 120px);
+}
+
+.text-container textarea{
+    resize: none;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: none;
+}

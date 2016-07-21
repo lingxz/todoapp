@@ -1,22 +1,28 @@
-<td class="pull-left">
+<td class="pull-left fixed-width-26">
     <div>
         <i class="material-icons" style="cursor: pointer" ng-click="isCollapsed = !isCollapsed">add</i>
     </div>
 </td>
 
-<td>
-    <div ng-enter="newTask()" contenteditable ng-model="ctrl.task.content"
-         ng-class="{'done-text':ctrl.task.done}">
-        {{ ctrl.task.content }}
+<td class="fluid-column">
+    <!--<div ng-enter="newTask()" contenteditable ng-model="ctrl.task.content"-->
+         <!--ng-class="{'done-text':ctrl.task.done}">-->
+        <!--{{ ctrl.task.content }}-->
+    <!--</div>-->
+    <div class="text-container">
+        <textarea rows="1" msd-elastic ng-model="ctrl.task.content">
+            {{ ctrl.task.content }}
+        </textarea>
     </div>
+
 
     <div uib-collapse="isCollapsed" ng-class="{'done-text':ctrl.task.done}">
         Generate a list of subposts here
     </div>
 </td>
 
-<td class="pull-right">
-    <div ng-class="{'done-text':ctrl.task.done}">
+<td class="pull-right fixed-width-80">
+    <div class="pull-right" ng-class="{'done-text':ctrl.task.done}">
         <i class="material-icons"
            ng-show="ctrl.task.due_date"
            uib-tooltip="{{ ctrl.task.due_date }}"

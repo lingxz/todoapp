@@ -115,8 +115,7 @@ def retrieve_tasks():
     # Support for the reverse query here
     tasks = Task.query. \
         filter(Task.user_id == session['user_id']). \
-        order_by(Task.id.desc()). \
-        limit(10)
+        order_by(Task.id.desc())
 
     todo_list = []
     for task in tasks:
