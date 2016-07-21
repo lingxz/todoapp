@@ -1,6 +1,7 @@
 <td class="pull-left fixed-width-26">
-    <div>
-        <i class="material-icons" style="cursor: pointer" ng-click="isCollapsed = !isCollapsed">add</i>
+    <div ng-class="{'done-text':ctrl.task.done}">
+        <i class="material-icons" style="cursor: pointer"
+           ng-click="isCollapsed = !isCollapsed">add</i>
     </div>
 </td>
 
@@ -10,7 +11,9 @@
         <!--{{ ctrl.task.content }}-->
     <!--</div>-->
     <div class="text-container">
-        <textarea rows="1" msd-elastic ng-model="ctrl.task.content">
+        <textarea rows="1" msd-elastic
+                  ng-model="ctrl.task.content"
+                  ng-class="{'done-text':ctrl.task.done}">
             {{ ctrl.task.content }}
         </textarea>
     </div>
