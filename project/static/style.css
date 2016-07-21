@@ -9,9 +9,9 @@ textarea.form-control {
     resize: none;
 }
 
-.material-icons:hover {
-    background-color: lightgrey;
-}
+/*.material-icons:hover {*/
+    /*background-color: lightgrey;*/
+/*}*/
 
 .material-icons.md-18 { font-size: 18px; }
 .material-icons.md-24 { font-size: 24px; }
@@ -62,4 +62,14 @@ textarea.form-control {
     height: 100%;
     outline: none;
     border: none;
+}
+
+td:focus {
+    outline: none;
+    border: 0;
+ }
+
+i:focus {
+    outline: none;
+    border: 0;
 }
