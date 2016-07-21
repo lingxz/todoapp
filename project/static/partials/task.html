@@ -13,7 +13,8 @@
     <div class="text-container">
         <textarea rows="1" msd-elastic
                   ng-model="ctrl.task.content"
-                  ng-class="{'done-text':ctrl.task.done}">
+                  ng-class="{'done-text':ctrl.task.done}"
+                  ng-enter="newTask()">
             {{ ctrl.task.content }}
         </textarea>
     </div>
