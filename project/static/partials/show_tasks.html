@@ -22,7 +22,7 @@
     <table st-table="tasks" class="table">
         <tbody>
         <tr ng-repeat="task in tasks.slice()">
-            <td ng-hide="task.done && !showCompleted"><task task="task"></task></td>
+            <td ng-hide="task.done && !showCompleted"><task task="task" ng-click="setCurrentTask(task)"></task></td>
         </tr>
         </tbody>
     </table>

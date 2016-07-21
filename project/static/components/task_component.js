@@ -67,27 +67,6 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
         $scope.$emit(TASK_EVENTS.addNewEmptyTask)
     };
 
-    $scope.deleteTask = function () {
-        var task = $scope.ctrl.task;
-        $http({
-            method: 'POST',
-            url: '/delete_task',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id
-            }
-        }).then(function (response) {
-            $scope.$emit(TASK_EVENTS.refreshTaskList)
-        })
-    };
-
-
-    hotkeys.bindTo($scope)
-        .add({
-            combo: 'ctrl+shift+backspace',
-            description: 'delete this task',
-            callback: $scope.deleteTask
-        });
 }
 
 angular.module('todoApp')

@@ -90,7 +90,8 @@ todoApp.controller("mainController", [
     'AuthService',
     'USER_PREFERENCES',
     'TASK_EVENTS',
-    function ($scope, $rootScope, $http, AuthService, USER_PREFERENCES, TASK_EVENTS) {
+    'hotkeys',
+    function ($scope, $rootScope, $http, AuthService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
         $scope.retrieveNr = 10;
@@ -146,6 +147,33 @@ todoApp.controller("mainController", [
             $scope.showCompleted = false;
         });
 
-        $scope.retrieveLastNItems($scope.retrieveNr)
+        $scope.retrieveLastNItems($scope.retrieveNr);
+
+        $scope.deleteTask = function (task) {
+            $http({
+                method: 'POST',
+                url: '/delete_task',
+                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+                data: {
+                    id: task.id
+                }
+            }).then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList)
+            })
+        };
+
+        $scope.setCurrentTask = function (task) {
+            $scope.currentTask = task;
+        };
+
+        hotkeys.bindTo($scope)
+            .add({
+                combo: 'ctrl+shift+backspace',
+                description: 'delete this task',
+                allowIn: ['TEXTAREA'],
+                callback: function (event, keypress) {
+                    $scope.deleteTask($scope.currentTask)
+                }
+            });
     }
 ]);
