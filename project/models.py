@@ -54,15 +54,21 @@ class Task(db.Model):
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())
     due_date = db.Column(db.DateTime, nullable=True)
     category = db.Column(db.Text, nullable=True)
+    lft = db.Column(db.Integer, nullable=False)
+    rgt = db.Column(db.Integer, nullable=False)
 
-    parent_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
-    sub_tasks = db.relationship("Task", backref=db.backref('parent', remote_side=[id]))
-
-    def __init__(self, content, user_id, due_date=None):
+    def __init__(self, content, user_id, due_date=None, prev_task=None):
         self.content = content
         self.due_date = due_date
         self.user_id = int(user_id)
         self.done = False
+
+        if not prev_task:
+            print("Creating the initial task")
+            self.lft = 0
+            self.rgt = 1
+        else:
+            print("Add a new task")
 
     def __repr__(self):
         return '<Content %s>' % self.content

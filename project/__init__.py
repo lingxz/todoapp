@@ -108,10 +108,7 @@ def logout():
     return jsonify({'result': 'success'})
 
 
-@app.route('/retrieve', methods=['POST'])
-@login_required
-def retrieve_tasks():
-    """Swap to a post request because you are sending data"""
+def retrieve_tasks_helper():
     # Support for the reverse query here
     tasks = Task.query. \
         filter(Task.user_id == session['user_id']). \
@@ -131,6 +128,27 @@ def retrieve_tasks():
             'done': task.done
         }
         todo_list.append(task_item)
+    return todo_list
+
+
+@app.route('/retrieve', methods=['POST'])
+@login_required
+def retrieve_tasks():
+    """Swap to a post request because you are sending data"""
+    # Support for the reverse query here
+    todo_list = retrieve_tasks_helper()
+
+    # Must generate the initial task
+    if len(todo_list) == 0:
+        task = Task(
+            content="Edit your first task",
+            user_id=session['user_id'],
+            due_date=None
+        )
+        db.session.add(task)
+        db.session.commit()
+        todo_list = retrieve_tasks_helper()
+
     return json.dumps(todo_list)
 
 
@@ -157,6 +175,7 @@ def add_task():
         dt = None
         content = data
 
+    # Prev task must now be fed in (I think)
     task = Task(
         content=content,
         user_id=request.json['user_id'],
