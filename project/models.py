@@ -57,18 +57,18 @@ class Task(db.Model):
     lft = db.Column(db.Integer, nullable=False)
     rgt = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, content, user_id, due_date=None, prev_task=None):
+    def __init__(self, content, user_id, due_date=None, my_right=None):
         self.content = content
         self.due_date = due_date
         self.user_id = int(user_id)
         self.done = False
 
-        if not prev_task:
-            print("Creating the initial task")
+        if not my_right:
             self.lft = 0
             self.rgt = 1
         else:
-            print("Add a new task")
+            self.lft = my_right + 1
+            self.rgt = my_right + 2
 
     def __repr__(self):
         return '<Content %s>' % self.content

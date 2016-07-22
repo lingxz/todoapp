@@ -2,6 +2,7 @@ import json
 from flask import Flask, request, redirect, jsonify, session
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from project.config import BaseConfig
 import jwt
 from jwt import DecodeError, ExpiredSignature
@@ -112,7 +113,7 @@ def retrieve_tasks_helper():
     # Support for the reverse query here
     tasks = Task.query. \
         filter(Task.user_id == session['user_id']). \
-        order_by(Task.id.desc())
+        order_by(Task.lft)
 
     todo_list = []
     for task in tasks:
@@ -175,12 +176,20 @@ def add_task():
         dt = None
         content = data
 
-    # Prev task must now be fed in (I think)
+    user_id = request.json['user_id']
+    my_right = Task.query.get(request.json['prev_task']).rgt
     task = Task(
         content=content,
-        user_id=request.json['user_id'],
-        due_date=dt
+        user_id=user_id,
+        due_date=dt,
+        my_right=my_right
     )
+    user_id = str(user_id)
+    # Technically this should be wrapped in a transaction
+    cmd = "UPDATE tasks SET rgt = rgt + 2 WHERE user_id =" + user_id + " AND rgt > " + str(my_right)
+    db.engine.execute(text(cmd))
+    cmd2 = "UPDATE tasks SET lft = lft + 2 WHERE user_id =" + user_id + " AND lft > " + str(my_right)
+    db.engine.execute(text(cmd2))
     db.session.add(task)
     db.session.commit()
     return 'OK'
