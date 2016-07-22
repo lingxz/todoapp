@@ -2,6 +2,7 @@ import json
 from flask import Flask, request, redirect, jsonify, session
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from project.config import BaseConfig
 import jwt
 from jwt import DecodeError, ExpiredSignature
@@ -108,14 +109,11 @@ def logout():
     return jsonify({'result': 'success'})
 
 
-@app.route('/retrieve', methods=['POST'])
-@login_required
-def retrieve_tasks():
-    """Swap to a post request because you are sending data"""
+def retrieve_tasks_helper():
     # Support for the reverse query here
     tasks = Task.query. \
         filter(Task.user_id == session['user_id']). \
-        order_by(Task.id.desc())
+        order_by(Task.lft)
 
     todo_list = []
     for task in tasks:
@@ -131,6 +129,27 @@ def retrieve_tasks():
             'done': task.done
         }
         todo_list.append(task_item)
+    return todo_list
+
+
+@app.route('/retrieve', methods=['POST'])
+@login_required
+def retrieve_tasks():
+    """Swap to a post request because you are sending data"""
+    # Support for the reverse query here
+    todo_list = retrieve_tasks_helper()
+
+    # Must generate the initial task
+    if len(todo_list) == 0:
+        task = Task(
+            content="Edit your first task",
+            user_id=session['user_id'],
+            due_date=None
+        )
+        db.session.add(task)
+        db.session.commit()
+        todo_list = retrieve_tasks_helper()
+
     return json.dumps(todo_list)
 
 
@@ -157,11 +176,20 @@ def add_task():
         dt = None
         content = data
 
+    user_id = request.json['user_id']
+    my_right = Task.query.get(request.json['prev_task']).rgt
     task = Task(
         content=content,
-        user_id=request.json['user_id'],
-        due_date=dt
+        user_id=user_id,
+        due_date=dt,
+        my_right=my_right
     )
+    user_id = str(user_id)
+    # Technically this should be wrapped in a transaction
+    cmd = "UPDATE tasks SET rgt = rgt + 2 WHERE user_id =" + user_id + " AND rgt > " + str(my_right)
+    db.engine.execute(text(cmd))
+    cmd2 = "UPDATE tasks SET lft = lft + 2 WHERE user_id =" + user_id + " AND lft > " + str(my_right)
+    db.engine.execute(text(cmd2))
     db.session.add(task)
     db.session.commit()
     return 'OK'
