@@ -137,6 +137,25 @@ def task_to_dictionary(task):
     return task_item
 
 
+def extract_datetime_from_text(data):
+    cal = pdt.Calendar()
+    date_time = cal.nlp(data)
+    if date_time and date_time[0][0] > datetime.now():  # if date is in the past, ignore date
+        # if datetime was given
+        dt = date_time[0][0]  # this defaults to 9am if no time was given
+        # here we try to remove datetime from string
+        date_string_start = date_time[0][2]
+        date_string_end = date_time[0][3]
+        content = data[:date_string_start].rstrip() + data[date_string_end:]
+        if not content.strip():
+            content = data
+
+    else:
+        dt = None
+        content = data
+    return dt, content
+
+
 @app.route('/retrieve', methods=['POST'])
 @login_required
 def retrieve_tasks():
@@ -165,21 +184,7 @@ def add_task():
     # if not data:
     #     return redirect('/')
 
-    cal = pdt.Calendar()
-    date_time = cal.nlp(data)
-    if date_time and date_time[0][0] > datetime.now():  # if date is in the past, ignore date
-        # if datetime was given
-        dt = date_time[0][0]  # this defaults to 9am if no time was given
-        # here we try to remove datetime from string
-        date_string_start = date_time[0][2]
-        date_string_end = date_time[0][3]
-        content = data[:date_string_start].rstrip() + data[date_string_end:]
-        if not content.strip():
-            content = data
-
-    else:
-        dt = None
-        content = data
+    dt, content = extract_datetime_from_text(data)
 
     user_id = request.json['user_id']
     my_right = Task.query.get(request.json['prev_task']).rgt
@@ -254,6 +259,19 @@ def remove_date():
     id = request.json['id']
     current_task = Task.query.filter_by(id=id).first()
     current_task.due_date = None
+    db.session.commit()
+    return 'OK'
+
+
+@app.route('/parse_task', methods=['POST'])
+@login_required
+def parse_task():
+    id = request.json['id']
+    text = request.json['content']
+    dt, content = extract_datetime_from_text(text)
+    current_task = Task.query.filter_by(id=id).first()
+    current_task.content = content
+    current_task.due_date = dt
     db.session.commit()
     return 'OK'
 

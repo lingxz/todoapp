@@ -35,6 +35,13 @@
            style="cursor: pointer"
            ng-click="callDateTimePicker($event)">alarm</i>
 
+        <i class="material-icons"
+           ng-hide="ctrl.task.due_date"
+           uib-tooltip="Add alarm"
+           tooltip-placement="top"
+           style="cursor: pointer"
+           ng-click="callDateTimePicker($event)">add</i>
+
         <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done</i>
 
         <!--clear all subtasks button, do this when we actually have subtasks-->
