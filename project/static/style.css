@@ -64,12 +64,7 @@ textarea.form-control {
     border: none;
 }
 
-td:focus {
+:focus {
     outline: none;
     border: 0;
  }
-
-i:focus {
-    outline: none;
-    border: 0;
-}

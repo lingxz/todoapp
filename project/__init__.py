@@ -117,19 +117,24 @@ def retrieve_tasks_helper():
 
     todo_list = []
     for task in tasks:
-        if task.due_date:
-            # convert datetime object to string before sending
-            due_date = task.due_date.strftime("%Y/%m/%d %H:%M:%S")
-        else:
-            due_date = None
-        task_item = {
-            'id': task.id,
-            'content': task.content,
-            'due_date': due_date,
-            'done': task.done
-        }
+        task_item = task_to_dictionary(task)
         todo_list.append(task_item)
     return todo_list
+
+
+def task_to_dictionary(task):
+    if task.due_date:
+        # convert datetime object to string before sending
+        due_date = task.due_date.strftime("%Y/%m/%d %H:%M:%S")
+    else:
+        due_date = None
+    task_item = {
+        'id': task.id,
+        'content': task.content,
+        'due_date': due_date,
+        'done': task.done
+    }
+    return task_item
 
 
 @app.route('/retrieve', methods=['POST'])
@@ -192,7 +197,7 @@ def add_task():
     db.engine.execute(text(cmd2))
     db.session.add(task)
     db.session.commit()
-    return 'OK'
+    return json.dumps(task_to_dictionary(task))
 
 
 @app.route('/markdone', methods=['POST'])
