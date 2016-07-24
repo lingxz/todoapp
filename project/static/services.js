@@ -132,19 +132,28 @@ angular.module('todoApp').factory('AuthService',
                 }
             }
 
-            function getUserPreference(user) { // should this be in another service?
+            function getUserPreference() { // should this be in another service?
+                var show_completed = true;
                 $http({
-                    method: 'POST',
+                    method: 'GET',
                     url: '/api/user_preferences',
-                    headers: {Authorization: 'Bearer ' + getToken()},
-                    data: {user: user}
+                    headers: {Authorization: 'Bearer ' + getToken()}
                 })
                     .success(function (response) {
-                        return response.data
+                        show_completed = response.show_completed_task;
                     })
                     .error(function (error) {
                         console.log(error);
                     });
+
+                return show_completed
+            }
+
+            function updateShowTaskPref(option) {
+                if (option == false) {
+                    return false;
+                }
+                return true;
             }
 
             // return available functions for use in controllers
@@ -156,7 +165,8 @@ angular.module('todoApp').factory('AuthService',
                 getCurrentUser: getCurrentUser,
                 getCurrentUserID: getCurrentUserID,
                 getToken: getToken,
-                getUserPreference: getUserPreference
+                getUserPreference: getUserPreference,
+                updateShowTaskPref: updateShowTaskPref
             });
 
         }]);

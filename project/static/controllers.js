@@ -139,12 +139,14 @@ todoApp.controller("mainController", [
             });
         };
 
-        $scope.showCompleted = true;  //TODO: need to change default
+        $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
         $rootScope.$on(USER_PREFERENCES.showCompletedTasks, function (next, current) {
             $scope.showCompleted = true;
+            AuthService.updateShowTaskPref(true)
         });
         $rootScope.$on(USER_PREFERENCES.hideCompletedTasks, function (next, current) {
             $scope.showCompleted = false;
+            AuthService.updateShowTaskPref(false)
         });
 
         $scope.retrieveLastNItems($scope.retrieveNr);

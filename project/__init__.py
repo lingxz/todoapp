@@ -208,10 +208,10 @@ def add_task():
 @app.route('/markdone', methods=['POST'])
 @login_required
 def mark_as_done():
-    id = request.json['id']
-    if not id:
+    uid = request.json['id']
+    if not uid:
         return redirect('/')
-    current_task = Task.query.filter_by(id=id).first()
+    current_task = Task.query.filter_by(id=uid).first()
     if current_task.done:
         current_task.done = False
         db.session.commit()
@@ -222,20 +222,28 @@ def mark_as_done():
         return json.dumps({'done': True})
 
 
-@app.route('/api/user_preferences', methods=['POST'])
+@app.route('/api/user_preferences', methods=['GET'])
 @login_required
 def get_user_preferences():
-    id = request.json['user']['id']
-    show_completed_task = User.query.filter_by(id=id).first().show_completed_task
-    return json.dumps({'show_completed_task': show_completed_task})
+    uid = session['user_id']
+    current_user = User.query.filter_by(id=uid).first()
+    return json.dumps({'show_completed_task': current_user.show_completed_task})
+
+
+@app.route('/api/user_preferences/show_task_toggle', methods=['GET'])
+@login_required
+def show_task_toggle():
+    uid = session['user_id']
+    current_user = User.query.filter_by(id=uid).first()
+    return json.dumps({'show_completed_task': current_user.show_completed_task})
 
 
 @app.route('/edit_task', methods=['POST'])
 @login_required
 def edit_task():
-    id = request.json['id']
+    uid = request.json['id']
     content = request.json['content']
-    current_task = Task.query.filter_by(id=id).first()
+    current_task = Task.query.filter_by(id=uid).first()
     current_task.content = content
     db.session.commit()
     return 'OK'
@@ -244,10 +252,10 @@ def edit_task():
 @app.route('/edit_date', methods=['POST'])
 @login_required
 def edit_date():
-    id = request.json['id']
+    uid = request.json['id']
     new_date = request.json['date']
     new_date = datetime.strptime(new_date, '%a %b %d %Y %H:%M:%S GMT%z (%Z)')
-    current_task = Task.query.filter_by(id=id).first()
+    current_task = Task.query.filter_by(id=uid).first()
     current_task.due_date = new_date
     db.session.commit()
     return new_date.strftime("%Y/%m/%d %H:%M:%S")
@@ -256,8 +264,8 @@ def edit_date():
 @app.route('/remove_date', methods=['POST'])
 @login_required
 def remove_date():
-    id = request.json['id']
-    current_task = Task.query.filter_by(id=id).first()
+    uid = request.json['id']
+    current_task = Task.query.filter_by(id=uid).first()
     current_task.due_date = None
     db.session.commit()
     return 'OK'
@@ -266,10 +274,10 @@ def remove_date():
 @app.route('/parse_task', methods=['POST'])
 @login_required
 def parse_task():
-    id = request.json['id']
-    text = request.json['content']
-    dt, content = extract_datetime_from_text(text)
-    current_task = Task.query.filter_by(id=id).first()
+    uid = request.json['id']
+    my_text = request.json['content']
+    dt, content = extract_datetime_from_text(my_text)
+    current_task = Task.query.filter_by(id=uid).first()
     current_task.content = content
     current_task.due_date = dt
     db.session.commit()
@@ -279,8 +287,8 @@ def parse_task():
 @app.route('/delete_task', methods=['POST'])
 @login_required
 def delete_task():
-    id = request.json['id']
-    current_task = db.session.query(Task).get(id)
+    uid = request.json['id']
+    current_task = db.session.query(Task).get(uid)
     db.session.delete(current_task)
     db.session.commit()
     return 'OK'

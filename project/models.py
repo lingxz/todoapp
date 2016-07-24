@@ -23,6 +23,7 @@ class User(db.Model):
         self.password = bcrypt.generate_password_hash(str(password))
         self.registered_on = datetime.datetime.now()
         self.username = username
+        self.show_completed_task = True
         self.admin = admin
 
     def is_active(self):
@@ -39,9 +40,6 @@ class User(db.Model):
     def is_anonymous(self):
         """True, as anonymous users are supported."""
         return True
-
-    def __repr__(self):
-        return '<User {0}>'.format(self.email)
 
 
 class Task(db.Model):
