@@ -139,14 +139,18 @@ todoApp.controller("mainController", [
             });
         };
 
-        $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
+        // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
+        var promise = AuthService.getUserPreference(); // TODO: need to store user preference, cannot always default to true
+        promise.then(function (value) {
+            $scope.showCompleted = value;
+        });
         $rootScope.$on(USER_PREFERENCES.showCompletedTasks, function (next, current) {
+            AuthService.updateShowTaskPref(true);
             $scope.showCompleted = true;
-            AuthService.updateShowTaskPref(true)
         });
         $rootScope.$on(USER_PREFERENCES.hideCompletedTasks, function (next, current) {
+            AuthService.updateShowTaskPref(false);
             $scope.showCompleted = false;
-            AuthService.updateShowTaskPref(false)
         });
 
         $scope.retrieveLastNItems($scope.retrieveNr);

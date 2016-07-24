@@ -230,12 +230,21 @@ def get_user_preferences():
     return json.dumps({'show_completed_task': current_user.show_completed_task})
 
 
-@app.route('/api/user_preferences/show_task_toggle', methods=['GET'])
+@app.route('/api/user_preferences/update_show_task', methods=['POST'])
 @login_required
 def show_task_toggle():
     uid = session['user_id']
-    current_user = User.query.filter_by(id=uid).first()
-    return json.dumps({'show_completed_task': current_user.show_completed_task})
+    option = request.json['option']
+
+    # Sqlite limitations
+    if option:
+        option = "1"
+    else:
+        option = "0"
+
+    cmd = "UPDATE users SET show_completed_task = " + str(option) + " WHERE id = " + str(uid)
+    db.engine.execute(text(cmd))
+    return 'OK'
 
 
 @app.route('/edit_task', methods=['POST'])

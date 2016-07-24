@@ -3,6 +3,11 @@
  */
 
 function navController($scope, $rootScope, AUTH_EVENTS, AuthService, USER_PREFERENCES) {
+    var promise = AuthService.getUserPreference(); // TODO: need to store user preference, cannot always default to true
+    promise.then(function (value) {
+        $scope.showCompleted = value;
+    });
+
     $scope.loggedIn = AuthService.isLoggedIn();
     $scope.currentUser = AuthService.getCurrentUser();
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (next, current) {
@@ -14,14 +19,14 @@ function navController($scope, $rootScope, AUTH_EVENTS, AuthService, USER_PREFER
         $scope.currentUser = AuthService.getCurrentUser();
     });
 
-    $scope.showCompleted = AuthService.getUserPreference(); // TODO: need to store user preference, cannot always default to true
     $scope.toggleCompleted = function () {
         if ($scope.showCompleted) {
             $rootScope.$broadcast(USER_PREFERENCES.hideCompletedTasks);
+            $scope.showCompleted = false;
         } else {
             $rootScope.$broadcast(USER_PREFERENCES.showCompletedTasks);
+            $scope.showCompleted = true;
         }
-        $scope.showCompleted = AuthService.getUserPreference();
     };
 
 }

@@ -133,6 +133,7 @@ angular.module('todoApp').factory('AuthService',
             }
 
             function getUserPreference() { // should this be in another service?
+                var deferred = $q.defer();
                 var show_completed = true;
                 $http({
                     method: 'GET',
@@ -140,20 +141,24 @@ angular.module('todoApp').factory('AuthService',
                     headers: {Authorization: 'Bearer ' + getToken()}
                 })
                     .success(function (response) {
-                        show_completed = response.show_completed_task;
+                        deferred.resolve(response.show_completed_task);
                     })
                     .error(function (error) {
-                        console.log(error);
+                        deferred.reject();
                     });
 
-                return show_completed
+                return deferred.promise
             }
 
             function updateShowTaskPref(option) {
-                if (option == false) {
-                    return false;
-                }
-                return true;
+                $http({
+                    method: 'POST',
+                    url: '/api/user_preferences/update_show_task',
+                    headers: {Authorization: 'Bearer ' + getToken()},
+                    data: {
+                        'option': option
+                    }
+                })
             }
 
             // return available functions for use in controllers
