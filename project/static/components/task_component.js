@@ -45,7 +45,16 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
     $scope.$watch('ctrl.task.content', debounceSaveUpdates);
 
     $scope.callDateTimePicker = function (event) {
-        cur_pos = [event.originalEvent.pageX - 300, event.originalEvent.pageY - 350];
+        var el = event.target;
+        var viewportOffset = el.getBoundingClientRect();
+        var left = viewportOffset.left;
+        var top = viewportOffset.top;
+        var bottom = viewportOffset.bottom;
+        if (top < window.innerHeight / 2) { // button in top half of window
+            cur_pos = [left - 330, bottom - 70]
+        } else {
+            cur_pos = [left - 330, top - 330]
+        }
         DatetimeService.setCursorPos(cur_pos, task.id);
     };
 

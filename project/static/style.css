@@ -72,4 +72,5 @@ textarea.form-control {
 .datetimepicker {
     background-color: white;
     border-style: solid;
+    z-index: 1000;
 }
