@@ -68,3 +68,8 @@ textarea.form-control {
     outline: none;
     border: 0;
  }
+
+.datetimepicker {
+    background-color: white;
+    border-style: solid;
+}
