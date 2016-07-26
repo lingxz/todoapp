@@ -205,6 +205,50 @@ def add_task():
     return json.dumps(task_to_dictionary(task))
 
 
+def get_subtasks(parent):
+    subtasks = []
+    return subtasks
+
+
+@app.route('/add_subtask', methods=['POST'])
+@login_required
+def add_subtask():
+    user_id = request.json['user_id']
+    id = request.json['subtask_id']
+    sub_task = Task.query.filter_by(id=id).first()
+    content = sub_task.content
+    user_id = sub_task.user_id
+    due_date = sub_task.due_date
+
+    parent_id = request.json['prev_task_id']
+    parent_task = Task.query.filter_by(id=parent_id).first()
+
+    delete_task_helper(parent_task)
+
+    sub_tasks = get_subtasks(parent_task)
+    if not sub_tasks:
+        # adding a child to a node with no existing children
+        parent_left = parent_task.lft
+        cmd = "UPDATE tasks SET rgt = rgt + 2 WHERE user_id = :user_id AND rgt > :parent_left"
+        db.engine.execute(cmd, {'user_id': str(user_id), 'parent_left': str(parent_left)})
+
+        cmd = "UPDATE tasks SET lft = lft + 2 WHERE user_id = :user_id AND lft > :parent_left"
+        db.engine.execute(cmd, {'user_id': str(user_id), 'parent_left': str(parent_left)})
+        task = Task(
+            content=content,
+            user_id=user_id,
+            due_date=due_date,
+            my_right=parent_left
+        )
+        db.session.add(task)
+        db.session.commit()
+
+    return json.dumps(task_to_dictionary(task))
+
+    # add new node
+    # delete old node
+
+
 @app.route('/markdone', methods=['POST'])
 @login_required
 def mark_as_done():
@@ -299,12 +343,18 @@ def delete_task():
     uid = request.json['id']
     user_id = request.json['user_id']
     current_task = db.session.query(Task).get(uid)
+    delete_task_helper(current_task)
 
+    db.session.commit()
+    return 'OK'
+
+
+def delete_task_helper(current_task):
     # this is for deleting a leaf node only
+    user_id = current_task.user_id
     my_left = current_task.lft
     my_right = current_task.rgt
     my_width = my_right - my_left + 1
-    print(my_width)
     db.session.delete(current_task)
 
     cmd = "UPDATE tasks SET rgt = rgt - :my_width WHERE user_id = :user_id AND rgt > :my_right"
@@ -312,9 +362,6 @@ def delete_task():
 
     cmd = "UPDATE tasks SET lft = lft - :my_width WHERE user_id = :user_id AND lft > :my_right"
     db.engine.execute(cmd, {'my_width': str(my_width), 'user_id': str(user_id), 'my_right': str(my_right)})
-
-    db.session.commit()
-    return 'OK'
 
 
 @app.route('/')
