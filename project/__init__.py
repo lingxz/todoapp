@@ -297,8 +297,22 @@ def parse_task():
 @login_required
 def delete_task():
     uid = request.json['id']
+    user_id = request.json['user_id']
     current_task = db.session.query(Task).get(uid)
+
+    # this is for deleting a leaf node only
+    my_left = current_task.lft
+    my_right = current_task.rgt
+    my_width = my_right - my_left + 1
+    print(my_width)
     db.session.delete(current_task)
+
+    cmd = "UPDATE tasks SET rgt = rgt - :my_width WHERE user_id = :user_id AND rgt > :my_right"
+    db.engine.execute(cmd, {'my_width': str(my_width), 'user_id': str(user_id), 'my_right': str(my_right)})
+
+    cmd = "UPDATE tasks SET lft = lft - :my_width WHERE user_id = :user_id AND lft > :my_right"
+    db.engine.execute(cmd, {'my_width': str(my_width), 'user_id': str(user_id), 'my_right': str(my_right)})
+
     db.session.commit()
     return 'OK'
 
