@@ -341,7 +341,7 @@ def parse_task():
 @login_required
 def delete_task():
     uid = request.json['id']
-    user_id = request.json['user_id']
+    # user_id = request.json['user_id']
     current_task = db.session.query(Task).get(uid)
     delete_task_helper(current_task)
 
@@ -370,4 +370,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
