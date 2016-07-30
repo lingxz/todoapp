@@ -2,9 +2,9 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $http, $timeout, AuthService, DatetimeService, keyboardManager, TASK_EVENTS, hotkeys) {
-    var task = $scope.ctrl.task;
-    $scope.isCollapsed = true;
+function TaskController($scope, $http, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
+    var task = $scope.task;
+    $scope.isCollapsed = false;
     $scope.markAsDone = function () {
         $http({
             method: 'POST',
@@ -22,7 +22,6 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
 
     var timeout = null;
     var saveTask = function (newVal) {
-        var task = $scope.ctrl.task;
         $http({
             method: 'POST',
             url: '/edit_task',
@@ -42,7 +41,7 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
             timeout = $timeout(saveTask(newVal), 1000); // saves updates every 1 second
         }
     };
-    $scope.$watch('ctrl.task.content', debounceSaveUpdates);
+    $scope.$watch('task.content', debounceSaveUpdates);
 
     $scope.callDateTimePicker = function (event) {
         var el = event.target;
@@ -59,7 +58,6 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
     };
 
     $scope.removeDate = function () {
-        var task = $scope.ctrl.task;
         task.due_date = null;
         $http({
             method: 'POST',
@@ -80,7 +78,6 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
                 headers: {Authorization: 'Bearer ' + AuthService.getToken()},
                 data: {
                     content: "",
-                    duedate: null,
                     user_id: AuthService.getCurrentUserID(),
                     prev_task: task.id
                 } //TODO: add input date
@@ -93,17 +90,45 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, k
             $scope.newtask = ""
     };
 
+    $scope.setCurrentTask = function(){
+        TaskService.setCurrentTask(task)
+    }
+
+
 }
 
-angular.module('todoApp')
-    .component('task', {
+
+angular.module('todoApp').directive("task", function(RecursionHelper) {
+    return {
+        restrict: "E",
+        scope: {task: '='},
         templateUrl: 'static/partials/task.html',
         controller: TaskController,
-        controllerAs: 'ctrl',
-        bindings: {
-            task: '='
+        compile: function(element) {
+            return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
+                // Define your normal link function here.
+                // Alternative: instead of passing a function,
+                // you can also pass an object with
+                // a 'pre'- and 'post'-link function.
+            });
         }
-    });
+    };
+});
+
+
+//angular.module('todoApp')
+//    .component('task', {
+//        templateUrl: 'static/partials/task.html',
+//        controller: TaskController,
+//        controllerAs: 'ctrl',
+//        bindings: {
+//            task: '='
+//        }
+//    });
+
+
+
+
 
 
 angular.module('todoApp')

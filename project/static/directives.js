@@ -11,4 +11,3 @@ angular.module('todoApp').directive('ngEnter', function () {
         });
     };
 });
-

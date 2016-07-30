@@ -55,11 +55,15 @@ class Task(db.Model):
     lft = db.Column(db.Integer, nullable=False)
     rgt = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, content, user_id, due_date=None, my_right=None):
+    # combine the adjacency list model so that it is easier to query for children
+    parent_id = db.Column(db.Integer, nullable=True)
+
+    def __init__(self, content, user_id, due_date=None, my_right=None, parent_id=None):
         self.content = content
         self.due_date = due_date
         self.user_id = int(user_id)
         self.done = False
+        self.parent_id = parent_id
 
         if not my_right:
             self.lft = 0

@@ -1,5 +1,5 @@
 <td class="pull-left fixed-width-26">
-    <div ng-class="{'done-text':ctrl.task.done}">
+    <div ng-class="{'done-text':task.done}">
         <i class="material-icons" style="cursor: pointer"
            ng-click="isCollapsed = !isCollapsed">add</i>
     </div>
@@ -13,30 +13,33 @@
     <div class="text-container">
         <textarea rows="1" msd-elastic
                   spellcheck="false"
-                  ng-model="ctrl.task.content"
-                  ng-class="{'done-text':ctrl.task.done}"
+                  ng-model="task.content"
+                  ng-class="{'done-text':task.done}"
+                  ng-focus="setCurrentTask()"
                   ng-enter="newTask()">
-            {{ ctrl.task.content }}
+            {{ task.content }}
         </textarea>
     </div>
 
-
-    <div uib-collapse="isCollapsed" ng-class="{'done-text':ctrl.task.done}">
-        Generate a list of subposts here
+    <div uib-collapse="isCollapsed" ng-class="{'done-text':task.done}" ng-repeat="child in task.children">
+        <task task="child" style="cursor: auto;"></task>
     </div>
+
 </td>
 
+
+
 <td class="pull-right fixed-width-80">
-    <div class="pull-right" ng-class="{'done-text':ctrl.task.done}">
+    <div class="pull-right" ng-class="{'done-text':task.done}">
         <i class="material-icons"
-           ng-show="ctrl.task.due_date"
-           uib-tooltip="{{ ctrl.task.due_date }}"
+           ng-show="task.due_date"
+           uib-tooltip="{{ task.due_date }}"
            tooltip-placement="top"
            style="cursor: pointer"
            ng-click="callDateTimePicker($event)">alarm</i>
 
         <i class="material-icons"
-           ng-hide="ctrl.task.due_date"
+           ng-hide="task.due_date"
            uib-tooltip="Add alarm"
            tooltip-placement="top"
            style="cursor: pointer"

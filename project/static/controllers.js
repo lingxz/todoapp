@@ -88,52 +88,55 @@ todoApp.controller("mainController", [
     '$rootScope',
     '$http',
     'AuthService',
+    'TaskService',
     'USER_PREFERENCES',
     'TASK_EVENTS',
     'hotkeys',
-    function ($scope, $rootScope, $http, AuthService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
+    function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
-        $scope.retrieveNr = 10;
+        //$scope.retrieveNr = 10;
 
-        $scope.$on(TASK_EVENTS.addNewEmptyTask, function (next, current) {
-            $scope.addTask("");
-        });
+        //$scope.$on(TASK_EVENTS.addNewEmptyTask, function (next, current) {
+        //    $scope.addTask("");
+        //});
 
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
-            $scope.retrieveLastNItems($scope.retrieveNr)
+            $scope.retrieveLastNItems()
         });
 
-        $scope.addTask = function (content) {
-            $http({
-                url: '/add',
-                method: "POST",
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    content: content,
-                    duedate: 2015,
-                    user_id: AuthService.getCurrentUserID()
-                } //TODO: add input date
-            }).then(function (response) {
-                $scope.retrieveLastNItems($scope.retrieveNr);
-                $scope.newtask = ""
-            }, function (error) {
-                console.log(error)
-            });
-            $scope.newtask = ""
-        };
+        //$scope.addTask = function (content) {
+        //    $http({
+        //        url: '/add',
+        //        method: "POST",
+        //        headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+        //        data: {
+        //            content: content,
+        //            user_id: AuthService.getCurrentUserID(),
+        //            prev_task: $scope.currentTask.id
+        //        } //TODO: add input date
+        //    }).then(function (response) {
+        //        $scope.retrieveLastNItems();
+        //        $scope.newtask = ""
+        //    }, function (error) {
+        //        console.log(error)
+        //    });
+        //    $scope.newtask = ""
+        //};
+
 
         // TODO: get n tasks only
-        $scope.retrieveLastNItems = function (n) {
+        $scope.retrieveLastNItems = function () {
             $http({
                 method: 'POST',
-                url: '/retrieve',
+                url: '/retrieve_tasks',
                 headers: {Authorization: 'Bearer ' + AuthService.getToken()},
                 data: {
-                    numTasks: $scope.retrieveNr
+                    user_id: AuthService.getCurrentUserID()
                 }
             }).then(function (response) {
                 $scope.tasks = response.data;
+                console.log(response.data)
             }, function (error) {
                 console.log(error);
             });
@@ -161,6 +164,7 @@ todoApp.controller("mainController", [
                 url: '/delete_task',
                 headers: {Authorization: 'Bearer ' + AuthService.getToken()},
                 data: {
+                    user_id: AuthService.getCurrentUserID(),
                     id: task.id
                 }
             }).then(function (response) {
@@ -168,9 +172,57 @@ todoApp.controller("mainController", [
             })
         };
 
-        $scope.setCurrentTask = function (task) {
-            $scope.currentTask = task;
+
+        $scope.currentTask = TaskService.getCurrentTask();
+        $scope.$watch(TaskService.getCurrentTask,
+            function(new_task, old_task){
+                console.log(new_task);
+                $scope.currentTask = new_task
+            }
+        );
+
+        $scope.makeSubTaskHelper = function (task, prev_id) {
+
+            // need to find previous sibling task first
+            //
+            //index = $scope.tasks.indexOf(task);
+            //prev_task = $scope.tasks[index-1];
+
+
+            $http({
+                    url: '/add_subtask',
+                    method: "POST",
+                    headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+                    data: {
+                        user_id: AuthService.getCurrentUserID(),
+                        prev_task_id: prev_id,
+                        subtask_id: task.id
+                    }
+                }).then(function (response) {
+                    $scope.$emit(TASK_EVENTS.refreshTaskList);
+                }, function (error) {
+                    console.log(error)
+                });
         };
+
+        $scope.makeSubTask = function(task){
+            // get previous task first
+            $http({
+                url: '/get_prev_sibling',
+                method: "POST",
+                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+                data: {
+                    user_id: AuthService.getCurrentUserID(),
+                    task_id: task.id
+                }
+            }).then(function (response) {
+                prev_id = response.data.id;
+                $scope.makeSubTaskHelper(task, prev_id)
+            }, function (error){
+                console.log(error)
+            });
+        };
+
 
         hotkeys.bindTo($scope)
             .add({
@@ -179,6 +231,16 @@ todoApp.controller("mainController", [
                 allowIn: ['TEXTAREA'],
                 callback: function (event, keypress) {
                     $scope.deleteTask($scope.currentTask)
+                }
+            });
+
+        hotkeys.bindTo($scope)
+            .add({
+                combo: 'tab',
+                description: 'make this a sub task',
+                allowIn: ['TEXTAREA'],
+                callback: function (event, keypress) {
+                    $scope.makeSubTask($scope.currentTask)
                 }
             });
     }

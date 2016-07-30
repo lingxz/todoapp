@@ -23,7 +23,7 @@
         <tbody>
         <tr ng-repeat="task in tasks.slice()">
             <td ng-hide="task.done && !showCompleted">
-                <task task="task" ng-click="setCurrentTask(task)" style="cursor: auto;"></task>
+                <task task="task" style="cursor: auto;"></task>
             </td>
         </tr>
         </tbody>
