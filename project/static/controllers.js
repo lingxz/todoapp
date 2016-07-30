@@ -149,7 +149,7 @@ todoApp.controller("mainController", [
                 $scope.showCompleted = newval
             }
         );
-        
+
         $rootScope.$on(USER_PREFERENCES.showCompletedTasks, function (next, current) {
             AuthService.updateShowTaskPref(true);
             $scope.showCompleted = true;

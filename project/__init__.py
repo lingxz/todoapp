@@ -183,7 +183,6 @@ def retrieve():
 @login_required
 def retrieve_tasks():
     user_id = session['user_id']
-    print(Task.query.filter(Task.user_id == user_id).all())
 
     # find all root nodes
     roots = []
@@ -250,6 +249,7 @@ def add_task():
         my_right=my_right,
         parent_id=prev_task.parent_id
     )
+
     user_id = str(user_id)
     # Technically this should be wrapped in a transaction
     cmd = "UPDATE tasks SET rgt = rgt + 2 WHERE user_id =" + user_id + " AND rgt > " + str(my_right)
@@ -424,12 +424,18 @@ def parse_task():
 @app.route('/delete_task', methods=['POST'])
 @login_required
 def delete_task():
-    uid = request.json['id']
+    task_id = request.json['id']
     # user_id = request.json['user_id']
-    current_task = db.session.query(Task).get(uid)
-    delete_task_helper(current_task)
+    current_task = db.session.query(Task).get(task_id)
 
-    db.session.commit()
+    # get all subordinates of task
+    # deleting a parent task deletes all subordinates
+
+    tree = Task.query.filter(Task.lft >= current_task.lft, Task.lft < current_task.rgt).all()
+
+    for task in tree:
+        delete_task_helper(task)
+
     return 'OK'
 
 
