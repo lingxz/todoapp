@@ -21,8 +21,8 @@
 
     <table st-table="tasks" class="table">
         <tbody>
-        <tr ng-repeat="task in tasks.slice()">
-            <td ng-hide="task.done && !showCompleted">
+        <tr ng-repeat="task in tasks.slice()" ng-hide="task.done && !showCompleted">
+            <td>
                 <task task="task" style="cursor: auto;"></task>
             </td>
         </tr>

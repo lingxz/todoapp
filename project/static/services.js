@@ -141,7 +141,8 @@ angular.module('todoApp').factory('AuthService',
                     headers: {Authorization: 'Bearer ' + getToken()}
                 })
                     .success(function (response) {
-                        deferred.resolve(response.show_completed_task);
+                        setShowTaskPref(response.show_completed_task);
+                        //deferred.resolve(response.show_completed_task);
                     })
                     .error(function (error) {
                         deferred.reject();
@@ -151,6 +152,7 @@ angular.module('todoApp').factory('AuthService',
             }
 
             function updateShowTaskPref(option) {
+                setShowTaskPref(option);
                 $http({
                     method: 'POST',
                     url: '/api/user_preferences/update_show_task',
@@ -159,6 +161,14 @@ angular.module('todoApp').factory('AuthService',
                         'option': option
                     }
                 })
+            }
+
+            var showTaskPref;
+            function setShowTaskPref(newPref){
+                showTaskPref = newPref
+            }
+            function retrieveShowTaskPref(){
+                return showTaskPref
             }
 
             // return available functions for use in controllers
@@ -171,7 +181,8 @@ angular.module('todoApp').factory('AuthService',
                 getCurrentUserID: getCurrentUserID,
                 getToken: getToken,
                 getUserPreference: getUserPreference,
-                updateShowTaskPref: updateShowTaskPref
+                updateShowTaskPref: updateShowTaskPref,
+                retrieveShowTaskPref: retrieveShowTaskPref
             });
 
         }]);

@@ -136,17 +136,20 @@ todoApp.controller("mainController", [
                 }
             }).then(function (response) {
                 $scope.tasks = response.data;
-                console.log(response.data)
             }, function (error) {
                 console.log(error);
             });
         };
 
         // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
-        var promise = AuthService.getUserPreference(); // TODO: need to store user preference, cannot always default to true
-        promise.then(function (value) {
-            $scope.showCompleted = value;
-        });
+
+        AuthService.getUserPreference();
+        $scope.$watch(AuthService.retrieveShowTaskPref,
+            function(newval, oldval){
+                $scope.showCompleted = newval
+            }
+        );
+        
         $rootScope.$on(USER_PREFERENCES.showCompletedTasks, function (next, current) {
             AuthService.updateShowTaskPref(true);
             $scope.showCompleted = true;
@@ -176,7 +179,6 @@ todoApp.controller("mainController", [
         $scope.currentTask = TaskService.getCurrentTask();
         $scope.$watch(TaskService.getCurrentTask,
             function(new_task, old_task){
-                console.log(new_task);
                 $scope.currentTask = new_task
             }
         );

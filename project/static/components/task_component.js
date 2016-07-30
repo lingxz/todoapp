@@ -92,8 +92,14 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
 
     $scope.setCurrentTask = function(){
         TaskService.setCurrentTask(task)
-    }
+    };
 
+    $scope.showCompleted = AuthService.getUserPreference();
+    $scope.$watch(AuthService.retrieveShowTaskPref,
+        function(newval, oldval){
+            $scope.showCompleted = newval
+        }
+    )
 
 }
 

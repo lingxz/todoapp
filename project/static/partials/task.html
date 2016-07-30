@@ -21,8 +21,11 @@
         </textarea>
     </div>
 
-    <div uib-collapse="isCollapsed" ng-class="{'done-text':task.done}" ng-repeat="child in task.children">
+    <div uib-collapse="isCollapsed"
+         ng-class="{'done-text':task.done}"
+         ng-repeat="child in task.children" ng-hide="child.done && !showCompleted">
         <task task="child" style="cursor: auto;"></task>
+
     </div>
 
 </td>
