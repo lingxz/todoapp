@@ -3,13 +3,15 @@
  */
 
 function navController($scope, $rootScope, AUTH_EVENTS, AuthService, USER_PREFERENCES) {
-    var promise = AuthService.getUserPreference(); // TODO: need to store user preference, cannot always default to true
-    promise.then(function (value) {
-        $scope.showCompleted = value;
-    });
+    this.$onInit = function () {
+        // Possible fix for the initial display of hidden might go here
+        console.log("INIT");
+        $scope.showCompleted = AuthService.retrieveShowTaskPref();
+    };
 
     $scope.loggedIn = AuthService.isLoggedIn();
     $scope.currentUser = AuthService.getCurrentUser();
+
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (next, current) {
         $scope.loggedIn = true;
         $scope.currentUser = AuthService.getCurrentUser();
@@ -21,19 +23,22 @@ function navController($scope, $rootScope, AUTH_EVENTS, AuthService, USER_PREFER
 
     $scope.toggleCompleted = function () {
         if ($scope.showCompleted) {
-            $rootScope.$broadcast(USER_PREFERENCES.hideCompletedTasks);
-            $scope.showCompleted = false;
+            AuthService.updateShowTaskPref(false);
         } else {
-            $rootScope.$broadcast(USER_PREFERENCES.showCompletedTasks);
-            $scope.showCompleted = true;
+            AuthService.updateShowTaskPref(true);
         }
     };
 
+    // Monitor the value of showCompleted
+    $scope.$watch(AuthService.retrieveShowTaskPref,
+        function (newval, oldval) {
+            $scope.showCompleted = newval
+        }
+    );
 }
-
 
 angular.module('todoApp')
     .component('navigation', {
-        templateUrl: 'static/partials/nav.html',
-        controller: navController
+        controller: navController,
+        templateUrl: 'static/partials/nav.html'
     });

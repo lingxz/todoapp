@@ -3,8 +3,16 @@
  */
 
 function TaskController($scope, $http, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
+    // Extract from controller
+    $scope.task = $scope.ctrl.task;
     var task = $scope.task;
+
+    // Control offsets
+    $scope.taskDepth = task.depth * 1.5;
+    $scope.taskWidth = 100 - $scope.taskDepth;
+
     $scope.isCollapsed = false;
+
     $scope.markAsDone = function () {
         $http({
             method: 'POST',
@@ -72,69 +80,46 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
     $scope.newTask = function () {
         // only fire event to parent scope
         // $scope.$emit(TASK_EVENTS.addNewEmptyTask)
-            $http({
-                url: '/add',
-                method: "POST",
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    content: "",
-                    user_id: AuthService.getCurrentUserID(),
-                    prev_task: task.id
-                } //TODO: add input date
-            }).then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-                $scope.newtask = ""
-            }, function (error) {
-                console.log(error)
-            });
+        $http({
+            url: '/add',
+            method: "POST",
+            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+            data: {
+                content: "",
+                user_id: AuthService.getCurrentUserID(),
+                prev_task: task.id
+            } //TODO: add input date
+        }).then(function (response) {
+            $scope.$emit(TASK_EVENTS.refreshTaskList);
             $scope.newtask = ""
+        }, function (error) {
+            console.log(error)
+        });
+        $scope.newtask = ""
     };
 
-    $scope.setCurrentTask = function(){
+    $scope.setCurrentTask = function () {
         TaskService.setCurrentTask(task)
     };
 
     $scope.showCompleted = AuthService.getUserPreference();
     $scope.$watch(AuthService.retrieveShowTaskPref,
-        function(newval, oldval){
+        function (newval, oldval) {
             $scope.showCompleted = newval
         }
     )
 
 }
 
-
-angular.module('todoApp').directive("task", function(RecursionHelper) {
-    return {
-        restrict: "E",
-        scope: {task: '='},
+angular.module('todoApp')
+    .component('task', {
         templateUrl: 'static/partials/task.html',
         controller: TaskController,
-        compile: function(element) {
-            return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
-                // Define your normal link function here.
-                // Alternative: instead of passing a function,
-                // you can also pass an object with
-                // a 'pre'- and 'post'-link function.
-            });
+        controllerAs: 'ctrl',
+        bindings: {
+            task: '='
         }
-    };
-});
-
-
-//angular.module('todoApp')
-//    .component('task', {
-//        templateUrl: 'static/partials/task.html',
-//        controller: TaskController,
-//        controllerAs: 'ctrl',
-//        bindings: {
-//            task: '='
-//        }
-//    });
-
-
-
-
+    });
 
 
 angular.module('todoApp')

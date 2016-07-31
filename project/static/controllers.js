@@ -145,19 +145,10 @@ todoApp.controller("mainController", [
 
         AuthService.getUserPreference();
         $scope.$watch(AuthService.retrieveShowTaskPref,
-            function(newval, oldval){
+            function (newval, oldval) {
                 $scope.showCompleted = newval
             }
         );
-
-        $rootScope.$on(USER_PREFERENCES.showCompletedTasks, function (next, current) {
-            AuthService.updateShowTaskPref(true);
-            $scope.showCompleted = true;
-        });
-        $rootScope.$on(USER_PREFERENCES.hideCompletedTasks, function (next, current) {
-            AuthService.updateShowTaskPref(false);
-            $scope.showCompleted = false;
-        });
 
         $scope.retrieveLastNItems($scope.retrieveNr);
 
@@ -178,7 +169,7 @@ todoApp.controller("mainController", [
 
         $scope.currentTask = TaskService.getCurrentTask();
         $scope.$watch(TaskService.getCurrentTask,
-            function(new_task, old_task){
+            function (new_task, old_task) {
                 $scope.currentTask = new_task
             }
         );
@@ -192,22 +183,22 @@ todoApp.controller("mainController", [
 
 
             $http({
-                    url: '/add_subtask',
-                    method: "POST",
-                    headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                    data: {
-                        user_id: AuthService.getCurrentUserID(),
-                        prev_task_id: prev_id,
-                        subtask_id: task.id
-                    }
-                }).then(function (response) {
-                    $scope.$emit(TASK_EVENTS.refreshTaskList);
-                }, function (error) {
-                    console.log(error)
-                });
+                url: '/add_subtask',
+                method: "POST",
+                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+                data: {
+                    user_id: AuthService.getCurrentUserID(),
+                    prev_task_id: prev_id,
+                    subtask_id: task.id
+                }
+            }).then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            }, function (error) {
+                console.log(error)
+            });
         };
 
-        $scope.makeSubTask = function(task){
+        $scope.makeSubTask = function (task) {
             // get previous task first
             $http({
                 url: '/get_prev_sibling',
@@ -220,7 +211,7 @@ todoApp.controller("mainController", [
             }).then(function (response) {
                 prev_id = response.data.id;
                 $scope.makeSubTaskHelper(task, prev_id)
-            }, function (error){
+            }, function (error) {
                 console.log(error)
             });
         };

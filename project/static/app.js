@@ -4,7 +4,7 @@ var todoApp = angular.module("todoApp", [
     'ngAnimate',
     'ngAria',
     'ui.bootstrap.datetimepicker',
-    'smart-table',
+    // 'smart-table',
     'cfp.hotkeys',
     'monospaced.elastic']);
 
@@ -50,12 +50,12 @@ todoApp.config(function ($routeProvider) {
 todoApp.run(function ($rootScope, $location, $route, AuthService) {
     $rootScope.$on('$routeChangeStart',
         function (event, next, current) {
-                    if (next.access.restricted && !AuthService.isLoggedIn()) {
-                        $location.path('/login');
-                        $route.reload();
-                    }
-                });
+            if (next.access.restricted && !AuthService.isLoggedIn()) {
+                $location.path('/login');
+                $route.reload();
+            }
         });
+});
 // });
 
 todoApp.run(['$route', function ($route) {

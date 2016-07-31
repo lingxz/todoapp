@@ -10,19 +10,40 @@ textarea.form-control {
 }
 
 /*.material-icons:hover {*/
-    /*background-color: lightgrey;*/
+/*background-color: lightgrey;*/
 /*}*/
 
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
+.material-icons.md-18 {
+    font-size: 18px;
+}
 
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+.material-icons.md-24 {
+    font-size: 24px;
+}
 
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+.material-icons.md-36 {
+    font-size: 36px;
+}
+
+.material-icons.md-48 {
+    font-size: 48px;
+}
+
+.material-icons.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+}
+
+.material-icons.md-light {
+    color: rgba(255, 255, 255, 1);
+}
+
+.material-icons.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+}
 
 .done-text {
     color: lightgrey;
@@ -30,17 +51,19 @@ textarea.form-control {
 }
 
 [contenteditable]:focus {
-    outline: 0px solid transparent; }
+    outline: 0px solid transparent;
+}
 
-.table{
+.table {
     border: none;
 }
 
 .show {
-  display: block !important;
+    display: block !important;
 }
+
 .hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .fixed-width-26 {
@@ -52,14 +75,14 @@ textarea.form-control {
 }
 
 .fluid-column {
-    float:left;
+    float: left;
     width: calc(100% - 120px);
 }
 
-.text-container textarea{
+.tc-textarea {
     resize: none;
     width: 100%;
-    height: 100%;
+    height: auto;
     outline: none;
     border: none;
 }
@@ -67,7 +90,7 @@ textarea.form-control {
 :focus {
     outline: none;
     border: 0;
- }
+}
 
 .datetimepicker {
     background-color: white;
