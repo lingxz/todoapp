@@ -1,8 +1,8 @@
 var todoApp = angular.module("todoApp", [
     'ngRoute',
-    'ui.bootstrap',
     'ngAnimate',
     'ngAria',
+    'ui.bootstrap',
     'ui.bootstrap.datetimepicker',
     // 'smart-table',
     'cfp.hotkeys',
