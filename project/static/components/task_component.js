@@ -3,6 +3,8 @@
  */
 
 function TaskController($scope, $http, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
+    // Extract from controller
+    $scope.task = $scope.ctrl.task;
     var task = $scope.task;
 
     // Control offsets
@@ -11,7 +13,6 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
 
     $scope.isCollapsed = false;
 
-    console.log($scope);
     $scope.markAsDone = function () {
         $http({
             method: 'POST',
@@ -110,34 +111,15 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
 
 }
 
-
-angular.module('todoApp').directive("task", function (RecursionHelper) {
-    return {
-        restrict: "E",
-        scope: {task: '='},
+angular.module('todoApp')
+    .component('task', {
         templateUrl: 'static/partials/task.html',
         controller: TaskController,
-        compile: function (element) {
-            return RecursionHelper.compile(element, function (scope, iElement, iAttrs, controller, transcludeFn) {
-                // Define your normal link function here.
-                // Alternative: instead of passing a function,
-                // you can also pass an object with
-                // a 'pre'- and 'post'-link function.
-            });
+        controllerAs: 'ctrl',
+        bindings: {
+            task: '='
         }
-    };
-});
-
-
-//angular.module('todoApp')
-//    .component('task', {
-//        templateUrl: 'static/partials/task.html',
-//        controller: TaskController,
-//        controllerAs: 'ctrl',
-//        bindings: {
-//            task: '='
-//        }
-//    });
+    });
 
 
 angular.module('todoApp')
