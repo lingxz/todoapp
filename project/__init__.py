@@ -4,11 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from project.config import BaseConfig
-import jwt
-from jwt import DecodeError, ExpiredSignature
-from datetime import datetime, timedelta
-from functools import wraps
-import parsedatetime as pdt
+import datetime
 
 # config
 app = Flask(__name__)
@@ -19,51 +15,8 @@ db = SQLAlchemy(app)
 
 # Import after to avoid circular dependency
 from project.models import Task, User
-
-
-# Token creation
-def create_token(user):
-    payload = {
-        # data
-        'id': user.id,
-        'username': user.username,
-        # issued at
-        'iat': datetime.utcnow(),
-        # expiry
-        'exp': datetime.utcnow() + timedelta(days=1)
-    }
-
-    token = jwt.encode(payload, BaseConfig.SECRET_KEY, algorithm='HS256')
-    return token.decode('unicode_escape')
-
-
-def parse_token(req):
-    token = req.headers.get('Authorization').split()[1]
-    return jwt.decode(token, BaseConfig.SECRET_KEY, algorithms='HS256')
-
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not request.headers.get('Authorization'):
-            response = jsonify(message='Missing authorization header')
-            response.status_code = 401
-            return response
-
-        try:
-            payload = parse_token(request)
-        except DecodeError:
-            response = jsonify(message='Token is invalid')
-            response.status_code = 401
-            return response
-        except ExpiredSignature:
-            response = jsonify(message='Token has expired')
-            response.status_code = 401
-            return response
-
-        return f(*args, **kwargs)
-
-    return decorated_function
+from project.utils import utils
+from project.utils import auth
 
 
 @app.route('/api/login', methods=['POST'])
@@ -74,7 +27,7 @@ def login():
             user.password, json_data['password']):
         session['logged_in'] = True
         session['user_id'] = user.id
-        token = create_token(user)
+        token = auth.create_token(user)
         return jsonify({'result': True, "token": token, "username": user.username})
     else:
         return jsonify({'result': False, "token": -1})
@@ -102,68 +55,19 @@ def register():
 
 
 @app.route('/api/logout')
-@login_required
+@auth.login_required
 def logout():
     session.pop('logged_in', None)
     session.pop('user_id', None)
     return jsonify({'result': 'success'})
 
 
-def retrieve_tasks_helper():
-    # Support for the reverse query here
-    tasks = Task.query. \
-        filter(Task.user_id == session['user_id']). \
-        order_by(Task.lft)
-
-    todo_list = []
-    for task in tasks:
-        task_item = task_to_dictionary(task)
-        todo_list.append(task_item)
-    return todo_list
-
-
-def task_to_dictionary(task):
-    if task.due_date:
-        # convert datetime object to string before sending
-        due_date = task.due_date.strftime("%Y/%m/%d %H:%M:%S")
-    else:
-        due_date = None
-    task_item = {
-        'id': task.id,
-        'content': task.content,
-        'due_date': due_date,
-        'done': task.done,
-        'lft': task.lft,
-        'rgt': task.rgt
-    }
-    return task_item
-
-
-def extract_datetime_from_text(data):
-    cal = pdt.Calendar()
-    date_time = cal.nlp(data)
-    if date_time and date_time[0][0] > datetime.now():  # if date is in the past, ignore date
-        # if datetime was given
-        dt = date_time[0][0]  # this defaults to 9am if no time was given
-        # here we try to remove datetime from string
-        date_string_start = date_time[0][2]
-        date_string_end = date_time[0][3]
-        content = data[:date_string_start].rstrip() + data[date_string_end:]
-        if not content.strip():
-            content = data
-
-    else:
-        dt = None
-        content = data
-    return dt, content
-
-
 @app.route('/retrieve', methods=['POST'])
-@login_required
+@auth.login_required
 def retrieve():
     """Swap to a post request because you are sending data"""
     # Support for the reverse query here
-    todo_list = retrieve_tasks_helper()
+    todo_list = utils.retrieve_tasks_helper()
 
     # Must generate the initial task
     if len(todo_list) == 0:
@@ -174,13 +78,13 @@ def retrieve():
         )
         db.session.add(task)
         db.session.commit()
-        todo_list = retrieve_tasks_helper()
+        todo_list = utils.retrieve_tasks_helper()
 
     return json.dumps(todo_list)
 
 
 @app.route('/retrieve_tasks', methods=['POST'])
-@login_required
+@auth.login_required
 def retrieve_tasks():
     user_id = session['user_id']
 
@@ -196,7 +100,7 @@ def retrieve_tasks():
         )
         db.session.add(task)
         db.session.commit()
-        trees = retrieve_tasks_helper()
+        trees = utils.retrieve_tasks_helper()
         return json.dumps(trees)
 
     roots.append(root1)
@@ -212,51 +116,24 @@ def retrieve_tasks():
 
     trees = []
     for root in roots:
-        trees.append(get_tree(root))
+        trees.append(utils.get_tree(root))
 
     # Recurse through the trees to extract every task
     output = []
     for tree in trees:
-        output += in_order_traverse(tree, [], 0)
+        output += utils.in_order_traverse(tree, [], 0)
 
     return json.dumps(output)
 
 
-def in_order_traverse(tree, output, depth):
-    if 'children' in tree:
-        out_tree = dict(tree)
-        del out_tree['children']
-        out_tree['depth'] = depth
-        output = [out_tree]
-        for subtree in tree['children']:
-            output += in_order_traverse(subtree, [], depth + 1)
-    else:
-        tree['depth'] = depth
-        output.append(tree)
-    return output
-
-
-def get_tree(root):
-    tree = task_to_dictionary(root)
-    tree['children'] = []
-    children = Task.query.filter(Task.parent_id == root.id)
-
-    if not children:
-        return tree
-    else:
-        for child in children:
-            tree['children'].append(get_tree(child))
-        return tree
-
-
 @app.route('/add', methods=['POST'])
-@login_required
+@auth.login_required
 def add_task():
     data = request.json['content']
     # if not data:
     #     return redirect('/')
 
-    dt, content = extract_datetime_from_text(data)
+    dt, content = utils.extract_datetime_from_text(data)
 
     user_id = request.json['user_id']
     prev_task = Task.query.get(request.json['prev_task'])
@@ -277,16 +154,11 @@ def add_task():
     db.engine.execute(text(cmd2))
     db.session.add(task)
     db.session.commit()
-    return json.dumps(task_to_dictionary(task))
-
-
-def get_subtasks(parent):
-    subtasks = Task.query.filter(Task.parent_id == parent.id).all()
-    return subtasks
+    return json.dumps(utils.ask_to_dictionary(task))
 
 
 @app.route('/add_subtask', methods=['POST'])
-@login_required
+@auth.login_required
 def add_subtask():
     user_id = request.json['user_id']
     id = request.json['subtask_id']
@@ -298,7 +170,7 @@ def add_subtask():
     parent_id = request.json['prev_task_id']
     parent_task = Task.query.filter_by(id=parent_id).first()
 
-    sub_tasks = get_subtasks(parent_task)
+    sub_tasks = utils.get_subtasks(parent_task)
     if not sub_tasks:
         # adding a child to a node with no existing children
         parent_left = parent_task.lft
@@ -307,7 +179,7 @@ def add_subtask():
 
         db.engine.execute(cmd, {'user_id': str(user_id), 'parent_left': str(parent_left)})
         db.engine.execute(cmd2, {'user_id': str(user_id), 'parent_left': str(parent_left)})
-        delete_task_helper(current_task)
+        utils.delete_task_helper(current_task)
         task = Task(
             content=content,
             user_id=user_id,
@@ -326,7 +198,7 @@ def add_subtask():
         db.engine.execute(cmd, {'user_id': str(user_id), 'prev_right': str(prev_right)})
         cmd2 = "UPDATE tasks SET lft = lft + 2 WHERE user_id = :user_id AND lft > :prev_right"
         db.engine.execute(cmd2, {'user_id': str(user_id), 'prev_right': str(prev_right)})
-        delete_task_helper(current_task)
+        utils.delete_task_helper(current_task)
         task = Task(
             content=content,
             user_id=user_id,
@@ -337,11 +209,11 @@ def add_subtask():
         db.session.add(task)
         db.session.commit()
 
-    return json.dumps(task_to_dictionary(task))
+    return json.dumps(utils.task_to_dictionary(task))
 
 
 @app.route('/get_prev_sibling', methods=['POST'])
-@login_required
+@auth.login_required
 def get_prev_sibling():
     task_id = request.json['task_id']
     task = Task.query.filter(Task.id == task_id).first()
@@ -349,11 +221,11 @@ def get_prev_sibling():
     user_id = task.user_id
     left = task.lft
     prev_sibling = Task.query.filter(Task.parent_id == parent_id, Task.user_id == user_id, Task.rgt == left - 1).first()
-    return json.dumps(task_to_dictionary(prev_sibling))
+    return json.dumps(utils.task_to_dictionary(prev_sibling))
 
 
 @app.route('/markdone', methods=['POST'])
-@login_required
+@auth.login_required
 def mark_as_done():
     uid = request.json['id']
     if not uid:
@@ -370,7 +242,7 @@ def mark_as_done():
 
 
 @app.route('/api/user_preferences', methods=['GET'])
-@login_required
+@auth.login_required
 def get_user_preferences():
     uid = session['user_id']
     current_user = User.query.filter_by(id=uid).first()
@@ -378,7 +250,7 @@ def get_user_preferences():
 
 
 @app.route('/api/user_preferences/update_show_task', methods=['POST'])
-@login_required
+@auth.login_required
 def show_task_toggle():
     uid = session['user_id']
     option = request.json['option']
@@ -395,7 +267,7 @@ def show_task_toggle():
 
 
 @app.route('/edit_task', methods=['POST'])
-@login_required
+@auth.login_required
 def edit_task():
     uid = request.json['id']
     content = request.json['content']
@@ -406,7 +278,7 @@ def edit_task():
 
 
 @app.route('/edit_date', methods=['POST'])
-@login_required
+@auth.login_required
 def edit_date():
     uid = request.json['id']
     new_date = request.json['date']
@@ -418,7 +290,7 @@ def edit_date():
 
 
 @app.route('/remove_date', methods=['POST'])
-@login_required
+@auth.login_required
 def remove_date():
     uid = request.json['id']
     current_task = Task.query.filter_by(id=uid).first()
@@ -428,11 +300,11 @@ def remove_date():
 
 
 @app.route('/parse_task', methods=['POST'])
-@login_required
+@auth.login_required
 def parse_task():
     uid = request.json['id']
     my_text = request.json['content']
-    dt, content = extract_datetime_from_text(my_text)
+    dt, content = utils.extract_datetime_from_text(my_text)
     current_task = Task.query.filter_by(id=uid).first()
     current_task.content = content
     current_task.due_date = dt
@@ -441,7 +313,7 @@ def parse_task():
 
 
 @app.route('/delete_task', methods=['POST'])
-@login_required
+@auth.login_required
 def delete_task():
     task_id = request.json['id']
     # user_id = request.json['user_id']
@@ -453,25 +325,9 @@ def delete_task():
     tree = Task.query.filter(Task.lft >= current_task.lft, Task.lft < current_task.rgt).all()
 
     for task in tree:
-        delete_task_helper(task)
+        utils.delete_task_helper(task)
 
     return 'OK'
-
-
-def delete_task_helper(current_task):
-    # this is for deleting a leaf node only
-    user_id = current_task.user_id
-    my_left = current_task.lft
-    my_right = current_task.rgt
-    my_width = my_right - my_left + 1
-    db.session.delete(current_task)
-
-    cmd = "UPDATE tasks SET rgt = rgt - :my_width WHERE user_id = :user_id AND rgt > :my_right"
-    db.engine.execute(cmd, {'my_width': str(my_width), 'user_id': str(user_id), 'my_right': str(my_right)})
-
-    cmd = "UPDATE tasks SET lft = lft - :my_width WHERE user_id = :user_id AND lft > :my_right"
-    db.engine.execute(cmd, {'my_width': str(my_width), 'user_id': str(user_id), 'my_right': str(my_right)})
-    db.session.commit()
 
 
 @app.route('/')
