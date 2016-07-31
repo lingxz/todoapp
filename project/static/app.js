@@ -50,12 +50,12 @@ todoApp.config(function ($routeProvider) {
 todoApp.run(function ($rootScope, $location, $route, AuthService) {
     $rootScope.$on('$routeChangeStart',
         function (event, next, current) {
-                    if (next.access.restricted && !AuthService.isLoggedIn()) {
-                        $location.path('/login');
-                        $route.reload();
-                    }
-                });
+            if (next.access.restricted && !AuthService.isLoggedIn()) {
+                $location.path('/login');
+                $route.reload();
+            }
         });
+});
 // });
 
 todoApp.run(['$route', function ($route) {

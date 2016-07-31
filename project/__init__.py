@@ -214,7 +214,26 @@ def retrieve_tasks():
     for root in roots:
         trees.append(get_tree(root))
 
-    return json.dumps(trees)
+    # Recurse through the trees to extract every task
+    output = []
+    for tree in trees:
+        output += in_order_traverse(tree, [], 0)
+
+    return json.dumps(output)
+
+
+def in_order_traverse(tree, output, depth):
+    if 'children' in tree:
+        out_tree = dict(tree)
+        del out_tree['children']
+        out_tree['depth'] = depth
+        output = [out_tree]
+        for subtree in tree['children']:
+            output += in_order_traverse(subtree, [], depth + 1)
+    else:
+        tree['depth'] = depth
+        output.append(tree)
+    return output
 
 
 def get_tree(root):
@@ -329,7 +348,7 @@ def get_prev_sibling():
     parent_id = task.parent_id
     user_id = task.user_id
     left = task.lft
-    prev_sibling = Task.query.filter(Task.parent_id == parent_id, Task.user_id == user_id, Task.rgt == left-1).first()
+    prev_sibling = Task.query.filter(Task.parent_id == parent_id, Task.user_id == user_id, Task.rgt == left - 1).first()
     return json.dumps(task_to_dictionary(prev_sibling))
 
 
