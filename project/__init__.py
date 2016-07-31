@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from project.config import BaseConfig
-import datetime
+from datetime import datetime
 
 # config
 app = Flask(__name__)
@@ -117,7 +117,7 @@ def add_task():
     db.engine.execute(text(cmd2))
     db.session.add(task)
     db.session.commit()
-    return json.dumps(utils.ask_to_dictionary(task))
+    return json.dumps(utils.task_to_dictionary(task))
 
 
 @app.route('/add_subtask', methods=['POST'])
