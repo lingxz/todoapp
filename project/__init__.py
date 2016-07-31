@@ -18,48 +18,11 @@ from project.models import Task, User
 from project.utils import utils
 from project.utils import auth
 
+# Import routes
+from project.routes import users
 
-@app.route('/api/login', methods=['POST'])
-def login():
-    json_data = request.json
-    user = User.query.filter_by(email=json_data['email']).first()
-    if user and bcrypt.check_password_hash(
-            user.password, json_data['password']):
-        session['logged_in'] = True
-        session['user_id'] = user.id
-        token = auth.create_token(user)
-        return jsonify({'result': True, "token": token, "username": user.username})
-    else:
-        return jsonify({'result': False, "token": -1})
-
-
-@app.route('/api/register', methods=['POST'])
-def register():
-    """
-    For POSTS, create the relevant account
-    """
-    json_data = request.json
-    user = User(
-        email=json_data['email'],
-        username=json_data['username'],
-        password=json_data['password']
-    )
-    try:
-        db.session.add(user)
-        db.session.commit()
-        status = 'success'
-    except:
-        status = 'this user is already registered'
-    db.session.close()
-    return jsonify({'result': status})
-
-
-@app.route('/api/logout')
-@auth.login_required
-def logout():
-    session.pop('logged_in', None)
-    session.pop('user_id', None)
-    return jsonify({'result': 'success'})
+# Register the routes, this looks weird but it necessary to register the blueprint object
+app.register_blueprint(users.users)
 
 
 @app.route('/retrieve', methods=['POST'])
@@ -239,31 +202,6 @@ def mark_as_done():
         current_task.done = True
         db.session.commit()
         return json.dumps({'done': True})
-
-
-@app.route('/api/user_preferences', methods=['GET'])
-@auth.login_required
-def get_user_preferences():
-    uid = session['user_id']
-    current_user = User.query.filter_by(id=uid).first()
-    return json.dumps({'show_completed_task': current_user.show_completed_task})
-
-
-@app.route('/api/user_preferences/update_show_task', methods=['POST'])
-@auth.login_required
-def show_task_toggle():
-    uid = session['user_id']
-    option = request.json['option']
-
-    # Sqlite limitations
-    if option:
-        option = "1"
-    else:
-        option = "0"
-
-    cmd = "UPDATE users SET show_completed_task = " + str(option) + " WHERE id = " + str(uid)
-    db.engine.execute(text(cmd))
-    return 'OK'
 
 
 @app.route('/edit_task', methods=['POST'])
