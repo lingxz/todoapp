@@ -1,4 +1,4 @@
-<div ng-class="{'done-text':task.done}">
+<div ng-class="{'done-text':task.done}" class="container-fluid" style="width:{{taskWidth}}%; float:right;">
     <table style="width:100%; table-layout: fixed">
         <tr>
             <td style="width:30px">
@@ -12,7 +12,7 @@
                           ng-class="{'done-text':task.done}"
                           ng-focus="setCurrentTask()"
                           ng-enter="newTask()">
-                {{ task.content }}
+                         {{ task.content }}
                 </textarea>
             </td>
 

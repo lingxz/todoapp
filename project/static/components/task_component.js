@@ -4,8 +4,14 @@
 
 function TaskController($scope, $http, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
     var task = $scope.task;
-    console.log(task);
+
+    // Control offsets
+    $scope.taskDepth = task.depth * 1.5;
+    $scope.taskWidth = 100 - $scope.taskDepth;
+
     $scope.isCollapsed = false;
+
+    console.log($scope);
     $scope.markAsDone = function () {
         $http({
             method: 'POST',
