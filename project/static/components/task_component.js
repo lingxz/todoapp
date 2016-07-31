@@ -4,6 +4,7 @@
 
 function TaskController($scope, $http, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
     var task = $scope.task;
+    console.log(task);
     $scope.isCollapsed = false;
     $scope.markAsDone = function () {
         $http({
@@ -72,31 +73,31 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
     $scope.newTask = function () {
         // only fire event to parent scope
         // $scope.$emit(TASK_EVENTS.addNewEmptyTask)
-            $http({
-                url: '/add',
-                method: "POST",
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    content: "",
-                    user_id: AuthService.getCurrentUserID(),
-                    prev_task: task.id
-                } //TODO: add input date
-            }).then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-                $scope.newtask = ""
-            }, function (error) {
-                console.log(error)
-            });
+        $http({
+            url: '/add',
+            method: "POST",
+            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
+            data: {
+                content: "",
+                user_id: AuthService.getCurrentUserID(),
+                prev_task: task.id
+            } //TODO: add input date
+        }).then(function (response) {
+            $scope.$emit(TASK_EVENTS.refreshTaskList);
             $scope.newtask = ""
+        }, function (error) {
+            console.log(error)
+        });
+        $scope.newtask = ""
     };
 
-    $scope.setCurrentTask = function(){
+    $scope.setCurrentTask = function () {
         TaskService.setCurrentTask(task)
     };
 
     $scope.showCompleted = AuthService.getUserPreference();
     $scope.$watch(AuthService.retrieveShowTaskPref,
-        function(newval, oldval){
+        function (newval, oldval) {
             $scope.showCompleted = newval
         }
     )
@@ -104,14 +105,14 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
 }
 
 
-angular.module('todoApp').directive("task", function(RecursionHelper) {
+angular.module('todoApp').directive("task", function (RecursionHelper) {
     return {
         restrict: "E",
         scope: {task: '='},
         templateUrl: 'static/partials/task.html',
         controller: TaskController,
-        compile: function(element) {
-            return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
+        compile: function (element) {
+            return RecursionHelper.compile(element, function (scope, iElement, iAttrs, controller, transcludeFn) {
                 // Define your normal link function here.
                 // Alternative: instead of passing a function,
                 // you can also pass an object with
@@ -131,10 +132,6 @@ angular.module('todoApp').directive("task", function(RecursionHelper) {
 //            task: '='
 //        }
 //    });
-
-
-
-
 
 
 angular.module('todoApp')

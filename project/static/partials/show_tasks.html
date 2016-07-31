@@ -1,34 +1,7 @@
 <div class="container-fluid col-md-10 col-md-offset-1">
-    <!--<div class="form-group">
-        <form ng-submit="addTask(newtask)"
-              style="margin-top:30px;">
-            <h3>Add a new task</h3>
-
-            <div class="form-group">
-                <input type="text"
-                       class="form-control"
-                       placeholder="New Task..."
-                       ng-model="newtask">
-            </div>
-        </form>
-    </div>-->
-
-    <!--<div class="list-group">-->
-        <!--<div class="list-group-item" ng-repeat="task in tasks.slice()" ng-hide="task.done && !showCompleted">-->
-            <!--<task task="task"></task>-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <table st-table="tasks" class="table">
-        <tbody>
-        <tr ng-repeat="task in tasks.slice()" ng-hide="task.done && !showCompleted">
-            <td>
-                <task task="task" style="cursor: auto;"></task>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div ng-repeat="task in tasks.slice()" ng-hide="task.done && !showCompleted">
+        <task task="task" style="cursor: auto;"></task>
+    </div>
 
     <datetimebox></datetimebox>
-
 </div>
