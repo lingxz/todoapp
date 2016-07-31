@@ -9,7 +9,7 @@ describe('AuthService', function () {
 
     beforeEach(module('todoApp'));
 
-    beforeEach(inject(function(_AuthService_, _$q_, _$timeout_, _$httpBackend_, _$window_){
+    beforeEach(inject(function(_$q_, _$timeout_, _$httpBackend_, _$window_, _AuthService_){
         AuthService = _AuthService_;
         $q = _$q_;
         $timeout = _$timeout_;
@@ -17,10 +17,11 @@ describe('AuthService', function () {
         $window = _$window_;
     }));
 
-    afterEach(function() {
-        httpBackend.verifyNoOutstandingExpectation();
-        httpBackend.verifyNoOutstandingRequest();
-    });
+
+  //   afterEach(function() {
+  //       $httpBackend.verifyNoOutstandingExpectation();
+  //       $httpBackend.verifyNoOutstandingRequest();
+  //   });
 
     describe('AuthService functions', function(){
 
@@ -31,7 +32,6 @@ describe('AuthService', function () {
         it('should have a login function', function(){
             expect(angular.isFunction(AuthService.login)).toBe(true);
         });
-
         it('should have a logout function', function(){
             expect(angular.isFunction(AuthService.logout)).toBe(true);
         });
@@ -59,10 +59,5 @@ describe('AuthService', function () {
 
     });
 
-    describe('AuthService', function(){
-        it('should have ', function(){
-
-        })
-    })
 
 });
