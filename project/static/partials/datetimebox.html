@@ -1,4 +1,5 @@
 <datetimepicker ng-class="visibility"
                 ng-style="{'left': posx, 'top': posy, 'position': 'absolute'}"
                 data-ng-model="chosenTime"
+                data-before-render="beforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
                 minView="ctrl.getToday"></datetimepicker>
