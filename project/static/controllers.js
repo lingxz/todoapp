@@ -93,7 +93,7 @@ todoApp.controller("mainController", [
     'TASK_EVENTS',
     'hotkeys',
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
-        $scope.tasks = [{content: "asdf"}, {content: "hello"}];
+        // $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
         //$scope.retrieveNr = 10;
 
@@ -143,14 +143,14 @@ todoApp.controller("mainController", [
 
         // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
 
-        AuthService.getUserPreference();
+        // AuthService.getUserPreference();
         $scope.$watch(AuthService.retrieveShowTaskPref,
             function (newval, oldval) {
                 $scope.showCompleted = newval
             }
         );
 
-        $scope.retrieveLastNItems($scope.retrieveNr);
+        $scope.retrieveLastNItems();
 
         $scope.deleteTask = function (task) {
             $http({

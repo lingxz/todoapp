@@ -25,3 +25,7 @@ python manage.py runserver
 python manage.py db upgrade
 python manage.py runserver
 ```
+
+### Testing (you will need Node.js to run the tests)
+```npm init``` to install the necessary npm packages
+```karma start``` to run the tests
