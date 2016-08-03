@@ -98,6 +98,19 @@ describe('mainController', function () {
             expect(angular.isFunction(scope.deleteTask)).toBe(true);
         });
 
+        it('should send user and task data and headers to the server', function () {
+            scope = rootScope.$new();
+            $httpBackend.whenPOST('/retrieve_tasks').respond(201, '');
+            var controller = createController(scope, mockService);
+            task = {id: 3};
+
+            $httpBackend.expectPOST('/delete_task', {user_id: user_id, id: task.id}, function (headers) {
+                return headers.Authorization === 'Bearer ' + token
+            }).respond(200, '');
+            scope.deleteTask(task);
+            $httpBackend.flush();
+        });
+
     })
 
 });
