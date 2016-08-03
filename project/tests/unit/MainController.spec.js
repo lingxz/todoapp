@@ -1,59 +1,103 @@
 describe('mainController', function () {
 
     var scope,
-        ctrl,
-        httpBackend;
+        createContrller,
+        httpBackend,
+        createController,
+        AuthService,
+        TaskService,
+        USER_PREFERENCES,
+        TASK_EVENTS,
+        hotkeys;
 
+    beforeEach(module('templates'));
     beforeEach(module('todoApp'));
 
-    // beforeEach(inject(function ($injector) {
-    //     httpBackend = $injector.get('$httpBackend');
-    //     rootScope = $injector.get('$rootScope');
-    //
-    //     controller = $injector.get('$controller');
-    //
-    //     createController = function () {
-    //         return controller('mainController', { $scope: scope });
-    //     }
-    // }));
+    beforeEach(inject(function ($controller, $rootScope, _$httpBackend_, $injector) {
+        AuthService = $injector.get('AuthService');
+        TaskService = $injector.get('TaskService');
+        USER_PREFERENCES = $injector.get('USER_PREFERENCES');
+        TASK_EVENTS = $injector.get('TASK_EVENTS');
+        hotkeys = $injector.get('hotkeys');
+        rootScope = $rootScope;
 
-    beforeEach(inject(function ($controller, $rootScope, _$httpBackend_) {
-        scope = $rootScope.$new();
-        ctrl = $controller('mainController', { $scope: scope });
-        httpBackend = _$httpBackend_;
+        createController = function (scope, mockService) {
+            return $controller('mainController', {
+                '$scope': scope,
+                'AuthService': mockService
+            })
+        };
+
+        $httpBackend = _$httpBackend_;
     }));
 
-    // describe('retrieveLastNItems function', function () {
-    //     httpBackend.when('POST', '/retrieve_tasks', )
-    //
-    //
-    // });
+    describe('retrieveLastNItems function', function () {
 
+        user_id = 12;
+        var token = 'some_token';
 
-    it('should have a retrieveLastNItems function', function () {
-        expect(angular.isFunction(scope.retrieveLastNItems)).toBe(true);
+        // mock the AuthService
+        var mockService = {
+            getCurrentUserID: function () { return user_id },
+            getToken: function () { return token }
+        };
+
+        it('should exist', function () {
+            scope = rootScope.$new();
+            var controller = createController(scope, AuthService);
+            expect(angular.isFunction(scope.retrieveLastNItems)).toBe(true);
+        });
+
+        it('should be called when the controller initiates', function () {
+            $httpBackend.expectPOST('/retrieve_tasks');
+            scope = rootScope.$new();
+            var controller = createController(scope, mockService);
+        });
+
+        it('should send user data with correct header to the server', function () {
+            scope = rootScope.$new();
+
+            // this is the call to retrieveLastNItems when call initializes
+            $httpBackend.whenPOST('/retrieve_tasks').respond(200, '');
+
+            var controller = createController(scope, mockService);
+            $httpBackend.expectPOST('/retrieve_tasks', {user_id: user_id}, function (headers) {
+                return headers.Authorization === 'Bearer ' + token
+            }).respond(200, '');
+
+            scope.retrieveLastNItems();
+            $httpBackend.flush()
+        });
+
+        it('should set tasks to the response data', function () {
+            scope = rootScope.$new();
+            tasklist = 'xxx';
+            $httpBackend.whenPOST('/retrieve_tasks').respond(201, tasklist);
+            var controller = createController(scope, mockService);
+
+            scope.retrieveLastNItems();
+            $httpBackend.flush();
+            expect(scope.tasks).toEqual(tasklist)
+        });
     });
 
-    // it('should send auth header', function () {
-    //     httpBackend.flush();
-    //
-    //     httpBackend.expectPOST('/retrieve_tasks', {}, function (headers) {
-    //         return headers['Authorization']
-    //     }).respond(201, '');
-    //
-    //     httpBackend.flush();
-    //
-    // });
+    describe('deleteTask function', function () {
 
-    it('should populate task data when the http request succeeds', function () {
-        httpBackend.flush();
-        responseData = [
-            {content: "bla", depth: 0, done: true, due_date: null, id: 1, lft: 0, rgt: 5}
-        ];
+        user_id = 12;
+        var token = 'some_token';
 
-        httpBackend.expectPOST('/retrieve_tasks', undefined, {user_id: 1}).respond(responseData);
-        httpBackend.flush();
-        expect(scope.tasks).toEqual(responseData);
+        // mock the AuthService
+        var mockService = {
+            getCurrentUserID: function () { return user_id },
+            getToken: function () { return token }
+        };
+
+        it('should exist', function () {
+            scope = rootScope.$new();
+            var controller = createController(scope, AuthService);
+            expect(angular.isFunction(scope.deleteTask)).toBe(true);
+        });
+
     })
 
 });
