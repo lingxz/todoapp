@@ -45,8 +45,8 @@ module.exports = function(config) {
     preprocessors: {
       'project/static/*.html': ['ng-html2js'],
       'project/static/**/*.html': ['ng-html2js'],
-      'project/**/*.js': ['coverage'],
-      'project/**/**/*.js': ['coverage']
+      'project/static/*.js': ['coverage'],
+      'project/static/**/*.js': ['coverage']
     },
 
     ngHtml2JsPreprocessor: {
@@ -87,7 +87,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
 
 
     // Continuous Integration mode
