@@ -15,9 +15,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'node_modules/angular/angular.js',
       'node_modules/jquery/dist/jquery.js',
-      // 'node_modules/jquery/src/**/*.js',
+      'node_modules/angular/angular.js',
       'node_modules/bootstrap/dist/js/bootstrap.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'node_modules/angular-animate/angular-animate.js',
@@ -25,13 +24,12 @@ module.exports = function(config) {
       'node_modules/angular-elastic/elastic.js',
       'node_modules/angular-hotkeys/build/hotkeys.js',
       'node_modules/angular-route/angular-route.js',
-      // 'node_modules/angular-ui-bootstrap/src/**/*.js',
       'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
       'node_modules/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
-      'project/**/.js',
       'project/**/*.js',
-      'project/*.js',
-      'project/**/**/*.js'
+      'project/**/**/*.js',
+      'project/static/*.html',
+      'project/static/**/*.html'
     ],
 
 
@@ -40,16 +38,34 @@ module.exports = function(config) {
     ],
 
 
+
+
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'project/static/*.html': ['ng-html2js'],
+      'project/static/**/*.html': ['ng-html2js'],
+      'project/**/*.js': ['coverage'],
+      'project/**/**/*.js': ['coverage']
+    },
+
+    ngHtml2JsPreprocessor: {
+      // // strip this from the file path
+      stripPrefix: 'project/',
+      moduleName: 'templates'
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
+
+    coverageReporter: {
+      type : 'html',
+      // output coverage reports
+      dir : 'coverage/'
+    },
 
 
     // web server port
