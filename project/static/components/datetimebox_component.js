@@ -61,6 +61,14 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK
         });
     };
 
+    $scope.beforeRender = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+        var minDate = moment().startOf($view);
+        for (var i = 0; i < $dates.length; i++){
+            if (minDate.valueOf() > $dates[i].localDateValue()) {
+                $dates[i].selectable = false;
+            }
+        }
+    };
 }
 
 angular.module('todoApp')
