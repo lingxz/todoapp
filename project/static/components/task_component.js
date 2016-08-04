@@ -78,24 +78,14 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
     };
 
     $scope.newTask = function () {
-        // only fire event to parent scope
-        // $scope.$emit(TASK_EVENTS.addNewEmptyTask)
-        $http({
-            url: '/add',
-            method: "POST",
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                content: "",
-                user_id: AuthService.getCurrentUserID(),
-                prev_task: task.id
-            } //TODO: add input date
-        }).then(function (response) {
+        promise = TaskService.addTask(task);
+        promise.then(function () {
             $scope.$emit(TASK_EVENTS.refreshTaskList);
             $scope.newtask = ""
-        }, function (error) {
+        }, function(error) {
             console.log(error)
         });
-        $scope.newtask = ""
+        $scope.newtask = "";
     };
 
     $scope.setCurrentTask = function () {
