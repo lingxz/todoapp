@@ -96,7 +96,7 @@ todoApp.controller("mainController", [
         $scope.newtask = "";
 
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
-            TaskService.retrieveItems()
+            $scope.retrieveItems
         });
 
         // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
@@ -108,7 +108,14 @@ todoApp.controller("mainController", [
             }
         );
 
-        TaskService.retrieveItems();
+        $scope.retrieveItems = function () {
+            promise = TaskService.retrieveItems();
+            promise.then(function (response) {
+                $scope.tasks = response
+            })
+        };
+
+        $scope.retrieveItems();
 
         $scope.deleteTask = function (task) {
             $http({
