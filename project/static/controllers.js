@@ -105,25 +105,6 @@ todoApp.controller("mainController", [
             $scope.retrieveLastNItems()
         });
 
-        //$scope.addTask = function (content) {
-        //    $http({
-        //        url: '/add',
-        //        method: "POST",
-        //        headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-        //        data: {
-        //            content: content,
-        //            user_id: AuthService.getCurrentUserID(),
-        //            prev_task: $scope.currentTask.id
-        //        } //TODO: add input date
-        //    }).then(function (response) {
-        //        $scope.retrieveLastNItems();
-        //        $scope.newtask = ""
-        //    }, function (error) {
-        //        console.log(error)
-        //    });
-        //    $scope.newtask = ""
-        //};
-
 
         // TODO: get n tasks only
         $scope.retrieveLastNItems = function () {
