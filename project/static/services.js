@@ -288,13 +288,34 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
             }
         })
     }
+
+    function retrieveItems() {
+        var headers = AuthService.getHeaders();
+        deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: '/retrieve_tasks',
+            headers: headers,
+            data: {
+                user_id: AuthService.getCurrentUserID()
+            }
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+        return deferred.promise
+    }
+
     
     return ({
         setCurrentTask: setCurrentTask,
         getCurrentTask: getCurrentTask,
         addTask: addTask,
         removeDate: removeDate,
-        editTask: editTask
+        editTask: editTask,
+        retrieveItems: retrieveItems
     })
 
 }]);

@@ -31,7 +31,7 @@ describe('mainController', function () {
         $httpBackend = _$httpBackend_;
     }));
 
-    describe('retrieveLastNItems function', function () {
+    describe('retrieveItems function', function () {
 
         user_id = 12;
         var token = 'some_token';
@@ -45,7 +45,7 @@ describe('mainController', function () {
         it('should exist', function () {
             scope = rootScope.$new();
             var controller = createController(scope, AuthService);
-            expect(angular.isFunction(scope.retrieveLastNItems)).toBe(true);
+            expect(angular.isFunction(scope.retrieveItems)).toBe(true);
         });
 
         it('should be called when the controller initiates', function () {
@@ -57,7 +57,7 @@ describe('mainController', function () {
         it('should send user data with correct header to the server', function () {
             scope = rootScope.$new();
 
-            // this is the call to retrieveLastNItems when call initializes
+            // this is the call to retrieveItems when call initializes
             $httpBackend.whenPOST('/retrieve_tasks').respond(200, '');
 
             var controller = createController(scope, mockService);
@@ -65,7 +65,7 @@ describe('mainController', function () {
                 return headers.Authorization === 'Bearer ' + token
             }).respond(200, '');
 
-            scope.retrieveLastNItems();
+            scope.retrieveItems();
             $httpBackend.flush()
         });
 
@@ -75,7 +75,7 @@ describe('mainController', function () {
             $httpBackend.whenPOST('/retrieve_tasks').respond(201, tasklist);
             var controller = createController(scope, mockService);
 
-            scope.retrieveLastNItems();
+            scope.retrieveItems();
             $httpBackend.flush();
             expect(scope.tasks).toEqual(tasklist)
         });

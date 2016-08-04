@@ -95,7 +95,7 @@ describe('TaskService', function () {
             expect(result).toBe('resolved')
         });
 
-        it('should reject promise when request failed', function () {
+        it('should reject promise when request fails', function () {
             var task = {id: 3};
             $httpBackend.whenPOST('/add').respond(500, '');
             promise = TaskService.addTask(task);
@@ -153,7 +153,7 @@ describe('TaskService', function () {
             expect(result).toBe('resolved')
         });
 
-        it('should reject promise when request failed', function () {
+        it('should reject promise when request fails', function () {
             var task = {id: 3, another: 'bla'};
             $httpBackend.whenPOST('/remove_date').respond(500, '');
             promise = TaskService.removeDate(task);
@@ -197,6 +197,54 @@ describe('TaskService', function () {
             TaskService.editTask(task, content);
             $httpBackend.flush();
         });
-    })
+    });
 
+    describe('retrieveItems function', function () {
+
+        var expectedData = {user_id: 5};
+
+        it('should exist', function () {
+            expect(angular.isFunction(TaskService.retrieveItems)).toBe(true)
+        });
+
+        it('should send user data to the server', function () {
+            $httpBackend.expectPOST('/retrieve_tasks', expectedData).respond(201, '');
+            TaskService.retrieveItems();
+            $httpBackend.flush();
+        });
+
+        it('should send correct auth headers', function () {
+            $httpBackend.expectPOST('/retrieve_tasks', expectedData, function (headers) {
+                return headers.Authorization === 'xxx'
+            }).respond(201, '');
+            TaskService.retrieveItems();
+            $httpBackend.flush();
+        });
+
+        it('should resolve promise when request is successful', function () {
+            $httpBackend.whenPOST('/retrieve_tasks').respond(201, '');
+            promise = TaskService.retrieveItems();
+            var result = null;
+            promise.then(function () {
+                result = 'resolved'
+            }, function (error) {
+                result = 'rejected'
+            });
+            $httpBackend.flush();
+            expect(result).toBe('resolved')
+        });
+
+        it('should reject promise when request fails', function () {
+            $httpBackend.whenPOST('/retrieve_tasks').respond(500, '');
+            promise = TaskService.retrieveItems();
+            var result = null;
+            promise.then(function () {
+                result = 'resolved'
+            }, function (error) {
+                result = 'rejected'
+            });
+            $httpBackend.flush();
+            expect(result).toBe('rejected')
+        });
+    })
 });

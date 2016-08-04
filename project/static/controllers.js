@@ -93,34 +93,11 @@ todoApp.controller("mainController", [
     'TASK_EVENTS',
     'hotkeys',
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
-        // $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
-        //$scope.retrieveNr = 10;
-
-        //$scope.$on(TASK_EVENTS.addNewEmptyTask, function (next, current) {
-        //    $scope.addTask("");
-        //});
 
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
-            $scope.retrieveLastNItems()
+            TaskService.retrieveItems()
         });
-
-
-        // TODO: get n tasks only
-        $scope.retrieveLastNItems = function () {
-            $http({
-                method: 'POST',
-                url: '/retrieve_tasks',
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID()
-                }
-            }).then(function (response) {
-                $scope.tasks = response.data;
-            }, function (error) {
-                console.log(error);
-            });
-        };
 
         // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
 
@@ -131,7 +108,7 @@ todoApp.controller("mainController", [
             }
         );
 
-        $scope.retrieveLastNItems();
+        TaskService.retrieveItems();
 
         $scope.deleteTask = function (task) {
             $http({
