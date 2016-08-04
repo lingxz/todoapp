@@ -96,7 +96,7 @@ todoApp.controller("mainController", [
         $scope.newtask = "";
 
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
-            $scope.retrieveItems
+            $scope.retrieveItems()
         });
 
         // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
