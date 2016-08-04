@@ -236,7 +236,7 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         // for a default argument
         content = content || "";
 
-        headers = AuthService.getHeaders();
+        var headers = AuthService.getHeaders();
         $http({
             url: '/add',
             method: "POST",
@@ -255,11 +255,46 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
 
         return deferred.promise
     }
+
+    function removeDate(task) {
+        var deferred = $q.defer();
+        var headers = AuthService.getHeaders();
+        $http({
+            method: 'POST',
+            url: '/remove_date',
+            headers: headers,
+            data: {
+                id: task.id
+            }
+        }).then(function (response) {
+            deferred.resolve()
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+
+        return deferred.promise
+    }
+
+    function editTask(task, new_content) {
+        var headers = AuthService.getHeaders();
+        $http({
+            method: 'POST',
+            url: '/edit_task',
+            headers: headers,
+            data: {
+                id: task.id,
+                content: new_content
+            }
+        })
+    }
     
     return ({
         setCurrentTask: setCurrentTask,
         getCurrentTask: getCurrentTask,
-        addTask: addTask
+        addTask: addTask,
+        removeDate: removeDate,
+        editTask: editTask
     })
 
 }]);

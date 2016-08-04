@@ -30,15 +30,7 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
 
     var timeout = null;
     var saveTask = function (newVal) {
-        $http({
-            method: 'POST',
-            url: '/edit_task',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id,
-                content: newVal
-            }
-        })
+        TaskService.editTask(task, newVal);
     };
 
     var debounceSaveUpdates = function (newVal, oldVal) {
@@ -66,14 +58,9 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
     };
 
     $scope.removeDate = function () {
-        task.due_date = null;
-        $http({
-            method: 'POST',
-            url: '/remove_date',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id
-            }
+        promise = TaskService.removeDate(task);
+        promise.then(function () {
+            task.due_date = null
         })
     };
 

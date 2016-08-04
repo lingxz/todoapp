@@ -13,6 +13,8 @@ describe('TaskService', function () {
         $httpBackend = _$httpBackend_;
         AuthService = _AuthService_;
         $q = _$q_;
+        spyOn(AuthService, 'getHeaders').and.returnValue({Authorization: 'xxx'});
+        spyOn(AuthService, 'getCurrentUserID').and.returnValue(5);
     }));
 
     describe('set and get current task functions', function () {
@@ -25,23 +27,13 @@ describe('TaskService', function () {
 
     describe('addTask function', function () {
 
-        beforeEach(function () {
-            spyOn(AuthService, 'getHeaders').and.returnValue({Authorization: 'xxx'});
-            spyOn(AuthService, 'getCurrentUserID').and.returnValue(5);
-        });
-
         it('should exist', function () {
             expect(angular.isFunction(TaskService.addTask)).toBe(true)
         });
-
-        // it('should send task data to the correct url', function () {
-        //     TaskService.addTask();
-        //     expect(TaskService.constructAddTaskData).toHaveBeenCalled();
-        // });
         
         it('should send task data to the server', function () {
-            content = "content";
-            task = {id: 3};
+            var content = "content";
+            var task = {id: 3};
 
             expectedData = {
                 content: content,
@@ -49,15 +41,15 @@ describe('TaskService', function () {
                 prev_task: task.id
             };
 
-            $httpBackend.expectPOST('/add', expectedData).respond(200, '');
+            $httpBackend.expectPOST('/add', expectedData).respond(201, '');
             TaskService.addTask(task, content);
             $httpBackend.flush();
         });
 
         // this is not really unitary since it's checking data and headers at once
         it('should send correct auth headers', function () {
-            content = "content";
-            task = {id: 3};
+            var content = "content";
+            var task = {id: 3};
 
             expectedData = {
                 content: content,
@@ -67,7 +59,7 @@ describe('TaskService', function () {
 
             $httpBackend.expectPOST('/add', expectedData, function (headers) {
                 return headers.Authorization === 'xxx'
-            }).respond(200, '');
+            }).respond(201, '');
 
             TaskService.addTask(task, content);
             $httpBackend.flush()
@@ -83,7 +75,7 @@ describe('TaskService', function () {
                 prev_task: task.id
             };
 
-            $httpBackend.expectPOST('/add', expectedData).respond(200, '');
+            $httpBackend.expectPOST('/add', expectedData).respond(201, '');
             TaskService.addTask(task);
             $httpBackend.flush()
         });
@@ -117,7 +109,94 @@ describe('TaskService', function () {
             $httpBackend.flush();
             expect(result).toBe('rejected')
         })
-        
+    });
+
+    describe('removeDate function', function () {
+
+        it('should exist', function () {
+            expect(angular.isFunction(TaskService.removeDate)).toBe(true)
+        });
+
+        it('should send task data to the server', function () {
+            var task = {id: 3, another: 'bla'};
+            var expectedData = {id: 3};
+
+            $httpBackend.expectPOST('/remove_date', expectedData).respond(201, '');
+            TaskService.removeDate(task);
+            $httpBackend.flush();
+        });
+
+        it('should send correct auth headers', function () {
+            var task = {id: 3, another: 'bla'};
+            var expectedData = {id: 3};
+
+            $httpBackend.expectPOST('/remove_date', expectedData, function (headers) {
+                return headers.Authorization === 'xxx'
+            }).respond(201, '');
+
+            TaskService.removeDate(task);
+            $httpBackend.flush()
+        });
+
+        it('should resolve promise when request is successful', function () {
+            var task = {id: 3, another: 'bla'};
+            $httpBackend.whenPOST('/remove_date').respond(201, '');
+            promise = TaskService.removeDate(task);
+
+            var result = null;
+            promise.then(function () {
+                result = 'resolved'
+            }, function (error) {
+                result = 'rejected'
+            });
+            $httpBackend.flush();
+            expect(result).toBe('resolved')
+        });
+
+        it('should reject promise when request failed', function () {
+            var task = {id: 3, another: 'bla'};
+            $httpBackend.whenPOST('/remove_date').respond(500, '');
+            promise = TaskService.removeDate(task);
+
+            var result = null;
+            promise.then(function () {
+                result = 'resolved'
+            }, function (error) {
+                result = 'rejected'
+            });
+            $httpBackend.flush();
+            expect(result).toBe('rejected')
+        })
+    });
+
+    describe('editTask function', function () {
+
+        it('should exist', function () {
+            expect(angular.isFunction(TaskService.editTask)).toBe(true)
+        });
+
+        it('should send task data to the server', function () {
+            var task = {id: 3, another: 'bla'};
+            var content = 'content';
+            var expectedData = {id: task.id, content: content};
+
+            $httpBackend.expectPOST('/edit_task', expectedData).respond(201, '');
+            TaskService.editTask(task, content);
+            $httpBackend.flush();
+        });
+
+        it('should send correct auth headers', function () {
+
+            var task = {id: 3, another: 'bla'};
+            var content = 'content';
+            var expectedData = {id: task.id, content: content};
+
+            $httpBackend.expectPOST('/edit_task', expectedData, function (headers) {
+                return headers.Authorization === 'xxx'
+            }).respond(201, '');
+            TaskService.editTask(task, content);
+            $httpBackend.flush();
+        });
     })
 
 });
