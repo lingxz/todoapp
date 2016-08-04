@@ -96,6 +96,7 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
+test.db
 
 # Translations
 *.mo
@@ -153,10 +154,5 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-<<<<<<< HEAD
-# Test coverage reports
-coverage
-=======
 # test coverage reports
 coverage
->>>>>>> refs/remotes/origin/master
