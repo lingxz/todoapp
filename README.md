@@ -1,4 +1,5 @@
 #Todo app
+[![Build Status][travis-image]][travis-url]
 
 Made as an exercise in Flask, Angular, SQL
 
@@ -29,3 +30,6 @@ python manage.py runserver
 ### Testing (you will need Node.js to run the tests)
 ```npm init``` to install the necessary npm packages
 ```karma start``` to run the tests
+
+[travis-image]: https://travis-ci.org/lingxz/todoapp.svg?branch=master
+[travis-url]: https://travis-ci.org/lingxz/todoapp
