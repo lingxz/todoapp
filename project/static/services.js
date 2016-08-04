@@ -291,7 +291,7 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
 
     function retrieveItems() {
         var headers = AuthService.getHeaders();
-        deferred = $q.defer();
+        var deferred = $q.defer();
         $http({
             method: 'POST',
             url: '/retrieve_tasks',
@@ -308,6 +308,91 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         return deferred.promise
     }
 
+    function deleteTask(task) {
+        var headers = AuthService.getHeaders();
+        var deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: '/delete_task',
+            headers: headers,
+            data: {
+                user_id: AuthService.getCurrentUserID(),
+                id: task.id
+            }
+        }).then(function (response) {
+            deferred.resolve()
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+
+        return deferred.promise
+    }
+
+    function getPrevSibling(task) {
+        var headers = AuthService.getHeaders();
+        var deferred = $q.defer();
+
+        $http({
+            url: '/get_prev_sibling',
+            method: "POST",
+            headers: headers,
+            data: {
+                user_id: AuthService.getCurrentUserID(),
+                task_id: task.id
+            }
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+
+        return deferred.promise
+    }
+
+    function makeSubTask(task, prev_sibling_id) {
+        var headers = AuthService.getHeaders();
+        var deferred = $q.defer();
+
+        $http({
+            url: '/add_subtask',
+            method: "POST",
+            headers: headers,
+            data: {
+                user_id: AuthService.getCurrentUserID(),
+                prev_task_id: prev_sibling_id,
+                subtask_id: task.id
+            }
+        }).then(function (response) {
+            deferred.resolve()
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+
+        return deferred.promise
+    }
+    
+    function markAsDone(task) {
+        var headers = AuthService.getHeaders();
+        var deferred = $q.defer();
+
+        $http({
+            method: 'POST',
+            url: '/markdone',
+            headers: headers,
+            data: {
+                id: task.id
+            }
+        }).then(function (response) {
+            deferred.resolve(response.data)
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+        return deferred.promise
+    }
     
     return ({
         setCurrentTask: setCurrentTask,
@@ -315,7 +400,11 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         addTask: addTask,
         removeDate: removeDate,
         editTask: editTask,
-        retrieveItems: retrieveItems
+        retrieveItems: retrieveItems,
+        deleteTask: deleteTask,
+        getPrevSibling: getPrevSibling,
+        makeSubTask: makeSubTask,
+        markAsDone: markAsDone
     })
 
 }]);

@@ -14,17 +14,9 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
     $scope.isCollapsed = false;
 
     $scope.markAsDone = function () {
-        $http({
-            method: 'POST',
-            url: '/markdone',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id
-            }
-        }).then(function (response) {
-            task.done = response.data.done;
-        }, function (error) {
-            console.log(error);
+        promise = TaskService.markAsDone(task);
+        promise.then(function (data) {
+            task.done = data.done
         });
     };
 

@@ -118,15 +118,9 @@ todoApp.controller("mainController", [
         $scope.retrieveItems();
 
         $scope.deleteTask = function (task) {
-            $http({
-                method: 'POST',
-                url: '/delete_task',
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID(),
-                    id: task.id
-                }
-            }).then(function (response) {
+
+            promise = TaskService.deleteTask(task);
+            promise.then(function (response) {
                 $scope.$emit(TASK_EVENTS.refreshTaskList)
             })
         };
@@ -139,48 +133,17 @@ todoApp.controller("mainController", [
             }
         );
 
-        $scope.makeSubTaskHelper = function (task, prev_id) {
-
-            // need to find previous sibling task first
-            //
-            //index = $scope.tasks.indexOf(task);
-            //prev_task = $scope.tasks[index-1];
-
-
-            $http({
-                url: '/add_subtask',
-                method: "POST",
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID(),
-                    prev_task_id: prev_id,
-                    subtask_id: task.id
-                }
-            }).then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-            }, function (error) {
-                console.log(error)
-            });
-        };
-
         $scope.makeSubTask = function (task) {
-            // get previous task first
-            $http({
-                url: '/get_prev_sibling',
-                method: "POST",
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID(),
-                    task_id: task.id
-                }
-            }).then(function (response) {
-                prev_id = response.data.id;
-                $scope.makeSubTaskHelper(task, prev_id)
-            }, function (error) {
-                console.log(error)
-            });
+            var prev_id;
+            var promise = TaskService.getPrevSibling(task);
+            promise.then(function (response) {
+                prev_id = response.id;
+                var promise2 = TaskService.makeSubTask(task, prev_id);
+                promise2.then(function (response) {
+                    $scope.$emit(TASK_EVENTS.refreshTaskList);
+                })
+            })
         };
-
 
         hotkeys.bindTo($scope)
             .add({
