@@ -21,10 +21,6 @@ class UserTestSetup(TestCase):
         db.session.remove()
         db.drop_all()
 
-
-class UserTests(UserTestSetup):
-    """Functions to check user routes"""
-
     def create_user(self):
         self.test_username = 'test'
         self.test_password = 'test'
@@ -38,10 +34,20 @@ class UserTests(UserTestSetup):
         db.session.add(user)
         db.session.commit()
 
+    def login_user(self):
+        self.create_user()
+        resp = self.client.post(url_for('users.login'),
+                                data=json.dumps({'email': self.test_email, 'password': self.test_password}),
+                                content_type='application/json')
+        return resp.json['token']
+
+
+class TestUsers(UserTestSetup):
+    """Functions to check user routes"""
+
     def test_user_can_login(self):
         """Check if a registered user can log in"""
         self.create_user()
-
         resp = self.client.post(url_for('users.login'),
                                 data=json.dumps({'email': self.test_email, 'password': self.test_password}),
                                 content_type='application/json')
@@ -58,7 +64,7 @@ class UserTests(UserTestSetup):
         self.assertEquals(resp.json['result'], False)
 
     def test_can_register_user(self):
-        """Check if user can be registered"""
+        """Users can be registered"""
         resp = self.client.post(url_for('users.register'),
                                 data=json.dumps({
                                     'email': self.test_email,
@@ -71,7 +77,7 @@ class UserTests(UserTestSetup):
         self.assertEquals(resp.json['result'], 'success')
 
     def test_cannot_register_multiple_user(self):
-        """Prevent multiple registrations"""
+        """Multiple registrations are not allowed"""
         self.create_user()
 
         resp = self.client.post(url_for('users.register'),
@@ -84,3 +90,50 @@ class UserTests(UserTestSetup):
 
         self.assert200(resp)
         self.assertEquals(resp.json['result'], 'this user is already registered')
+
+    def test_user_can_logout(self):
+        """User that is logged in can log out"""
+        token = self.login_user()
+        resp = self.client.get(url_for('users.logout'),
+                               headers={'Authorization': 'Bearer ' + token}
+                               )
+
+        self.assert200(resp)
+        self.assertEquals(resp.json['result'], 'success')
+
+    def test_get_user_preference(self):
+        """User can retrieve task display preference"""
+        token = self.login_user()
+        resp = self.client.get(url_for('users.get_user_preferences'),
+                               headers={'Authorization': 'Bearer ' + token}
+                               )
+        self.assert200(resp)
+        self.assertEquals(resp.json['show_completed_task'], True)
+
+    def test_toggle_user_preference(self):
+        """User can toggle task display preference"""
+        token = self.login_user()
+
+        # Set preference to true
+        resp = self.client.post(url_for('users.show_task_toggle'),
+                                data=json.dumps({'option': True}),
+                                content_type='application/json',
+                                headers={'Authorization': 'Bearer ' + token}
+                                )
+        self.assert200(resp)
+
+        resp = self.client.get(url_for('users.get_user_preferences'),
+                               headers={'Authorization': 'Bearer ' + token})
+        self.assertEquals(resp.json['show_completed_task'], True)
+
+        # Set preference to false
+        resp = self.client.post(url_for('users.show_task_toggle'),
+                                data=json.dumps({'option': False}),
+                                content_type='application/json',
+                                headers={'Authorization': 'Bearer ' + token}
+                                )
+        self.assert200(resp)
+
+        resp = self.client.get(url_for('users.get_user_preferences'),
+                               headers={'Authorization': 'Bearer ' + token})
+        self.assertEquals(resp.json['show_completed_task'], False)
