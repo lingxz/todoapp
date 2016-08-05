@@ -188,6 +188,7 @@ angular.module('todoApp').factory('AuthService',
                 getToken: getToken,
                 getUserPreference: getUserPreference,
                 updateShowTaskPref: updateShowTaskPref,
+                setShowTaskPref: setShowTaskPref,
                 retrieveShowTaskPref: retrieveShowTaskPref,
                 getHeaders: getHeaders
             });
