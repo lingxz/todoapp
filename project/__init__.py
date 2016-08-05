@@ -19,7 +19,7 @@ from project.utils import utils
 from project.utils import auth
 
 # Import routes
-from project.routes import users
+from project.users import users
 
 # Register the routes, this looks weird but it necessary to register the blueprint object
 app.register_blueprint(users.users)

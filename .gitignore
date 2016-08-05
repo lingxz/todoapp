@@ -97,6 +97,7 @@ coverage.xml
 *,cover
 .hypothesis/
 test.db
+cover
 
 # Translations
 *.mo
