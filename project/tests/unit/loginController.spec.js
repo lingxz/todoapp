@@ -36,7 +36,6 @@ describe('loginController', function () {
         scope.loginForm = {};
         scope.loginForm.email = 'xyz';
         scope.loginForm.password = '123';
-
     }));
 
     describe('login function', function () {
@@ -56,8 +55,8 @@ describe('loginController', function () {
             scope.login();
             deferred.resolve();
             scope.$digest();
-
-            expect($location.path).toHaveBeenCalledWith('/');
+            expect($location.path.calls.count()).toBe(4);
+            expect($location.path.calls.mostRecent().args).toEqual(['/']);
         });
 
         it('should set clear login form and set $scope.disabled to false on success', function () {
@@ -77,14 +76,13 @@ describe('loginController', function () {
             expect(scope.loginForm).toEqual({});
             expect(scope.disabled).toBe(false);
         });
-
-        // TODO: why is this failing??
+        
         it('should not redirect when login fails', function () {
             spyOn($location, 'path').and.callThrough();
             scope.login();
             deferred.reject();
             scope.$digest();
-            expect($location.path).not.toHaveBeenCalledWith('/')
+            expect($location.path.calls.count()).toBe(3)
         })
     })
 

@@ -54,7 +54,8 @@ describe('registerController', function () {
             scope.register();
             deferred.resolve();
             scope.$digest();
-            expect($location.path).toHaveBeenCalledWith('/login')
+            expect($location.path.calls.count()).toBe(4);
+            expect($location.path.calls.mostRecent().args).toEqual(['/login']);
         });
 
         it('should clear registration form and set disabled to false on successful registration', function () {
@@ -74,15 +75,16 @@ describe('registerController', function () {
             expect(scope.registerForm).toEqual({})
         });
 
-        // why is this also failing?
+        // if redirecting, it is the 4th call, so we expect the fourth call not to be made
         it('should not redirect on failed registration', function () {
             spyOn($location, 'path').and.callThrough();
             scope.register();
             deferred.reject();
             scope.$digest();
-            expect($location.path).not.toHaveBeenCalled()
+            expect($location.path.calls.count()).toBe(3)
         })
     })
 
 
 });
+

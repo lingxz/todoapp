@@ -49,16 +49,16 @@ describe('logoutController', function () {
             scope.logout();
             deferred.resolve();
             scope.$digest();
-
-            expect($location.path).toHaveBeenCalledWith('/login');
+            expect($location.path.calls.count()).toBe(4);
+            expect($location.path.calls.mostRecent().args).toEqual(['/login']);
         });
 
-        it('should not redirect or do anything on unsuccessful logout', function () {
+        it('should not redirect on unsuccessful logout', function () {
             spyOn($location, 'path').and.callThrough();
             scope.logout();
             deferred.reject();
             scope.$digest();
-            expect($location.path).not.toHaveBeenCalled();
+            expect($location.path.calls.count()).toBe(3)
         })
     })
 });
