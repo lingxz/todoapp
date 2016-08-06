@@ -44,14 +44,6 @@ describe('logoutController', function () {
             expect(AuthService.logout).toHaveBeenCalled()
         });
 
-        it('should broadcast logoutSuccess event on successful logout', function () {
-            spyOn($rootScope, '$broadcast').and.callThrough();
-            scope.logout();
-            deferred.resolve();
-            scope.$digest();
-            expect($rootScope.$broadcast).toHaveBeenCalledWith(AUTH_EVENTS.logoutSuccess)
-        });
-
         it('should redirect to login page on successful logout', function () {
             spyOn($location, 'path').and.callThrough();
             scope.logout();
@@ -63,12 +55,10 @@ describe('logoutController', function () {
 
         it('should not redirect or do anything on unsuccessful logout', function () {
             spyOn($location, 'path').and.callThrough();
-            spyOn($rootScope, '$broadcast').and.callThrough();
             scope.logout();
             deferred.reject();
             scope.$digest();
             expect($location.path).not.toHaveBeenCalled();
-            expect($rootScope.$broadcast).not.toHaveBeenCalled();
         })
     })
 });

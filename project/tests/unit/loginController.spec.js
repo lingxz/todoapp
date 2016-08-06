@@ -51,15 +51,6 @@ describe('loginController', function () {
             expect(AuthService.login).toHaveBeenCalledWith('xyz', '123')
         });
 
-        it('should broadcast loginSuccess event on success', function () {
-            spyOn($rootScope, '$broadcast').and.callThrough();
-            scope.login();
-            deferred.resolve();
-            scope.$digest();
-            expect($rootScope.$broadcast).toHaveBeenCalled();
-            expect($rootScope.$broadcast).toHaveBeenCalledWith(AUTH_EVENTS.loginSuccess)
-        });
-
         it('should redirect to home page on success', function () {
             spyOn($location, 'path').and.callThrough();
             scope.login();
@@ -87,23 +78,13 @@ describe('loginController', function () {
             expect(scope.disabled).toBe(false);
         });
 
-        it('should broadcast loginFailed event when login fails', function () {
-            spyOn($rootScope, '$broadcast').and.callThrough();
-
-            scope.login();
-            deferred.reject();
-            scope.$digest();
-            expect($rootScope.$broadcast).toHaveBeenCalledWith(AUTH_EVENTS.loginFailed);
-            expect($rootScope.$broadcast).not.toHaveBeenCalledWith(AUTH_EVENTS.loginSuccess)
-        });
-
         // TODO: why is this failing??
         it('should not redirect when login fails', function () {
             spyOn($location, 'path').and.callThrough();
             scope.login();
             deferred.reject();
             scope.$digest();
-            expect($location.path).toHaveBeenCalledWith('/')
+            expect($location.path).not.toHaveBeenCalledWith('/')
         })
     })
 
