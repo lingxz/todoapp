@@ -22,9 +22,6 @@ class UserTestSetup(TestCase):
         db.drop_all()
 
     def create_user(self):
-        self.test_username = 'test'
-        self.test_password = 'test'
-        self.test_email = 'test@test.com'
         user = User(
             username=self.test_username,
             password=self.test_password,
@@ -137,3 +134,24 @@ class TestUsers(UserTestSetup):
         resp = self.client.get(url_for('users.get_user_preferences'),
                                headers={'Authorization': 'Bearer ' + token})
         self.assertEquals(resp.json['show_completed_task'], False)
+
+
+class TestAuth(UserTestSetup):
+    """Testing of authentication helper functions"""
+
+    # Need to figure out how to fake the expired token
+
+    def test_auth_routes_require_valid_token(self):
+        """User can retrieve task display preference"""
+        token = "asdf"
+        resp = self.client.get(url_for('users.get_user_preferences'),
+                               headers={'Authorization': 'Bearer ' + token}
+                               )
+        self.assert401(resp)
+        self.assertEquals(resp.json['message'], 'Token is invalid')
+
+    def test_auth_routes_require_token(self):
+        """User can retrieve task display preference"""
+        resp = self.client.get(url_for('users.get_user_preferences'))
+        self.assert401(resp)
+        self.assertEquals(resp.json['message'], 'Missing authorization header')
