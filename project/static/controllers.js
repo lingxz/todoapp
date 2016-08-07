@@ -2,8 +2,8 @@
  * Created by mark on 7/6/16.
  */
 angular.module('todoApp').controller('loginController',
-    ['$scope', '$rootScope', '$location', 'AUTH_EVENTS', 'AuthService',
-        function ($scope, $rootScope, $location, AUTH_EVENTS, AuthService) {
+    ['$scope', '$location', 'AuthService',
+        function ($scope, $location, AuthService) {
 
             $scope.login = function () {
 
@@ -15,14 +15,12 @@ angular.module('todoApp').controller('loginController',
                 AuthService.login($scope.loginForm.email, $scope.loginForm.password)
                 // handle success
                     .then(function () {
-                        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                         $location.path('/');
                         $scope.disabled = false;
                         $scope.loginForm = {};
                     })
                     // handle error
                     .catch(function () {
-                        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                         $scope.error = true;
                         $scope.errorMessage = "Invalid username and/or password";
                         $scope.disabled = false;
@@ -33,15 +31,14 @@ angular.module('todoApp').controller('loginController',
         }]);
 
 angular.module('todoApp').controller('logoutController',
-    ['$scope', '$rootScope', '$location', 'AUTH_EVENTS', 'AuthService',
-        function ($scope, $rootScope, $location, AUTH_EVENTS, AuthService) {
+    ['$scope', '$location', 'AuthService',
+        function ($scope, $location, AuthService) {
 
             $scope.logout = function () {
 
                 // call logout from service
                 AuthService.logout()
                     .then(function () {
-                        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
                         $location.path('/login');
                     });
 
@@ -93,53 +90,11 @@ todoApp.controller("mainController", [
     'TASK_EVENTS',
     'hotkeys',
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
-        // $scope.tasks = [{content: "asdf"}, {content: "hello"}];
         $scope.newtask = "";
-        //$scope.retrieveNr = 10;
-
-        //$scope.$on(TASK_EVENTS.addNewEmptyTask, function (next, current) {
-        //    $scope.addTask("");
-        //});
 
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
-            $scope.retrieveLastNItems()
+            $scope.retrieveItems()
         });
-
-        //$scope.addTask = function (content) {
-        //    $http({
-        //        url: '/add',
-        //        method: "POST",
-        //        headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-        //        data: {
-        //            content: content,
-        //            user_id: AuthService.getCurrentUserID(),
-        //            prev_task: $scope.currentTask.id
-        //        } //TODO: add input date
-        //    }).then(function (response) {
-        //        $scope.retrieveLastNItems();
-        //        $scope.newtask = ""
-        //    }, function (error) {
-        //        console.log(error)
-        //    });
-        //    $scope.newtask = ""
-        //};
-
-
-        // TODO: get n tasks only
-        $scope.retrieveLastNItems = function () {
-            $http({
-                method: 'POST',
-                url: '/retrieve_tasks',
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID()
-                }
-            }).then(function (response) {
-                $scope.tasks = response.data;
-            }, function (error) {
-                console.log(error);
-            });
-        };
 
         // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
 
@@ -150,22 +105,21 @@ todoApp.controller("mainController", [
             }
         );
 
-        $scope.retrieveLastNItems();
-
-        $scope.deleteTask = function (task) {
-            $http({
-                method: 'POST',
-                url: '/delete_task',
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID(),
-                    id: task.id
-                }
-            }).then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList)
+        $scope.retrieveItems = function () {
+            promise = TaskService.retrieveItems();
+            promise.then(function (response) {
+                $scope.tasks = response
             })
         };
 
+        $scope.retrieveItems();
+
+        $scope.deleteTask = function (task) {
+            promise = TaskService.deleteTask(task);
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList)
+            })
+        };
 
         $scope.currentTask = TaskService.getCurrentTask();
         $scope.$watch(TaskService.getCurrentTask,
@@ -174,48 +128,17 @@ todoApp.controller("mainController", [
             }
         );
 
-        $scope.makeSubTaskHelper = function (task, prev_id) {
-
-            // need to find previous sibling task first
-            //
-            //index = $scope.tasks.indexOf(task);
-            //prev_task = $scope.tasks[index-1];
-
-
-            $http({
-                url: '/add_subtask',
-                method: "POST",
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID(),
-                    prev_task_id: prev_id,
-                    subtask_id: task.id
-                }
-            }).then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-            }, function (error) {
-                console.log(error)
-            });
-        };
-
         $scope.makeSubTask = function (task) {
-            // get previous task first
-            $http({
-                url: '/get_prev_sibling',
-                method: "POST",
-                headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-                data: {
-                    user_id: AuthService.getCurrentUserID(),
-                    task_id: task.id
-                }
-            }).then(function (response) {
-                prev_id = response.data.id;
-                $scope.makeSubTaskHelper(task, prev_id)
-            }, function (error) {
-                console.log(error)
-            });
+            var prev_id;
+            var promise = TaskService.getPrevSibling(task);
+            promise.then(function (response) {
+                prev_id = response.id;
+                var promise2 = TaskService.makeSubTask(task, prev_id);
+                promise2.then(function (response) {
+                    $scope.$emit(TASK_EVENTS.refreshTaskList);
+                })
+            })
         };
-
 
         hotkeys.bindTo($scope)
             .add({
