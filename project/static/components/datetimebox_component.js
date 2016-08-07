@@ -9,9 +9,9 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, Task
         return moment();
     };
 
-    var cur_task = null;
+    $scope.cur_task = null;
 
-    $scope.showBox = function (cur_position) {
+    $scope.showBox = function (cur_pos) {
         $scope.posx = cur_pos[0];
         $scope.posy = cur_pos[1];
         $scope.visibility = "show";
@@ -24,11 +24,11 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, Task
     $scope.$watch(DatetimeService.getCursorPos,
         function (cur_pos, oldvalue) {
             if (cur_pos) {
-                task_id = DatetimeService.getCurTask();
+                var task_id = DatetimeService.getCurTask();
                 if ($scope.visibility == "hidden") {
                     $scope.showBox(cur_pos);
-                    cur_task = task_id
-                } else if ($scope.visibility === "show" && task_id === cur_task) {
+                    $scope.cur_task = task_id
+                } else if ($scope.visibility === "show" && task_id === $scope.cur_task) {
                     $scope.closeBox()
                 }
             }
@@ -39,7 +39,7 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, Task
         if ($scope.chosenTime) {
             // close box when user selects a time
             $scope.closeBox();
-            $scope.setDate(cur_task, $scope.chosenTime);
+            $scope.setDate($scope.cur_task, $scope.chosenTime);
         }
     });
 
