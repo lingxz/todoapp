@@ -147,8 +147,21 @@ textarea.form-control {
     z-index: 100;
     font-family: 'Open Sans', sans-serif;
     color: white;
+    width: 267px;
+    box-shadow: none;
+}
+
+.side-nav.fixed a {
+    text-align: right;
+    color: white;
 }
 
 .userView {
     height: 150px;
+}
+
+.my-circle {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
 }
