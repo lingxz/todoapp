@@ -134,9 +134,21 @@ textarea.form-control {
     border-radius: 0 !important;
     background-color: #08b1a2;
     font-family: 'Open Sans', sans-serif;
+    z-index: 200;
 }
 .nav-wrapper .brand-logo {
     font-family: 'Poiret One', cursive;
     font-size: 50px;
     padding-left: 2%;
+}
+
+.side-nav {
+    background: transparent;
+    z-index: 100;
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+}
+
+.userView {
+    height: 150px;
 }
