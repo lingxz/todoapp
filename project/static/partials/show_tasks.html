@@ -1,6 +1,8 @@
-<div class="container-fluid col-md-10 col-md-offset-1">
-    <div ng-repeat="task in tasks.slice()" ng-hide="task.done && !showCompleted">
-        <task task="task" style="cursor: auto;"></task>
+<div class="container-fluid col-md-8 col-md-offset-2">
+    <div ng-repeat="taskgroup in tasks.slice() | groupBy: 3" ng-hide="task.done && !showCompleted">
+        <div class="col-xs-4" ng-repeat="task in taskgroup">
+            <task task="task" style="cursor: auto;"></task>
+        </div>
     </div>
 
     <datetimebox></datetimebox>

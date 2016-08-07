@@ -1,6 +1,11 @@
 html, body, .container, textarea {
     height: 100%;
-    /*background-color: #ecf0f1;*/
+}
+
+body {
+    background: #775760 fixed; /* fallback for old browsers */
+    background: -webkit-linear-gradient(#775760, #00354f) fixed; /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(#775760, #00354f) fixed; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 textarea.form-control {
@@ -96,4 +101,42 @@ textarea.form-control {
     background-color: white;
     border-style: solid;
     z-index: 1000;
+}
+
+.card {
+    background: #fff;
+    border-radius: 2px;
+    display: inline-block;
+    height: 341px;
+    margin: 0.2rem;
+    position: relative;
+    width: 258px;
+}
+
+.card-1 {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.card-1:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+/** {*/
+    /*-webkit-border-radius: 0 !important;*/
+    /*-moz-border-radius: 0 !important;*/
+    /*border-radius: 0 !important;*/
+/*}*/
+
+.nav-wrapper {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    background-color: #08b1a2;
+    font-family: 'Open Sans', sans-serif;
+}
+.nav-wrapper .brand-logo {
+    font-family: 'Poiret One', cursive;
+    font-size: 50px;
+    padding-left: 2%;
 }

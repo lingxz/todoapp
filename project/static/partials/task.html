@@ -1,43 +1,81 @@
-<div ng-class="{'done-text':task.done}" class="container-fluid" style="width:{{taskWidth}}%; float:right;">
-    <table style="width:100%; table-layout: fixed">
-        <tr>
-            <td style="width:30px">
-                <i class="material-icons" style="cursor: pointer"
-                   ng-click="isCollapsed = !isCollapsed">add</i>
-            </td>
-            <td style="width:100%">
-                <textarea class="tc-textarea" rows="1" msd-elastic
-                          spellcheck="false"
-                          ng-model="task.content"
-                          ng-class="{'done-text':task.done}"
-                          ng-focus="setCurrentTask()"
-                          ng-enter="newTask()">
-                         {{ task.content }}
-                </textarea>
-            </td>
+<div class="card-row">
 
-            <td style="width:90px">
-                <span class="pull-right">
-                    <i class="material-icons"
-                       ng-show="task.due_date"
-                       uib-tooltip="{{ task.due_date }}"
-                       tooltip-placement="top"
-                       style="cursor: pointer"
-                       ng-click="callDateTimePicker($event)">alarm</i>
+    <div class="card card-1 darken-1">
+        <div class="card-content">
+            <span class="card-title">{{ task.content }} </span><i class="material-icons right activator">more_vert</i>
+            <p>by</p>
+            <p>{{ task.due_date }}</p>
 
-                    <i class="material-icons"
-                       ng-hide="task.due_date"
-                       uib-tooltip="Add alarm"
-                       tooltip-placement="top"
-                       style="cursor: pointer"
-                       ng-click="callDateTimePicker($event)">alarm_add</i>
+        </div>
+        <div class="card-action">
+            blabla
+        </div>
 
-                    <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done</i>
+        <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+            <p>Here is some more information about this product that is only revealed once clicked on.</p>
+            <i class="material-icons"
+               ng-show="task.due_date"
+               uib-tooltip="{{ task.due_date }}"
+               tooltip-placement="top"
+               style="cursor: pointer"
+               ng-click="callDateTimePicker($event)">alarm</i>
 
-                    <!--clear all subtasks button, do this when we actually have subtasks-->
-                    <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done_all</i>
-                </span>
-            </td>
-        </tr>
-    </table>
+            <i class="material-icons"
+               ng-hide="task.due_date"
+               uib-tooltip="Add alarm"
+               tooltip-placement="top"
+               style="cursor: pointer"
+               ng-click="callDateTimePicker($event)">alarm_add</i>
+
+        </div>
+    </div>
 </div>
+
+
+
+
+
+<!--<div ng-class="{'done-text':task.done}" class="container-fluid" style="width:{{taskWidth}}%; float:right;">-->
+    <!--<table style="width:100%; table-layout: fixed">-->
+        <!--<tr>-->
+            <!--<td style="width:30px">-->
+                <!--<i class="material-icons" style="cursor: pointer"-->
+                   <!--ng-click="isCollapsed = !isCollapsed">add</i>-->
+            <!--</td>-->
+            <!--<td style="width:100%">-->
+                <!--<textarea class="tc-textarea" rows="1" msd-elastic-->
+                          <!--spellcheck="false"-->
+                          <!--ng-model="task.content"-->
+                          <!--ng-class="{'done-text':task.done}"-->
+                          <!--ng-focus="setCurrentTask()"-->
+                          <!--ng-enter="newTask()">-->
+                         <!--{{ task.content }}-->
+                <!--</textarea>-->
+            <!--</td>-->
+
+            <!--<td style="width:90px">-->
+                <!--<span class="pull-right">-->
+                    <!--<i class="material-icons"-->
+                       <!--ng-show="task.due_date"-->
+                       <!--uib-tooltip="{{ task.due_date }}"-->
+                       <!--tooltip-placement="top"-->
+                       <!--style="cursor: pointer"-->
+                       <!--ng-click="callDateTimePicker($event)">alarm</i>-->
+
+                    <!--<i class="material-icons"-->
+                       <!--ng-hide="task.due_date"-->
+                       <!--uib-tooltip="Add alarm"-->
+                       <!--tooltip-placement="top"-->
+                       <!--style="cursor: pointer"-->
+                       <!--ng-click="callDateTimePicker($event)">alarm_add</i>-->
+
+                    <!--<i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done</i>-->
+
+                    <!--&lt;!&ndash;clear all subtasks button, do this when we actually have subtasks&ndash;&gt;-->
+                    <!--<i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done_all</i>-->
+                <!--</span>-->
+            <!--</td>-->
+        <!--</tr>-->
+    <!--</table>-->
+<!--</div>-->
