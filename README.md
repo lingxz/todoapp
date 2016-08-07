@@ -31,5 +31,9 @@ python manage.py runserver
 ```npm init``` to install the necessary npm packages
 ```karma start``` to run the tests
 
+### Testing (Backend)
+```pip install coverage```
+```nosetests --with-coverage --cover-package=project --cover-html```
+
 [travis-image]: https://travis-ci.org/lingxz/todoapp.svg?branch=master
 [travis-url]: https://travis-ci.org/lingxz/todoapp
