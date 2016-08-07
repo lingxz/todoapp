@@ -53,7 +53,5 @@ describe('AuthService', function () {
             AuthService.logout();
             $httpBackend.flush();
         });
-
     });
-
 });

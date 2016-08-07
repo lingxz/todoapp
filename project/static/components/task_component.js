@@ -2,10 +2,11 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $http, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
+function TaskController($scope, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
     // Extract from controller
-    $scope.task = $scope.ctrl.task;
-    var task = $scope.task;
+    var ctrl = this;
+    $scope.task = ctrl.task;
+    var task = ctrl.task;
 
     // Control offsets
     $scope.taskDepth = task.depth * 1.5;
@@ -14,31 +15,15 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
     $scope.isCollapsed = false;
 
     $scope.markAsDone = function () {
-        $http({
-            method: 'POST',
-            url: '/markdone',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id
-            }
-        }).then(function (response) {
-            task.done = response.data.done;
-        }, function (error) {
-            console.log(error);
+        promise = TaskService.markAsDone(task);
+        promise.then(function (data) {
+            task.done = data.done
         });
     };
 
     var timeout = null;
     var saveTask = function (newVal) {
-        $http({
-            method: 'POST',
-            url: '/edit_task',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id,
-                content: newVal
-            }
-        })
+        TaskService.editTask(task, newVal);
     };
 
     var debounceSaveUpdates = function (newVal, oldVal) {
@@ -66,55 +51,42 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
     };
 
     $scope.removeDate = function () {
-        task.due_date = null;
-        $http({
-            method: 'POST',
-            url: '/remove_date',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: task.id
-            }
+        promise = TaskService.removeDate(task);
+        promise.then(function () {
+            task.due_date = null
         })
     };
 
     $scope.newTask = function () {
-        // only fire event to parent scope
-        // $scope.$emit(TASK_EVENTS.addNewEmptyTask)
-        $http({
-            url: '/add',
-            method: "POST",
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                content: "",
-                user_id: AuthService.getCurrentUserID(),
-                prev_task: task.id
-            } //TODO: add input date
-        }).then(function (response) {
+        promise = TaskService.addTask(task);
+        promise.then(function () {
             $scope.$emit(TASK_EVENTS.refreshTaskList);
             $scope.newtask = ""
-        }, function (error) {
+        }, function(error) {
             console.log(error)
         });
-        $scope.newtask = ""
+        $scope.newtask = "";
     };
 
     $scope.setCurrentTask = function () {
         TaskService.setCurrentTask(task)
     };
 
-    $scope.showCompleted = AuthService.getUserPreference();
+    // $scope.showCompleted = AuthService.getUserPreference();
     $scope.$watch(AuthService.retrieveShowTaskPref,
         function (newval, oldval) {
             $scope.showCompleted = newval
         }
     )
-
 }
+
+angular.module('todoApp')
+    .controller('TaskController', TaskController);
 
 angular.module('todoApp')
     .component('task', {
         templateUrl: 'static/partials/task.html',
-        controller: TaskController,
+        controller: 'TaskController',
         controllerAs: 'ctrl',
         bindings: {
             task: '='
