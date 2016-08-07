@@ -456,5 +456,57 @@ describe('TaskService', function () {
             $httpBackend.flush();
             expect(result).toBe('rejected')
         });
+    });
+
+    describe('editDate function', function () {
+        var task_id = 3;
+        var due_date = new Date();
+        var expectedData = {id: task_id, date: due_date.toString()};
+
+        it('should exist', function () {
+            expect(angular.isFunction(TaskService.editDate)).toBe(true)
+        });
+
+        it('should send task data and due date to the server', function () {
+            $httpBackend.expectPOST('/edit_date', expectedData).respond(201, '');
+            TaskService.editDate(task_id, due_date);
+            $httpBackend.flush();
+        });
+
+        it('should send correct auth headers', function () {
+            $httpBackend.expectPOST('/edit_date', expectedData, function (headers) {
+                return headers.Authorization === 'xxx'
+            }).respond(201, '');
+            TaskService.editDate(task_id, due_date);
+            $httpBackend.flush();
+        });
+
+        it('should resolve promise when request is successful', function () {
+            $httpBackend.whenPOST('/edit_date').respond(201, '');
+            promise = TaskService.editDate(task_id, due_date);
+
+            var result = null;
+            promise.then(function (response) {
+                result = 'resolved'
+            }, function (error) {
+                result = 'rejected'
+            });
+            $httpBackend.flush();
+            expect(result).toBe('resolved')
+        });
+
+        it('should reject promise when request fails', function () {
+            $httpBackend.whenPOST('/edit_date').respond(500, '');
+            promise = TaskService.editDate(task_id, due_date);
+
+            var result = null;
+            promise.then(function (response) {
+                result = 'resolved'
+            }, function (error) {
+                result = 'rejected'
+            });
+            $httpBackend.flush();
+            expect(result).toBe('rejected')
+        });
     })
 });

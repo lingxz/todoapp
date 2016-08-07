@@ -394,6 +394,28 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         });
         return deferred.promise
     }
+
+    function editDate(task_id, date) {
+        var headers = AuthService.getHeaders();
+        var deferred = $q.defer();
+
+        $http({
+            method: 'POST',
+            url: '/edit_date',
+            headers: headers,
+            data: {
+                id: task_id,
+                date: date.toString()
+            }
+        }).then(function (response) {
+            deferred.resolve()
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+
+        return deferred.promise
+    }
     
     return ({
         setCurrentTask: setCurrentTask,
@@ -405,7 +427,8 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         deleteTask: deleteTask,
         getPrevSibling: getPrevSibling,
         makeSubTask: makeSubTask,
-        markAsDone: markAsDone
+        markAsDone: markAsDone,
+        editDate: editDate
     })
 
 }]);

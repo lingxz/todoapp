@@ -84,7 +84,5 @@ describe('registerController', function () {
             expect($location.path.calls.count()).toBe(3)
         })
     })
-
-
 });
 

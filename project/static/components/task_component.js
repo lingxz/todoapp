@@ -2,10 +2,11 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $http, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
+function TaskController($scope, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
     // Extract from controller
-    $scope.task = $scope.ctrl.task;
-    var task = $scope.task;
+    var ctrl = this;
+    $scope.task = ctrl.task;
+    var task = ctrl.task;
 
     // Control offsets
     $scope.taskDepth = task.depth * 1.5;
@@ -71,19 +72,21 @@ function TaskController($scope, $http, $timeout, AuthService, DatetimeService, T
         TaskService.setCurrentTask(task)
     };
 
-    $scope.showCompleted = AuthService.getUserPreference();
+    // $scope.showCompleted = AuthService.getUserPreference();
     $scope.$watch(AuthService.retrieveShowTaskPref,
         function (newval, oldval) {
             $scope.showCompleted = newval
         }
     )
-
 }
+
+angular.module('todoApp')
+    .controller('TaskController', TaskController);
 
 angular.module('todoApp')
     .component('task', {
         templateUrl: 'static/partials/task.html',
-        controller: TaskController,
+        controller: 'TaskController',
         controllerAs: 'ctrl',
         bindings: {
             task: '='

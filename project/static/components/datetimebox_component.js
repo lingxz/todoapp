@@ -2,15 +2,14 @@
  * Created by mark on 7/17/16.
  */
 
-function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK_EVENTS) {
-    // TODO: need to make datetimepicker opaque, now it's transparent
+function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TaskService, TASK_EVENTS) {
 
     $scope.visibility = "hidden";
     $scope.getToday = function () {
         return moment();
     };
 
-    cur_task = null;
+    var cur_task = null;
 
     $scope.showBox = function (cur_position) {
         $scope.posx = cur_pos[0];
@@ -40,24 +39,14 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK
         if ($scope.chosenTime) {
             // close box when user selects a time
             $scope.closeBox();
-            $scope.setTime($scope.chosenTime);
+            $scope.setDate(cur_task, $scope.chosenTime);
         }
     });
 
-    $scope.setTime = function (newTime) { // should i edit task date here or from task controller?
-        console.log(newTime);
-        $http({
-            method: 'POST',
-            url: '/edit_date',
-            headers: {Authorization: 'Bearer ' + AuthService.getToken()},
-            data: {
-                id: cur_task,
-                date: newTime.toString()
-            }
-        }).then(function (response) {
+    $scope.setDate = function (task_id, newDate) { // should i edit task date here or from task controller?
+        var promise = TaskService.editDate(task_id, newDate);
+        promise.then(function () {
             $scope.$emit(TASK_EVENTS.refreshTaskList)
-        }, function (error) {
-            console.log(error);
         });
     };
 
@@ -72,8 +61,11 @@ function dateTimeBoxController($scope, $http, DatetimeService, AuthService, TASK
 }
 
 angular.module('todoApp')
+    .controller('dateTimeBoxController', dateTimeBoxController);
+
+angular.module('todoApp')
     .component('datetimebox', {
         templateUrl: 'static/partials/datetimebox.html',
-        controller: dateTimeBoxController,
+        controller: 'dateTimeBoxController',
         controllerAs: 'ctrl'
     });
