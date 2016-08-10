@@ -5,15 +5,7 @@
 
         <ul id="slide-out" class="side-nav fixed">
             <li><div class="userView">
-                <!--<img class="background" src="images/office.jpg">-->
-                <!--<a href="#!user"><img class="circle" src="images/yuna.jpg"></a>-->
-                <!--<a href="#!name"><span class="white-text name">John Doe</span></a>-->
-                <!--<a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>-->
             </div></li>
-            <!--<li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>-->
-            <!--<li><a href="#!">Second Link</a></li>-->
-            <!--<li><div class="divider"></div></li>-->
-            <!--<li><a class="subheader">Subheader</a></li>-->
 
             <li><a class="waves-effect" href="#!"> <span class="my-circle"></span>board 1</a></li>
             <li><a class="waves-effect" href="#!">board 2</a></li>
@@ -21,19 +13,20 @@
         </ul>
         <!--<a href="#/" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>-->
 
-        <!--<ul id="slide-out" class="side-nav fixed">-->
-            <!--<li><a href="#/">First Sidebar Link</a></li>-->
-            <!--<li><a href="#/">Second Sidebar Link</a></li>-->
-        <!--</ul>-->
-
     </div>
 
 
     <div class="container-fluid col-md-8 col-md-offset-0">
-        <div ng-repeat="taskgroup in tasks.slice() | groupBy: 3" ng-hide="task.done && !showCompleted">
-            <div class="col-xs-4" ng-repeat="task in taskgroup">
-                <task task="task" style="cursor: auto;"></task>
-            </div>
+        <div class="row active-with-click" ng-repeat="taskgroup in tasks.slice() | groupBy: 3" ng-hide="task.done && !showCompleted">
+            <!--<div class="row active-with-click">-->
+                <div class="col-md-4 col-sm-6 col-xs-12 task-container" ng-repeat="task in taskgroup">
+                    <task task="task" style="cursor: auto;"></task>
+                </div>
+            <!--</div>-->
+
+            <!--<div class="col-xs-4" ng-repeat="task in taskgroup">-->
+                <!--<task task="task" style="cursor: auto;"></task>-->
+            <!--</div>-->
         </div>
 
         <datetimebox></datetimebox>

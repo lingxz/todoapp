@@ -1,36 +1,51 @@
-<div class="card-row">
+<!--<div class="card-row container-fluid">-->
 
-    <div class="card card-1 darken-1">
-        <div class="card-content">
-            <span class="card-title">{{ task.content }} </span><i class="material-icons right activator">more_vert</i>
-            <p>by</p>
-            <p>{{ task.due_date }}</p>
+    <!--<div class="card card-1 darken-1">-->
+        <!--<div class="card-content">-->
+            <!--<span class="card-title">{{ task.content }} </span><i class="material-icons right activator">more_vert</i>-->
+            <!--<p>by</p>-->
+            <!--<p>{{ task.due_date }}</p>-->
 
-        </div>
-        <!--<div class="card-action">-->
-            <!--blabla-->
         <!--</div>-->
+        <!--&lt;!&ndash;<div class="card-action">&ndash;&gt;-->
+            <!--&lt;!&ndash;blabla&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
 
-        <div class="card-reveal">
-            <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
-            <p>Here is some more information about this product that is only revealed once clicked on.</p>
-            <i class="material-icons"
-               ng-show="task.due_date"
-               uib-tooltip="{{ task.due_date }}"
-               tooltip-placement="top"
-               style="cursor: pointer"
-               ng-click="callDateTimePicker($event)">alarm</i>
+        <!--<div class="card-reveal">-->
+            <!--<span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>-->
+            <!--<p>Here is some more information about this product that is only revealed once clicked on.</p>-->
+            <!--<i class="material-icons"-->
+               <!--ng-show="task.due_date"-->
+               <!--uib-tooltip="{{ task.due_date }}"-->
+               <!--tooltip-placement="top"-->
+               <!--style="cursor: pointer"-->
+               <!--ng-click="callDateTimePicker($event)">alarm</i>-->
 
-            <i class="material-icons"
-               ng-hide="task.due_date"
-               uib-tooltip="Add alarm"
-               tooltip-placement="top"
-               style="cursor: pointer"
-               ng-click="callDateTimePicker($event)">alarm_add</i>
+            <!--<i class="material-icons"-->
+               <!--ng-hide="task.due_date"-->
+               <!--uib-tooltip="Add alarm"-->
+               <!--tooltip-placement="top"-->
+               <!--style="cursor: pointer"-->
+               <!--ng-click="callDateTimePicker($event)">alarm_add</i>-->
 
-        </div>
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<article class="material-card Red">
+    <h2>
+        <span>{{ task.content }}</span>
+    </h2>
+    <div class="mc-content">
+        <span>by {{ task.due_date }}</span>
     </div>
-</div>
+
+    <div class="mc-description">hello</div>
+    <a class="mc-btn-action">
+        <i class="fa fa-bars"></i>
+    </a>
+</article>
+
 
 
 

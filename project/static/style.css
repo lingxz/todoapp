@@ -111,6 +111,7 @@ textarea.form-control {
     margin: 0.2rem;
     position: relative;
     width: 258px;
+    opacity: 0.9;
 }
 
 .card-1 {
@@ -164,4 +165,9 @@ textarea.form-control {
     border-radius: 50%;
     width: 100px;
     height: 100px;
+}
+
+.task-container {
+    padding-left: 0.3em;
+    padding-right: 0.3em;
 }
