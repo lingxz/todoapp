@@ -1,49 +1,39 @@
-<!--<div class="card-row container-fluid">-->
-
-    <!--<div class="card card-1 darken-1">-->
-        <!--<div class="card-content">-->
-            <!--<span class="card-title">{{ task.content }} </span><i class="material-icons right activator">more_vert</i>-->
-            <!--<p>by</p>-->
-            <!--<p>{{ task.due_date }}</p>-->
-
-        <!--</div>-->
-        <!--&lt;!&ndash;<div class="card-action">&ndash;&gt;-->
-            <!--&lt;!&ndash;blabla&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--<div class="card-reveal">-->
-            <!--<span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>-->
-            <!--<p>Here is some more information about this product that is only revealed once clicked on.</p>-->
-            <!--<i class="material-icons"-->
-               <!--ng-show="task.due_date"-->
-               <!--uib-tooltip="{{ task.due_date }}"-->
-               <!--tooltip-placement="top"-->
-               <!--style="cursor: pointer"-->
-               <!--ng-click="callDateTimePicker($event)">alarm</i>-->
-
-            <!--<i class="material-icons"-->
-               <!--ng-hide="task.due_date"-->
-               <!--uib-tooltip="Add alarm"-->
-               <!--tooltip-placement="top"-->
-               <!--style="cursor: pointer"-->
-               <!--ng-click="callDateTimePicker($event)">alarm_add</i>-->
-
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-
 <article class="material-card Red">
     <h2>
         <span>{{ task.content }}</span>
+        <strong ng-show="task.due_date">by {{ formattedDate }}</strong>
     </h2>
     <div class="mc-content">
-        <span>by {{ task.due_date }}</span>
+
     </div>
 
-    <div class="mc-description">hello</div>
+    <div class="mc-description">
+        some description
+
+    </div>
     <a class="mc-btn-action">
         <i class="fa fa-bars"></i>
     </a>
+
+    <div class="mc-footer text-center">
+        <i class="material-icons"
+           ng-show="task.due_date"
+           uib-tooltip="{{ task.due_date }}"
+           tooltip-placement="top"
+           style="cursor: pointer"
+           ng-click="callDateTimePicker($event)">alarm</i></a>
+
+        <i class="material-icons"
+           ng-hide="task.due_date"
+           uib-tooltip="Add alarm"
+           tooltip-placement="top"
+           style="cursor: pointer"
+           ng-click="callDateTimePicker($event)">alarm_add</i></a>
+
+        <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done</i>
+        <!--clear all subtasks button, do this when we actually have subtasks-->
+        <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done_all</i>
+    </div>
 </article>
 
 
