@@ -26,6 +26,8 @@ module.exports = function (config) {
             'node_modules/angular-route/angular-route.js',
             'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
             'node_modules/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
+            'node_modules/angular-filter/dist/angular-filter.js',
+            'node_modules/moment/min/moment-with-locales.min.js',
             'project/**/*.js',
             'project/**/**/*.js',
             'project/static/*.html',
