@@ -171,3 +171,15 @@ textarea.form-control {
     padding-left: 0.1em;
     padding-right: 0.1em;
 }
+
+/*vertically align*/
+.circle-container {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.material-card.mc-active .circle-container {
+    display: none;
+}

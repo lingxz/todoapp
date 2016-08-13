@@ -1,0 +1,116 @@
+orbicular, [orbicular] {
+  display: block;
+  position: relative;
+  height: 1em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #EEE;
+  border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+}
+orbicular *, orbicular *:after, orbicular *:before, [orbicular] *, [orbicular] *:after, [orbicular] *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+orbicular > div.co-circle, orbicular div.co-fill, [orbicular] > div.co-circle, [orbicular] div.co-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1em;
+  height: 1em;
+  background: transparent;
+  border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-transition: -webkit-transform 0.3s linear;
+  -moz-transition: -moz-transform 0.3s linear;
+  -ms-transition: -ms-transform 0.3s linear;
+  -o-transition: -o-transform 0.3s linear;
+  transition: -webkit-transform 0.3s linear;
+  transition: transform 0.3s linear;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+orbicular > div.co-circle, [orbicular] > div.co-circle {
+  clip: rect(0px, 1em, 1em, 0.5em);
+  /*
+      clip-path is the CSS standard replacing clip
+      alternatively mask can also be used.
+      As of April 2015 clip-path had the following issues:
+      * Only supported via the webkit prefix
+          * Safari works with animation issues
+          * Chrome only clips div.co-fill
+  -webkit-clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+
+      * Only supported via the webkit prefix
+          * Mask works fine in Chrome and Safari (much better than clip-path)
+      * Requires more HTTP requests or larger CSS for inline files
+  -webkit-mask: url(mask-left.svg) top left / cover;
+  mask: url(mask-left.svg) top left / cover;
+  */
+}
+orbicular > div.co-circle > div.co-fill, [orbicular] > div.co-circle > div.co-fill {
+  clip: rect(0em, 0.5em, 1em, 0em);
+  /* Alternatives to clip
+  -webkit-clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+  clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+  // or
+  -webkit-mask: url(mask-right.svg) top left / cover;
+  mask: url(mask-right.svg) top left / cover;
+  */
+  background-color: #50a6d3;
+}
+orbicular > div.co-shadow, [orbicular] > div.co-shadow {
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2) inset;
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  background: transparent;
+  border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+}
+orbicular > div.co-content, [orbicular] > div.co-content {
+  position: absolute;
+  overflow: hidden;
+  z-index: 1;
+  height: 0.7em;
+  width: 0.7em;
+  margin-left: 0.15em;
+  margin-top: 0.15em;
+  background-color: #2b383f;
+  border-radius: 0.35em;
+  -webkit-border-radius: 0.35em;
+  -moz-border-radius: 0.35em;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2);
+}
+orbicular > div.co-content > div, [orbicular] > div.co-content > div {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+orbicular > div.co-content > div > div, [orbicular] > div.co-content > div > div {
+  display: table-row;
+  width: 100%;
+  height: 100%;
+}
+orbicular > div.co-content > div > div > div, [orbicular] > div.co-content > div > div > div {
+  position: relative;
+  display: table-cell;
+  font-size: 0.15em;
+  color: #FFF;
+  line-height: 1em;
+  text-align: center;
+  vertical-align: middle;
+  width: 100%;
+}
+
+div#containter {
+  width: 200px;
+  height: 200px;
+}

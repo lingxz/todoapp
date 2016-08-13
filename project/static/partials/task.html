@@ -2,10 +2,20 @@
     <h2>
         <span>{{ task.content }}</span>
         <strong ng-show="task.due_date">by {{ formattedDate }}</strong>
-    </h2>
-    <div class="mc-content">
 
+
+    </h2>
+
+    <div class="container-fluid col-xs-6 col-xs-offset-3 circle-container">
+        <orbicular total="80" progression="70" resize>
+            bla
+        </orbicular>
     </div>
+
+
+    <!--<div class="mc-content">-->
+
+    <!--</div>-->
 
     <div class="mc-description">
         some description
@@ -35,10 +45,6 @@
         <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done_all</i>
     </div>
 </article>
-
-
-
-
 
 
 <!--<div ng-class="{'done-text':task.done}" class="container-fluid" style="width:{{taskWidth}}%; float:right;">-->

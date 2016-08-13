@@ -1,0 +1,15 @@
+{
+  "name": "orbicular",
+  "main": ["orbicular.js"],
+  "ignore": [],
+  "description": "A CSS based circular progress bar for AngularJS",
+  "dependencies": {
+    "angular": "1.x"
+  },
+  "keywords": [
+    "circular",
+    "progress",
+    "bar",
+    "AngularJS"
+  ]
+}

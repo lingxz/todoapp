@@ -6,7 +6,8 @@ var todoApp = angular.module("todoApp", [
     'ui.bootstrap.datetimepicker',
     'cfp.hotkeys',
     'monospaced.elastic',
-    'angular.filter'
+    'angular.filter',
+    'Orbicular'
 ]);
 
 // todoApp.config(['$interpolateProvider', function ($interpolateProvider) {
