@@ -145,6 +145,7 @@ textarea.form-control {
 }
 
 .side-nav {
+    top: 64px;
     background: transparent;
     z-index: 100;
     font-family: 'Open Sans', sans-serif;
@@ -154,14 +155,14 @@ textarea.form-control {
 }
 
 .side-nav.fixed a {
-    text-align: right;
+    text-align: center;
     color: white;
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
 }
 
 .userView {
-    height: 150px;
+    text-align: center;
 }
 
 .my-circle {
@@ -186,3 +187,8 @@ textarea.form-control {
 .material-card.mc-active .circle-container {
     display: none;
 }
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
