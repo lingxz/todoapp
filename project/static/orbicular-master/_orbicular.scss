@@ -186,14 +186,14 @@
 
 @include orbicular(
   $barColor:  #50a6d3,    // The completed progress color
-  $barBg:     #EEE,       // The remaining progress color
-  $barWidth:  15,          // The bar width is defined as a percentage of the width of the circle
-  $contentBg: #2b383f,    // The circle center
-  $fontSize:  15,          // Content font-size as a percentage of the circle size
-  $fontColor: #FFF,       // Content text color
+  $barBg:     #FFF,       // The remaining progress color
+  $barWidth:  15,         // The bar width is defined as a percentage of the width of the circle
+  $contentBg: #FFF,    // The circle center
+  $fontSize:  15,         // Content font-size as a percentage of the circle size
+  $fontColor: #000,       // Content text color
   $transTime: 0.3s,       // Time to animate the movement
-  $transFunc: linear,     // transition timing
-  $shadow: 6px 6px 10px rgba(0,0,0,0.2)  // optional shadow (not default)
+  $transFunc: linear     // transition timing
+  //$shadow: 6px 6px 10px rgba(0,0,0,0.2)  // optional shadow (not default)
 );
 
 div#containter {

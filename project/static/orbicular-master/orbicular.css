@@ -5,7 +5,7 @@ orbicular, [orbicular] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #EEE;
+  background-color: #FFF;
   border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
   -moz-border-radius: 0.5em;
@@ -66,7 +66,7 @@ orbicular > div.co-circle > div.co-fill, [orbicular] > div.co-circle > div.co-fi
   background-color: #50a6d3;
 }
 orbicular > div.co-shadow, [orbicular] > div.co-shadow {
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2) inset;
+  display: none;
   position: absolute;
   width: 1em;
   height: 1em;
@@ -83,11 +83,10 @@ orbicular > div.co-content, [orbicular] > div.co-content {
   width: 0.7em;
   margin-left: 0.15em;
   margin-top: 0.15em;
-  background-color: #2b383f;
+  background-color: #FFF;
   border-radius: 0.35em;
   -webkit-border-radius: 0.35em;
   -moz-border-radius: 0.35em;
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.2);
 }
 orbicular > div.co-content > div, [orbicular] > div.co-content > div {
   display: table;
@@ -103,7 +102,7 @@ orbicular > div.co-content > div > div > div, [orbicular] > div.co-content > div
   position: relative;
   display: table-cell;
   font-size: 0.15em;
-  color: #FFF;
+  color: #000;
   line-height: 1em;
   text-align: center;
   vertical-align: middle;

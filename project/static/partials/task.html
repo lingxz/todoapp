@@ -1,13 +1,25 @@
 <article class="material-card Red">
     <h2>
-        <span>{{ task.content }}</span>
+        <span>
+            <textarea class="tc-textarea" rows="1" msd-elastic
+                      spellcheck="false"
+                      ng-model="task.content"
+                      ng-class="{'done-text':task.done}"
+                      ng-focus="setCurrentTask()"
+                      ng-enter="newTask()">
+                {{ task.content }}
+            </textarea>
+        </span>
+
+
+
         <strong ng-show="task.due_date">by {{ formattedDate }}</strong>
 
 
     </h2>
 
     <div class="container-fluid col-xs-6 col-xs-offset-3 circle-container">
-        <orbicular total="80" progression="70" resize>
+        <orbicular total="100" progression="60" resize counterclockwise>
             bla
         </orbicular>
     </div>
