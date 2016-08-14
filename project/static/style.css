@@ -1,3 +1,4 @@
+
 html, body, .container, textarea {
     height: 100%;
 }
@@ -155,6 +156,8 @@ textarea.form-control {
 .side-nav.fixed a {
     text-align: right;
     color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
 }
 
 .userView {
