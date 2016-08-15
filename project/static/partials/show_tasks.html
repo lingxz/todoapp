@@ -1,7 +1,44 @@
-<div class="container-fluid col-md-10 col-md-offset-1">
-    <div ng-repeat="task in tasks.slice()" ng-hide="task.done && !showCompleted">
-        <task task="task" style="cursor: auto;"></task>
+<div class="container-fluid">
+
+    <div class="container-fluid col-md-3">
+
+
+        <ul id="slide-out" class="side-nav fixed">
+            <li>
+                <div class="userView">
+                    <a href="#!"><i class="material-icons md-48" >note_add</i></a>
+                    <a href="#!"><h6>Add new Todo</h6></a>
+                    <br>
+                </div>
+            </li>
+
+            <li><a class="waves-effect" href="#!"> <span class="my-circle"></span>board 1</a></li>
+            <li><a class="waves-effect" href="#!">board 2</a></li>
+            <li><a class="waves-effect" href="#!">board 3</a></li>
+        </ul>
+        <!--<a href="#/" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>-->
+
     </div>
 
-    <datetimebox></datetimebox>
+
+    <div class="container-fluid col-md-8 col-md-offset-0">
+        <div class="active-with-click" ng-repeat="taskgroup in tasks.slice() | groupBy: 3" ng-hide="task.done && !showCompleted">
+            <div class="col-md-4 col-sm-6 col-xs-12 task-container" ng-repeat="task in taskgroup">
+                <task task="task" style="cursor: auto;"></task>
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <datetimebox></datetimebox>
+    </div>
+
+
 </div>
+
+
+

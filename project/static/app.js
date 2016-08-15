@@ -4,9 +4,11 @@ var todoApp = angular.module("todoApp", [
     'ngAria',
     'ui.bootstrap',
     'ui.bootstrap.datetimepicker',
-    // 'smart-table',
     'cfp.hotkeys',
-    'monospaced.elastic']);
+    'monospaced.elastic',
+    'angular.filter',
+    'Orbicular'
+]);
 
 // todoApp.config(['$interpolateProvider', function ($interpolateProvider) {
 //     $interpolateProvider.startSymbol('{[');

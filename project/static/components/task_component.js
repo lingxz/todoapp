@@ -77,7 +77,15 @@ function TaskController($scope, $timeout, AuthService, DatetimeService, TaskServ
         function (newval, oldval) {
             $scope.showCompleted = newval
         }
-    )
+    );
+
+    $scope.$watch('task.due_date', function (new_date) {
+        if(new_date) {
+            var dateObj = new Date(new_date);
+            var dateWrapper = moment(dateObj);
+            $scope.formattedDate = dateWrapper.format('MMM DD')
+        }
+    })
 }
 
 angular.module('todoApp')

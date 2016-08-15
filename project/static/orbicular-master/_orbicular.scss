@@ -1,0 +1,202 @@
+
+// Don't rely on Compass
+@mixin co-border-radius($radius) {
+    border-radius:$radius;
+    -webkit-border-radius:$radius;
+    -moz-border-radius:$radius;
+}
+
+@mixin co-transform($transform) {
+    -webkit-transform: $transform;
+    -moz-transform: $transform;
+    -ms-transform: $transform;
+    transform: $transform;
+}
+
+@mixin co-box-sizing($type) {
+    -webkit-box-sizing: $type;
+    -moz-box-sizing: $type;
+    box-sizing: $type;
+}
+
+// Use this mixin to add orbicular support to your css
+@mixin orbicular(
+    $barColor:  #50a6d3,    // The completed progress
+    $barBg:     #EEE,       // The remaining progress
+    $barWidth:  8,          // The bar width is defined as a percentage of the width of the circle
+    $contentBg: #2b383f,    // The circle center
+    $fontSize:  8,          // Content font-size as a percentage of the circle size
+    $fontColor: #FFF,
+    $transTime: 0.3s,
+    $transFunc: linear,
+    $shadow: ''
+    ) {
+
+    // This is the width of the progress bar itself.
+    // NOT the size of the circle which is definded by it's parent element.
+    //
+    // The bar width is defined as a percentage of the width of the circle
+    // (% of parent element width).
+    $calculatedWidth: $barWidth / 100;
+    $contentWidth: (1 - (2 * $calculatedWidth));
+
+    $actualBarWidth: $calculatedWidth + em;
+    $actualFontSize: $fontSize / 100 + em;
+
+
+    // this is the core progress class
+    orbicular, [orbicular] {
+        display: block;
+        position: relative;
+        height: 1em;
+        @include co-box-sizing(border-box);
+
+        *, *:after, *:before {
+            @include co-box-sizing(border-box);
+        }
+
+        // Provides the bars background
+        background-color: $barBg;
+        @include co-border-radius(0.5em);
+
+        // Common traits of all the circles
+        &> div.co-circle, div.co-fill {
+            position:absolute;
+            top: 0;
+            left: 0;
+            width: 1em;
+            height: 1em;
+            background: transparent;
+
+            @include co-border-radius(0.5em);
+
+            -webkit-transition: -webkit-transform $transTime $transFunc;
+            -moz-transition: -moz-transform $transTime $transFunc;
+            -ms-transition: -ms-transform $transTime $transFunc;
+            -o-transition: -o-transform $transTime $transFunc;
+            transition: -webkit-transform $transTime $transFunc;
+            transition: transform $transTime $transFunc;
+
+            // This may promote the layer to a composited layer.
+            // Should reduce flickering..
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            will-change: transform;
+        }
+
+        &> div.co-circle {
+            // Hides half of the circle
+            clip: rect(0px, 1em, 1em, 0.5em);
+
+            /*
+                clip-path is the CSS standard replacing clip
+                alternatively mask can also be used.
+                As of April 2015 clip-path had the following issues:
+                * Only supported via the webkit prefix
+                    * Safari works with animation issues
+                    * Chrome only clips div.co-fill
+            -webkit-clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+
+                * Only supported via the webkit prefix
+                    * Mask works fine in Chrome and Safari (much better than clip-path)
+                * Requires more HTTP requests or larger CSS for inline files
+            -webkit-mask: url(mask-left.svg) top left / cover;
+            mask: url(mask-left.svg) top left / cover;
+            */
+
+            &> div.co-fill {
+                clip: rect(0em, 0.5em, 1em, 0em);
+
+                /* Alternatives to clip
+                -webkit-clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+                clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+                // or
+                -webkit-mask: url(mask-right.svg) top left / cover;
+                mask: url(mask-right.svg) top left / cover;
+                */
+
+                background-color: $barColor;
+            }
+        }
+
+        // Optional Shadow (developer to style)
+        &> div.co-shadow {
+            @if $shadow == '' {
+                display: none;
+            } @else {
+                box-shadow: $shadow inset;
+            }
+
+            position:absolute;
+            width: 1em;
+            height: 1em;
+            background: transparent;
+
+            @include co-border-radius(0.5em);
+        }
+
+        // Centering of the transcluded content by default
+        &> div.co-content {
+            position:absolute;
+            overflow: hidden;
+
+            // this fixes the overflow:hidden in Chrome / webkit
+            z-index: 1;
+
+            height: $contentWidth + em;
+            width: $contentWidth + em;
+            margin-left: $actualBarWidth;
+            margin-top: $actualBarWidth;
+
+            background-color: $contentBg;
+            @include co-border-radius($contentWidth / 2 + em);
+
+            @if $shadow != '' {
+                box-shadow: $shadow;
+            }
+
+            &> div {
+                display: table;
+                width: 100%;
+                height: 100%;
+
+                &> div {
+                    display: table-row;
+                    width: 100%;
+                    height: 100%;
+
+                    &> div {
+                        position: relative;
+                        display: table-cell;
+
+                        font-size: $actualFontSize;
+                        color: $fontColor;
+                        line-height: 1em;
+                        text-align: center;
+                        vertical-align: middle;
+
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+} // END mixin
+
+@include orbicular(
+  $barColor:  #50a6d3,    // The completed progress color
+  $barBg:     #FFF,       // The remaining progress color
+  $barWidth:  15,         // The bar width is defined as a percentage of the width of the circle
+  $contentBg: #FFF,    // The circle center
+  $fontSize:  15,         // Content font-size as a percentage of the circle size
+  $fontColor: #000,       // Content text color
+  $transTime: 0.3s,       // Time to animate the movement
+  $transFunc: linear     // transition timing
+  //$shadow: 6px 6px 10px rgba(0,0,0,0.2)  // optional shadow (not default)
+);
+
+div#containter {
+  width: 200px;
+  height: 200px;
+}
