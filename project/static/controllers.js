@@ -108,8 +108,9 @@ todoApp.controller("mainController", [
         $scope.retrieveItems = function () {
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
-                $scope.tasks = response
-            })
+                $scope.tasks = response;
+                console.log($scope.tasks)
+            });
         };
 
         $scope.retrieveItems();
