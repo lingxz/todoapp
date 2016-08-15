@@ -73,7 +73,6 @@ def retrieve_tasks():
         output += utils.in_order_traverse(tree, [], 0, group)
         group += 1
 
-    print(output)
     return json.dumps(output)
 
 

@@ -91,6 +91,21 @@ todoApp.controller("mainController", [
     'hotkeys',
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.newtask = "";
+        $scope.taskGroup = 0;
+
+        /* ----- For the boards ----- */
+        $scope.taskGroup = 0;
+        $scope.greaterThan = function (prop, val) {
+            return function (item) {
+                return item[prop] > val;
+            }
+        };
+
+        $scope.changeBoard = function(val) {
+            $scope.taskGroup = val;
+        };
+
+        /* ----- End boards ----- */
 
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
             $scope.retrieveItems()
@@ -109,7 +124,6 @@ todoApp.controller("mainController", [
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
                 $scope.tasks = response;
-                console.log($scope.tasks)
             });
         };
 

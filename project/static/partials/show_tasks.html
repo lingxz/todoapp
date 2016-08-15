@@ -14,7 +14,7 @@
 
             <div ng-repeat="task in tasks.slice() | filter: {depth : 0}">
                 <li>
-                    <a href="#!" class="waves-effect">
+                    <a class="waves-effect" ng-click="changeBoard(task.group)">
                         <span class="my-circle" style="background-color:black"></span>{{ task.content }}
                     </a>
                 </li>
@@ -30,10 +30,14 @@
     <div class="container-fluid col-md-8 col-md-offset-0">
         <div class="active-with-click" ng-repeat="taskgroup in tasks.slice() | groupBy: 3"
              ng-hide="task.done && !showCompleted">
-            <div class="col-md-4 col-sm-6 col-xs-12 task-container" ng-repeat="task in taskgroup">
+            <div
+                    class="col-md-4 col-sm-6 col-xs-12 task-container"
+                    ng-repeat="task in taskgroup | filter: {group : taskGroup} | filter: greaterThan('depth', 0)"
+            >
                 <task task="task" style="cursor: auto;"></task>
             </div>
         </div>
+        {{ taskGroup }}
         <datetimebox></datetimebox>
     </div>
 
