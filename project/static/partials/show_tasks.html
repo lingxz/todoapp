@@ -32,7 +32,7 @@
              ng-hide="task.done && !showCompleted">
             <div
                     class="col-md-4 col-sm-6 col-xs-12 task-container"
-                    ng-repeat="task in taskgroup | filter: {group : taskGroup} | filter: greaterThan('depth', 0)"
+                    ng-repeat="task in taskgroup | filter: taskGroupFilter() | filter: greaterThan('depth', 0)"
             >
                 <task task="task" style="cursor: auto;"></task>
             </div>
