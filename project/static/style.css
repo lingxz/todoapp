@@ -192,3 +192,23 @@ textarea.form-control {
 .material-icons.md-24 { font-size: 24px; }
 .material-icons.md-36 { font-size: 36px; }
 .material-icons.md-48 { font-size: 48px; }
+
+hgroup {
+    color: white;
+    font-family: 'Sofia', cursive;
+}
+
+input.form-control {
+    color: white;
+}
+.login-submit {
+    margin: 4rem 0 2.2rem;
+}
+.login-register {
+    font-size: 1.2rem;
+    color: white;
+}
+.register-submit {
+    margin: 4rem 0 2.2rem;
+}
+
