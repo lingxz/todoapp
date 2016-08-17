@@ -208,4 +208,7 @@ input.form-control {
     font-size: 1.2rem;
     color: white;
 }
+.register-submit {
+    margin: 4rem 0 2.2rem;
+}
 
