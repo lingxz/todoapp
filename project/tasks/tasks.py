@@ -68,8 +68,10 @@ def retrieve_tasks():
 
     # Recurse through the trees to extract every task
     output = []
+    group = 0
     for tree in trees:
-        output += utils.in_order_traverse(tree, [], 0)
+        output += utils.in_order_traverse(tree, [], 0, group)
+        group += 1
 
     return json.dumps(output)
 

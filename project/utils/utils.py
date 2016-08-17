@@ -59,16 +59,18 @@ def extract_datetime_from_text(data):
 
 
 # Used to display tasks
-def in_order_traverse(tree, output, depth):
+def in_order_traverse(tree, output, depth, group):
     if 'children' in tree:
         out_tree = dict(tree)
         del out_tree['children']
         out_tree['depth'] = depth
+        out_tree['group'] = group
         output = [out_tree]
         for subtree in tree['children']:
-            output += in_order_traverse(subtree, [], depth + 1)
+            output += in_order_traverse(subtree, [], depth + 1, group)
     else:
         tree['depth'] = depth
+        tree['group'] = group
         output.append(tree)
     return output
 

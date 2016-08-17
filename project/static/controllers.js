@@ -92,6 +92,33 @@ todoApp.controller("mainController", [
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.newtask = "";
 
+        /* ----- For the boards ----- */
+        $scope.taskGroup = -1;
+        $scope.greaterThan = function (prop, val) {
+            return function (item) {
+                return item[prop] > val;
+            }
+        };
+
+        $scope.taskGroupFilter = function () {
+            return function (item) {
+                if ($scope.taskGroup >= 0) {
+                    return item['group'] == $scope.taskGroup;
+                }
+                return true
+            }
+        };
+
+        $scope.changeBoard = function(val) {
+            if ($scope.taskGroup === val) {
+                $scope.taskGroup = -1
+            } else {
+                $scope.taskGroup = val;
+            }
+        };
+
+        /* ----- End boards ----- */
+
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
             $scope.retrieveItems()
         });
@@ -108,8 +135,8 @@ todoApp.controller("mainController", [
         $scope.retrieveItems = function () {
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
-                $scope.tasks = response
-            })
+                $scope.tasks = response;
+            });
         };
 
         $scope.retrieveItems();

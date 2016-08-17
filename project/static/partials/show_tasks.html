@@ -6,34 +6,38 @@
         <ul id="slide-out" class="side-nav fixed">
             <li>
                 <div class="userView">
-                    <a href="#!"><i class="material-icons md-48" >note_add</i></a>
+                    <a href="#!"><i class="material-icons md-48">note_add</i></a>
                     <a href="#!"><h6>Add new Todo</h6></a>
                     <br>
                 </div>
             </li>
 
-            <li><a class="waves-effect" href="#!"> <span class="my-circle"></span>board 1</a></li>
-            <li><a class="waves-effect" href="#!">board 2</a></li>
-            <li><a class="waves-effect" href="#!">board 3</a></li>
+            <div ng-repeat="task in tasks.slice() | filter: {depth : 0}">
+                <li>
+                    <a class="waves-effect" ng-click="changeBoard(task.group)">
+                        <span class="my-circle" style="background-color:black"></span>{{ task.content }}
+                    </a>
+                </li>
+            </div>
+
         </ul>
+
         <!--<a href="#/" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>-->
 
     </div>
 
 
     <div class="container-fluid col-md-8 col-md-offset-0">
-        <div class="active-with-click" ng-repeat="taskgroup in tasks.slice() | groupBy: 3" ng-hide="task.done && !showCompleted">
-            <div class="col-md-4 col-sm-6 col-xs-12 task-container" ng-repeat="task in taskgroup">
+        <div class="active-with-click" ng-repeat="taskgroup in tasks.slice() | groupBy: 3"
+             ng-hide="task.done && !showCompleted">
+            <div
+                    class="col-md-4 col-sm-6 col-xs-12 task-container"
+                    ng-repeat="task in taskgroup | filter: taskGroupFilter() | filter: greaterThan('depth', 0)"
+            >
                 <task task="task" style="cursor: auto;"></task>
-
             </div>
-
-
-
         </div>
-
-
-
+        {{ taskGroup }}
         <datetimebox></datetimebox>
     </div>
 
