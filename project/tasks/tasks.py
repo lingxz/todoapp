@@ -107,9 +107,9 @@ def add_task():
     return json.dumps(utils.task_to_dictionary(task))
 
 
-@tasks.route('/add_subtask', methods=['POST'])
+@tasks.route('/make_subtask', methods=['POST'])
 @auth.login_required
-def add_subtask():
+def make_subtask():
     user_id = request.json['user_id']
     id = request.json['subtask_id']
     current_task = Task.query.filter_by(id=id).first()
@@ -153,6 +153,51 @@ def add_subtask():
             content=content,
             user_id=user_id,
             due_date=due_date,
+            parent_id=parent_id,
+            my_right=prev_right
+        )
+        db.session.add(task)
+        db.session.commit()
+
+    return json.dumps(utils.task_to_dictionary(task))
+
+
+@tasks.route('/add_subtask', methods=['POST'])
+@auth.login_required
+def add_subtask():
+    user_id = request.json['user_id']
+    parent_id = request.json['parent_id']
+    parent_task = Task.query.filter_by(id=parent_id).first()
+
+    sub_tasks = utils.get_subtasks(parent_task)
+    if not sub_tasks:
+        # adding a child to a node with no existing children
+        parent_left = parent_task.lft
+        cmd = "UPDATE tasks SET rgt = rgt + 2 WHERE user_id = :user_id AND rgt > :parent_left"
+        cmd2 = "UPDATE tasks SET lft = lft + 2 WHERE user_id = :user_id AND lft > :parent_left"
+
+        db.engine.execute(cmd, {'user_id': str(user_id), 'parent_left': str(parent_left)})
+        db.engine.execute(cmd2, {'user_id': str(user_id), 'parent_left': str(parent_left)})
+        task = Task(
+            content="ASDF",
+            user_id=user_id,
+            parent_id=parent_id,
+            my_right=parent_left
+        )
+        db.session.add(task)
+        db.session.commit()
+    else:
+        sub_tasks.sort(key=lambda x: x.rgt)
+        prev_right = sub_tasks[-1].rgt
+
+        # Technically this should be wrapped in a transaction
+        cmd = "UPDATE tasks SET rgt = rgt + 2 WHERE user_id = :user_id AND rgt >  :prev_right"
+        db.engine.execute(cmd, {'user_id': str(user_id), 'prev_right': str(prev_right)})
+        cmd2 = "UPDATE tasks SET lft = lft + 2 WHERE user_id = :user_id AND lft > :prev_right"
+        db.engine.execute(cmd2, {'user_id': str(user_id), 'prev_right': str(prev_right)})
+        task = Task(
+            content="ASDF",
+            user_id=user_id,
             parent_id=parent_id,
             my_right=prev_right
         )

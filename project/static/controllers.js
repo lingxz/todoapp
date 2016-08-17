@@ -94,6 +94,9 @@ todoApp.controller("mainController", [
 
         /* ----- For the boards ----- */
         $scope.taskGroup = -1;
+
+        // Should set this to some default
+        $scope.curTaskGroup = null;
         $scope.greaterThan = function (prop, val) {
             return function (item) {
                 return item[prop] > val;
@@ -109,12 +112,22 @@ todoApp.controller("mainController", [
             }
         };
 
-        $scope.changeBoard = function(val) {
+        $scope.changeBoard = function (task) {
+            var val = task.group;
             if ($scope.taskGroup === val) {
-                $scope.taskGroup = -1
+                $scope.taskGroup = -1;
             } else {
                 $scope.taskGroup = val;
+                $scope.curTaskGroup = task;
             }
+        };
+
+        $scope.addTaskToBoard = function () {
+            console.log($scope.curTaskGroup);
+            var promise = TaskService.addSubTask($scope.curTaskGroup.id);
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            })
         };
 
         /* ----- End boards ----- */
