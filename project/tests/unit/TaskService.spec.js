@@ -364,13 +364,13 @@ describe('TaskService', function () {
         });
 
         it('should send user and task data to the server', function () {
-            $httpBackend.expectPOST('/add_subtask', expectedData).respond(201, '');
+            $httpBackend.expectPOST('/make_subtask', expectedData).respond(201, '');
             TaskService.makeSubTask(task, prev_sibling_id);
             $httpBackend.flush();
         });
 
         it('should send correct auth headers', function () {
-            $httpBackend.expectPOST('/add_subtask', expectedData, function (headers) {
+            $httpBackend.expectPOST('/make_subtask', expectedData, function (headers) {
                 return headers.Authorization === 'xxx'
             }).respond(201, '');
             TaskService.makeSubTask(task, prev_sibling_id);
@@ -378,7 +378,7 @@ describe('TaskService', function () {
         });
 
         it('should resolve promise when request is successful', function () {
-            $httpBackend.whenPOST('/add_subtask').respond(201, '');
+            $httpBackend.whenPOST('/make_subtask').respond(201, '');
             promise = TaskService.makeSubTask(task, prev_sibling_id);
 
             var result = null;
@@ -392,7 +392,7 @@ describe('TaskService', function () {
         });
 
         it('should reject promise when request fails', function () {
-            $httpBackend.whenPOST('/add_subtask').respond(500, '');
+            $httpBackend.whenPOST('/make_subtask').respond(500, '');
             promise = TaskService.makeSubTask(task, prev_sibling_id);
 
             var result = null;

@@ -119,7 +119,17 @@ todoApp.controller("mainController", [
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
                 $scope.tasks = response;
-                $scope.firstBoard = $scope.tasks[0]
+
+                // Find the very first board (for display)
+                $scope.firstBoard = $scope.tasks[0];
+
+                // Find the last board (for appending)
+                for (var i in $scope.tasks) {
+                    var curTask = $scope.tasks[i];
+                    if (curTask.depth == 0) {
+                        $scope.lastBoard = curTask;
+                    }
+                }
             });
         };
 
@@ -196,6 +206,14 @@ todoApp.controller("mainController", [
             })
         };
 
+        $scope.addNewBoard = function () {
+            console.log($scope.lastBoard);
+            var promise = TaskService.addTask($scope.lastBoard, "NEW BOARD");
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            })
+        };
+
         /* ----- End boards ----- */
 
 
@@ -209,14 +227,14 @@ todoApp.controller("mainController", [
                 }
             });
 
-        hotkeys.bindTo($scope)
-            .add({
-                combo: 'tab',
-                description: 'make this a sub task',
-                allowIn: ['TEXTAREA'],
-                callback: function (event, keypress) {
-                    $scope.makeSubTask($scope.currentTask)
-                }
-            });
+        // hotkeys.bindTo($scope)
+        //     .add({
+        //         combo: 'tab',
+        //         description: 'make this a sub task',
+        //         allowIn: ['TEXTAREA'],
+        //         callback: function (event, keypress) {
+        //             $scope.makeSubTask($scope.currentTask)
+        //         }
+        //     });
     }
 ]);
