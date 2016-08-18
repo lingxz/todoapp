@@ -92,51 +92,11 @@ todoApp.controller("mainController", [
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.newtask = "";
 
-        /* ----- For the boards ----- */
-        $scope.taskGroup = -1;
-
-        // Should set this to some default
-        $scope.curTaskGroup = null;
-        $scope.greaterThan = function (prop, val) {
-            return function (item) {
-                return item[prop] > val;
-            }
-        };
-
-        $scope.taskGroupFilter = function () {
-            return function (item) {
-                if ($scope.taskGroup >= 0) {
-                    return item['group'] == $scope.taskGroup;
-                }
-                return true
-            }
-        };
-
-        $scope.changeBoard = function (task) {
-            var val = task.group;
-            if ($scope.taskGroup === val) {
-                $scope.taskGroup = -1;
-            } else {
-                $scope.taskGroup = val;
-                $scope.curTaskGroup = task;
-            }
-        };
-
-        $scope.addTaskToBoard = function () {
-            console.log($scope.curTaskGroup);
-            var promise = TaskService.addSubTask($scope.curTaskGroup.id);
-            promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-            })
-        };
-
-        /* ----- End boards ----- */
-
         /* ----- Scrollbar config ----- */
         $scope.scrollBarsConfig = {
             autoHideScrollbar: false,
             theme: 'minimal',
-            advanced:{
+            advanced: {
                 updateOnContentResize: true
             },
             scrollInertia: 50
@@ -159,6 +119,7 @@ todoApp.controller("mainController", [
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
                 $scope.tasks = response;
+                $scope.firstBoard = $scope.tasks[0]
             });
         };
 
@@ -189,6 +150,54 @@ todoApp.controller("mainController", [
                 })
             })
         };
+
+        /* ----- For the boards ----- */
+        $scope.taskGroup = -1;
+
+        // Need to retrieve this at some point
+        $scope.curBoard = null;
+
+        $scope.greaterThan = function (prop, val) {
+            return function (item) {
+                return item[prop] > val;
+            }
+        };
+
+        $scope.taskGroupFilter = function () {
+            return function (item) {
+                if ($scope.taskGroup >= 0) {
+                    return item['group'] == $scope.taskGroup;
+                }
+                return true
+            }
+        };
+
+        $scope.changeBoard = function (task) {
+            var val = task.group;
+            if ($scope.taskGroup === val) {
+                $scope.taskGroup = -1;
+                $scope.curBoard = null;
+            } else {
+                $scope.taskGroup = val;
+                $scope.curBoard = task;
+            }
+        };
+
+        $scope.addTaskToBoard = function () {
+            var parent_id;
+            if ($scope.curBoard == null) {
+                parent_id = $scope.firstBoard.id;
+            } else {
+                parent_id = $scope.curBoard.id;
+            }
+            var promise = TaskService.addSubTask(parent_id);
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            })
+        };
+
+        /* ----- End boards ----- */
+
 
         hotkeys.bindTo($scope)
             .add({

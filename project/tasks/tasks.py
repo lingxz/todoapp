@@ -70,8 +70,7 @@ def retrieve_tasks():
     output = []
     group = 0
     for tree in trees:
-        output += utils.in_order_traverse(tree, [], 0, group)
-        group += 1
+        output += utils.in_order_traverse(tree, [], 0, tree['id'])
 
     return json.dumps(output)
 
