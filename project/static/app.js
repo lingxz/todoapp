@@ -36,14 +36,14 @@ todoApp.config(function ($routeProvider) {
             controller: 'registerController',
             access: {restricted: false}
         })
-        .when('/one', {
-            template: '<h1>This is page one!</h1>',
-            access: {restricted: true}
-        })
-        .when('/two', {
-            template: '<h1>This is page two!</h1>',
-            access: {restricted: false}
-        })
+        // .when('/one', {
+        //     template: '<h1>This is page one!</h1>',
+        //     access: {restricted: true}
+        // })
+        // .when('/two', {
+        //     template: '<h1>This is page two!</h1>',
+        //     access: {restricted: false}
+        // })
         .otherwise({
             redirectTo: '/'
         });
@@ -56,11 +56,15 @@ todoApp.run(function ($rootScope, $location, $route, AuthService) {
                 if (next.access.restricted && !AuthService.isLoggedIn()) {
                     $location.path('/login');
                     $route.reload();
+                } else if (AuthService.isLoggedIn() && !next.access.restricted) {
+                    if ($location.path() === '/login' || $location.path() === '/register') {
+                        $location.path('/');
+                        $route.reload();
+                    }
                 }
             }
         });
 });
-// });
 
 todoApp.run(['$route', function ($route) {
     $route.reload();
