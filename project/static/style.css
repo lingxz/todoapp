@@ -104,6 +104,11 @@ textarea.form-control {
     font-family: 'Open Sans', sans-serif;
     z-index: 200;
     box-shadow: none;
+    color: #dddddd;
+}
+
+.nav-wrapper ul a{
+    color: #dddddd;
 }
 
 .nav-wrapper .brand-logo {
