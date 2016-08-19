@@ -2,18 +2,25 @@
 .material-card {
     position: relative;
     height: 0;
-    padding-bottom: calc(100% + 80px);
-    margin-bottom: 0.2em;
-    background-color: white;
+    padding-bottom: calc(100% + 0px);
+    /*margin-bottom: 0.2em;*/
+    background-color: #dddddd;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    border-radius: 7px;
+    margin: 3px;
+    margin-bottom: 5px;
+    /*background-color: white;*/
 }
 .material-card h2 {
     position: absolute;
     /*top: calc(100% - 16px);*/
-    font-weight: 700;
+    font-weight: 400;
     left: 0;
     width: 100%;
     padding: 10px 16px;
-    color: #33d0b8;
+    color: #383833;
     font-size: 1.4em;
     line-height: 1.6em;
     margin: 0;
@@ -28,7 +35,7 @@
     display: block;
 }
 .material-card h2 strong {
-    font-weight: 400;
+    font-weight: 300;
     display: block;
     font-size: .8em;
 }
@@ -265,11 +272,11 @@
 }
 
 body {
-    background-color: #ECEFF1;
-    color: #37474F;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
-    font-size: 16px;
+    /*background-color: #ECEFF1;*/
+    /*color: #37474F;*/
+    /*font-family: 'Open Sans', sans-serif;*/
+    /*font-weight: 300;*/
+    /*font-size: 16px;*/
 }
 h1,
 h2,

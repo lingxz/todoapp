@@ -185,10 +185,10 @@
 } // END mixin
 
 @include orbicular(
-  $barColor:  #50a6d3,    // The completed progress color
-  $barBg:     #FFF,       // The remaining progress color
+  $barColor:  #E13C3C,    // The completed progress color
+  $barBg:     transparent,       // The remaining progress color
   $barWidth:  15,         // The bar width is defined as a percentage of the width of the circle
-  $contentBg: #FFF,    // The circle center
+  $contentBg: #dddddd,    // The circle center
   $fontSize:  15,         // Content font-size as a percentage of the circle size
   $fontColor: #000,       // Content text color
   $transTime: 0.3s,       // Time to animate the movement
