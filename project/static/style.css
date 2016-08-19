@@ -206,6 +206,10 @@ input.form-control {
     margin: 4rem 0 2.2rem;
 }
 .task-board {
+    height: -o-calc(100vh - 65px); /* opera */
+    height: -webkit-calc(100vh - 65px); /* google, safari */
+    height: -moz-calc(100vh - 65px); /* firefox */
+    height: calc(100vh - 65px);
     padding: 20px;
 }
 

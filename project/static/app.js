@@ -8,7 +8,8 @@ var todoApp = angular.module("todoApp", [
     'monospaced.elastic',
     'angular.filter',
     'Orbicular',
-    'angular-svg-round-progressbar'
+    'angular-svg-round-progressbar',
+    'ngScrollbars'
 ]);
 
 // todoApp.config(['$interpolateProvider', function ($interpolateProvider) {

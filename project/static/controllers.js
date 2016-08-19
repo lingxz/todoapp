@@ -119,6 +119,16 @@ todoApp.controller("mainController", [
 
         /* ----- End boards ----- */
 
+        /* ----- Scrollbar config ----- */
+        $scope.scrollBarsConfig = {
+            autoHideScrollbar: false,
+            theme: 'minimal',
+            advanced:{
+                updateOnContentResize: true
+            },
+            scrollInertia: 50
+        };
+
         $scope.$on(TASK_EVENTS.refreshTaskList, function (next, current) {
             $scope.retrieveItems()
         });
