@@ -70,4 +70,8 @@ input.form-control {
 .register-submit button:hover {
     background-color: #ff6352;
 }
+.auth-error {
+    color: #ff6352;
+    margin-bottom: 10px;
+}
 
