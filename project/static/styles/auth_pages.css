@@ -1,10 +1,15 @@
-hgroup {
-    color: #296EB4;
+hgroup h1{
+    /*color: #296EB4;*/
     color: #232e36;
     /*color: #5677fc;*/
     font-family: 'Sofia', cursive;
     font-weight: 300;
     font-size: 60px;
+}
+
+hgroup h2 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
 }
 
 input.form-control {
@@ -30,7 +35,9 @@ input.form-control {
 }
 
 #login-box {
+    width: 300px;
     top: 20px;
+    margin: 0 auto;
 }
 
 #login-form {
@@ -39,7 +46,9 @@ input.form-control {
 }
 
 #register-box {
+    width: 300px;
     top: 20px;
+    margin: 0 auto;
 }
 
 #register-form {

@@ -1,4 +1,9 @@
-.nav-wrapper {
+nav {
+    height: 40px;
+    line-height: 40px;
+}
+
+nav .nav-wrapper {
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
@@ -27,7 +32,8 @@
 
 .nav-wrapper .brand-logo {
     font-family: 'Poiret One', cursive;
-    font-size: 50px;
+    font-family: 'Sofia', cursive;
+    font-size: 20px;
     padding-left: 2%;
     color: white;
 }
