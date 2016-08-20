@@ -165,7 +165,7 @@ todoApp.controller("mainController", [
         $scope.curBoardID = -1;
 
         // Need to retrieve this at some point
-        $scope.curBoard = null;
+        $scope.curBoard = $scope.firstBoard;
 
         $scope.greaterThan = function (prop, val) {
             return function (item) {
@@ -217,8 +217,11 @@ todoApp.controller("mainController", [
         $scope.deleteBoard = function () {
             console.log("DELETE BOARD", $scope.curBoardID);
             if ($scope.curBoardID == -1) return;
+            var promise = TaskService.deleteTask($scope.curBoard);
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            })
         };
-
         /* ----- End boards ----- */
 
 

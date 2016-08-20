@@ -26,6 +26,9 @@
     </div>
 
     <div class="container-fluid col-md-8 col-md-offset-0">
+        <!-- Content for each board -->
+        <div style="color:white" ng-show="curBoard.content">{{ curBoard.content }}</div>
+
         <div class="active-with-click col-md-4 col-sm-6 col-xs-12 task-container"
              ng-repeat="task in tasks.slice() | filter: taskGroupFilter() | filter: greaterThan('depth', 0)"
              ng-hide="task.done && !showCompleted">
@@ -33,6 +36,8 @@
         </div>
         <datetimebox></datetimebox>
     </div>
+
+    <board ng-show="curBoard.content" board="curBoard" tasks="tasks"></board>
 
 
 </div>
