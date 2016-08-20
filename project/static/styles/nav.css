@@ -3,7 +3,14 @@
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
     /*background-color: #BF211E;*/
-    background-color: #E13C3C;
+    /*background-color: #E13C3C;*/
+    /*background-color: #1d222a;*/
+    /*background-color: #2B4162;*/
+    /*background-color: #296EB4;*/
+    /*background-color: #5677fc;*/
+    /*background-color: #0091de;*/
+    background-color: #3597d3;
+    /*background-color: #6680d4;*/
     font-family: 'Open Sans', sans-serif;
     z-index: 200;
     box-shadow: none;
@@ -11,7 +18,7 @@
 }
 
 .nav-wrapper ul a{
-    color: #dddddd;
+    color: white;
 }
 .nav-wrapper ul a:hover {
     text-decoration: none;
@@ -22,5 +29,5 @@
     font-family: 'Poiret One', cursive;
     font-size: 50px;
     padding-left: 2%;
-    color: #dddddd;
+    color: white;
 }

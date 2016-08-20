@@ -5,13 +5,14 @@
     padding-bottom: calc(100% + 0px);
     /*margin-bottom: 0.2em;*/
     background-color: #dddddd;
+    background-color: white;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;
     border-radius: 7px;
     margin: 3px;
     margin-bottom: 5px;
-    /*background-color: white;*/
+    /*border: 2px solid black;*/
 }
 .material-card h2 {
     position: absolute;

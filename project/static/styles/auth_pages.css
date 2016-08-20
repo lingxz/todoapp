@@ -1,20 +1,64 @@
 hgroup {
-    color: white;
+    color: #296EB4;
+    color: #232e36;
+    /*color: #5677fc;*/
     font-family: 'Sofia', cursive;
+    font-weight: 300;
     font-size: 60px;
 }
 
 input.form-control {
-    color: white;
+    color: black;
 }
 .login-submit {
     margin: 4rem 0 2.2rem;
 }
 .login-register {
     font-size: 1.2rem;
-    color: white;
+    color: black;
+    opacity: 0.87;
 }
+.login-register a{
+    color: #ff6352
+}
+.login-register a:hover {
+    color: #ff6352;
+}
+
 .register-submit {
     margin: 4rem 0 2.2rem;
+}
+
+#login-box {
+    top: 20px;
+}
+
+#login-form {
+    padding: 20px;
+    background-color: white;
+}
+
+#register-box {
+    top: 20px;
+}
+
+#register-form {
+    padding: 20px;
+    background-color: white;
+}
+
+.login-submit button {
+    /*background-color: #ff6276;*/
+    background-color: #ff6352;
+}
+.login-submit button:hover {
+    background-color: #ff6352;
+}
+
+.register-submit button {
+    background-color: #ff6352;
+}
+.register-submit button:hover {
+    background-color: #ff6352;
 }
 

@@ -3,7 +3,7 @@ html, body, .container, textarea {
 }
 
 body {
-    background: #282B28;
+    background: #e6f2f7;
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
     font-size: 16px;
@@ -43,6 +43,11 @@ body {
     color: rgba(255, 255, 255, 0.3);
 }
 
-a:hover {
-    color: #039be5;
+.form-group input[type=text]:focus {
+    border-bottom: 1px solid #ff6352;
+    box-shadow: 0 1px 0 0 #ff6352;
+}
+.form-group input[type=password]:focus {
+    border-bottom: 1px solid #ff6352;
+    box-shadow: 0 1px 0 0 #ff6352;
 }
