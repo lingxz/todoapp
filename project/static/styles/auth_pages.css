@@ -56,20 +56,6 @@ input.form-control {
     background-color: white;
 }
 
-.login-submit button {
-    /*background-color: #ff6276;*/
-    background-color: #ff6352;
-}
-.login-submit button:hover {
-    background-color: #ff6352;
-}
-
-.register-submit button {
-    background-color: #ff6352;
-}
-.register-submit button:hover {
-    background-color: #ff6352;
-}
 .auth-error {
     color: #ff6352;
     margin-bottom: 10px;
