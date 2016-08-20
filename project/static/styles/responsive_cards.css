@@ -271,16 +271,21 @@
     border-color: #FFEBEE;
 }
 
-body {
-    /*background-color: #ECEFF1;*/
-    /*color: #37474F;*/
-    /*font-family: 'Open Sans', sans-serif;*/
-    /*font-weight: 300;*/
-    /*font-size: 16px;*/
-}
 h1,
 h2,
 h3 {
     font-weight: 200;
+}
+
+.circle-container {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.material-card.mc-active .circle-container {
+    display: none;
 }
 

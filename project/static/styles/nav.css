@@ -1,0 +1,22 @@
+.nav-wrapper {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    /*background-color: #BF211E;*/
+    background-color: #E13C3C;
+    font-family: 'Open Sans', sans-serif;
+    z-index: 200;
+    box-shadow: none;
+    color: #dddddd;
+}
+
+.nav-wrapper ul a{
+    color: #dddddd;
+}
+
+.nav-wrapper .brand-logo {
+    font-family: 'Poiret One', cursive;
+    font-size: 50px;
+    padding-left: 2%;
+    color: #dddddd;
+}
