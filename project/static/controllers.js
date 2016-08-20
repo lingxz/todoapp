@@ -162,7 +162,7 @@ todoApp.controller("mainController", [
         };
 
         /* ----- For the boards ----- */
-        $scope.taskGroup = -1;
+        $scope.curBoardID = -1;
 
         // Need to retrieve this at some point
         $scope.curBoard = null;
@@ -175,8 +175,8 @@ todoApp.controller("mainController", [
 
         $scope.taskGroupFilter = function () {
             return function (item) {
-                if ($scope.taskGroup >= 0) {
-                    return item['group'] == $scope.taskGroup;
+                if ($scope.curBoardID >= 0) {
+                    return item['group'] == $scope.curBoardID;
                 }
                 return true
             }
@@ -184,11 +184,11 @@ todoApp.controller("mainController", [
 
         $scope.changeBoard = function (task) {
             var val = task.group;
-            if ($scope.taskGroup === val) {
-                $scope.taskGroup = -1;
+            if ($scope.curBoardID === val) {
+                $scope.curBoardID = -1;
                 $scope.curBoard = null;
             } else {
-                $scope.taskGroup = val;
+                $scope.curBoardID = val;
                 $scope.curBoard = task;
             }
         };
@@ -207,11 +207,16 @@ todoApp.controller("mainController", [
         };
 
         $scope.addNewBoard = function () {
-            console.log($scope.lastBoard);
+            // console.log($scope.lastBoard);
             var promise = TaskService.addTask($scope.lastBoard, "NEW BOARD");
             promise.then(function (response) {
                 $scope.$emit(TASK_EVENTS.refreshTaskList);
             })
+        };
+
+        $scope.deleteBoard = function () {
+            console.log("DELETE BOARD", $scope.curBoardID);
+            if ($scope.curBoardID == -1) return;
         };
 
         /* ----- End boards ----- */
