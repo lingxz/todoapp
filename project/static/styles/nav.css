@@ -13,6 +13,10 @@
 .nav-wrapper ul a{
     color: #dddddd;
 }
+.nav-wrapper ul a:hover {
+    text-decoration: none;
+    color: #dddddd;
+}
 
 .nav-wrapper .brand-logo {
     font-family: 'Poiret One', cursive;
