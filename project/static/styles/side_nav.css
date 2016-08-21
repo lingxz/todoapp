@@ -12,6 +12,7 @@
 
 .side-nav a {
     height: 32px;
+    line-height: 32px;
 }
 
 .side-nav.fixed a {
