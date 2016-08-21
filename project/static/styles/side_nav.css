@@ -1,11 +1,18 @@
 .side-nav {
-    top: 64px;
+    top: 40px;
     background: transparent;
     z-index: 100;
     font-family: 'Open Sans', sans-serif;
     width: 267px;
     box-shadow: none;
     padding: 30px;
+    overflow-y: auto;
+    height: calc(100% - 40px);
+}
+
+.side-nav a {
+    height: 32px;
+    line-height: 32px;
 }
 
 .side-nav.fixed a {

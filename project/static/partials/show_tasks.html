@@ -4,16 +4,15 @@
         <ul id="slide-out" class="side-nav fixed">
             <li>
                 <div class="userView">
-                    <a ng-click="addNewBoard()"><i class="material-icons md-48">note_add</i></a>
-                    <a ng-click="deleteBoard()"><i class="material-icons md-48">delete</i></a>
-                    <a ng-click="addTaskToBoard()"><h6>Add new Todo</h6></a>
-                    <button class="btn btn-block">New Todo</button>
+                    <button class="btn btn-block" ng-click="addTaskToBoard()"> New Todo </button>
+                    <button class="btn btn-block" ng-click="addNewBoard()"> New Board </button>
+                    <button class="btn btn-block" ng-click="deleteBoard()"> Delete Board </button>
                     <br>
                 </div>
             </li>
 
             <div ng-repeat="task in tasks.slice() | filter: {depth : 0}">
-                <li>
+                <li class="board-list">
                     <a class="waves-effect" ng-click="changeBoard(task)">
                         <span class="my-circle" style="background-color:black"></span>{{ task.content }}
                     </a>
