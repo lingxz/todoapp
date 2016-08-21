@@ -2,7 +2,17 @@ function BoardController($scope, $timeout, AuthService, DatetimeService, TaskSer
     var ctrl = this;
     $scope.currentBoard = ctrl.board;
     $scope.tasks = ctrl.tasks;
-    console.log($scope.currentBoard, $scope.tasks);
+
+    // Pass in data
+    this.$onChanges = function (changesObj) {
+        if (changesObj.board) {
+            $scope.currentBoard = changesObj.board.currentValue;
+        }
+        if (changesObj.tasks) {
+            $scope.tasks = changesObj.tasks;
+        }
+        console.log($scope.currentBoard, $scope.tasks.currentValue);
+    };
 }
 
 angular.module('todoApp')
@@ -14,7 +24,7 @@ angular.module('todoApp')
         controller: 'BoardController',
         controllerAs: 'ctrl',
         bindings: {
-            board: '=',
-            tasks: '='
+            board: '<',
+            tasks: '<'
         }
     });

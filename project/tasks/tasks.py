@@ -53,6 +53,7 @@ def retrieve_tasks():
 
     roots.append(root1)
     rgt = root1.rgt
+    lft = root1.lft
 
     while True:
         r = Task.query.filter(Task.user_id == user_id, Task.lft == rgt + 1).first()
@@ -61,6 +62,7 @@ def retrieve_tasks():
         else:
             roots.append(r)
             rgt = r.rgt
+            lft = r.lft
 
     trees = []
     for root in roots:

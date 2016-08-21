@@ -92,6 +92,10 @@ todoApp.controller("mainController", [
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.newtask = "";
 
+        // For boards
+        $scope.curBoardID = -1;
+        $scope.curBoard = $scope.firstBoard;
+
         /* ----- Scrollbar config ----- */
         $scope.scrollBarsConfig = {
             autoHideScrollbar: false,
@@ -115,10 +119,27 @@ todoApp.controller("mainController", [
             }
         );
 
+        // To pass the correct data to the board component
+        $scope.filteredTasks = null;
+        $scope.taskFilter = function () {
+            if ($scope.curBoardID === -1) {
+                $scope.filteredTasks = $scope.tasks;
+            } else {
+                var res = [];
+                for (var i in $scope.tasks) {
+                    if ($scope.tasks[i].rgt < $scope.curBoard.rgt && $scope.tasks[i].lft > $scope.curBoard.lft) {
+                        res.push($scope.tasks[i]);
+                    }
+                }
+                $scope.filteredTasks = res;
+            }
+        };
+
         $scope.retrieveItems = function () {
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
                 $scope.tasks = response;
+                $scope.taskFilter();
 
                 // Find the very first board (for display)
                 $scope.firstBoard = $scope.tasks[0];
@@ -162,11 +183,6 @@ todoApp.controller("mainController", [
         };
 
         /* ----- For the boards ----- */
-        $scope.curBoardID = -1;
-
-        // Need to retrieve this at some point
-        $scope.curBoard = $scope.firstBoard;
-
         $scope.greaterThan = function (prop, val) {
             return function (item) {
                 return item[prop] > val;
@@ -191,6 +207,7 @@ todoApp.controller("mainController", [
                 $scope.curBoardID = val;
                 $scope.curBoard = task;
             }
+            $scope.taskFilter();
         };
 
         $scope.addTaskToBoard = function () {
