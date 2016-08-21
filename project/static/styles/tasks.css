@@ -3,21 +3,43 @@
     height: -webkit-calc(100vh - 65px); /* google, safari */
     height: -moz-calc(100vh - 65px); /* firefox */
     height: calc(100vh - 65px);
-    padding-right: 20px;
-    padding-bottom: 20px;
-    padding-top: 20px;
-    padding-left: 240px;
+    padding: 20px;
+    max-width: 340px;
+    left: 240px
 }
+
+/*.task-board {*/
+    /*padding: 20px;*/
+    /*max-width: 340px;*/
+    /*margin: 0px auto; }*/
+@media (min-width: 680px) {
+    .task-board {
+        max-width: 680px; } }
+@media (min-width: 1020px) {
+    .task-board {
+        max-width: 1020px; } }
+@media (min-width: 1360px) {
+    .task-board {
+        max-width: 1360px; } }
+@media (min-width: 1700px) {
+    .task-board {
+        max-width: 1700px; } }
+@media (min-width: 2040px) {
+    .task-board {
+        max-width: 2040px; } }
 
 @media only screen and (max-width : 992px) {
     .task-board {
-        padding-left: 0;
+        left: 0;
+        padding: 20px;
     }
 }
-
 .task-container {
     padding-left: 0.1em;
     padding-right: 0.1em;
+    width: 250px;
+    height: 250px;
+    float: left;
 }
 
 .datetimepicker {
