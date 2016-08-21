@@ -54,6 +54,8 @@ body {
 
 button.btn {
     background-color: #ff6352;
+    padding-left: 0;
+    padding-right: 0;
 }
 button.btn:hover {
     background-color: #E5594A;
