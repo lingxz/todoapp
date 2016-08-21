@@ -5,7 +5,7 @@ orbicular, [orbicular] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #FFF;
+  background-color: transparent;
   border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
   -moz-border-radius: 0.5em;
@@ -63,7 +63,7 @@ orbicular > div.co-circle > div.co-fill, [orbicular] > div.co-circle > div.co-fi
   -webkit-mask: url(mask-right.svg) top left / cover;
   mask: url(mask-right.svg) top left / cover;
   */
-  background-color: #50a6d3;
+  background-color: #E13C3C;
 }
 orbicular > div.co-shadow, [orbicular] > div.co-shadow {
   display: none;
@@ -83,7 +83,7 @@ orbicular > div.co-content, [orbicular] > div.co-content {
   width: 0.7em;
   margin-left: 0.15em;
   margin-top: 0.15em;
-  background-color: #FFF;
+  background-color: #dddddd;
   border-radius: 0.35em;
   -webkit-border-radius: 0.35em;
   -moz-border-radius: 0.35em;

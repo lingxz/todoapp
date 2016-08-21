@@ -7,7 +7,9 @@ var todoApp = angular.module("todoApp", [
     'cfp.hotkeys',
     'monospaced.elastic',
     'angular.filter',
-    'Orbicular'
+    'Orbicular',
+    'angular-svg-round-progressbar',
+    'ngScrollbars'
 ]);
 
 // todoApp.config(['$interpolateProvider', function ($interpolateProvider) {

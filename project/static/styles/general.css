@@ -1,0 +1,61 @@
+html, body, .container, textarea {
+    height: 100%;
+}
+
+body {
+    background: #e6f2f7;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+:focus {
+    outline: none;
+    border: 0;
+}
+
+.show {
+    display: block !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+.material-icons.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+}
+
+.material-icons.md-light {
+    color: rgba(255, 255, 255, 1);
+}
+
+.material-icons.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.form-group input[type=text]:focus {
+    border-bottom: 1px solid #ff6352;
+    box-shadow: 0 1px 0 0 #ff6352;
+}
+.form-group input[type=password]:focus {
+    border-bottom: 1px solid #ff6352;
+    box-shadow: 0 1px 0 0 #ff6352;
+}
+
+button.btn {
+    background-color: #ff6352;
+}
+button.btn:hover {
+    background-color: #E5594A;
+    color: white;
+}

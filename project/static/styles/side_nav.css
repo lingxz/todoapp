@@ -1,0 +1,30 @@
+.side-nav {
+    top: 64px;
+    background: transparent;
+    z-index: 100;
+    font-family: 'Open Sans', sans-serif;
+    width: 267px;
+    box-shadow: none;
+    padding: 30px;
+}
+
+.side-nav.fixed a {
+    text-align: left;
+    color: black;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    font-size: 17px;
+}
+
+.userView {
+    text-align: center;
+}
+
+.my-circle {
+    display: inline-block;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+    color : purple;
+}

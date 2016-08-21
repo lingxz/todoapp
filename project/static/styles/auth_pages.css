@@ -1,0 +1,63 @@
+hgroup h1{
+    /*color: #296EB4;*/
+    color: #232e36;
+    /*color: #5677fc;*/
+    font-family: 'Sofia', cursive;
+    font-weight: 300;
+    font-size: 60px;
+}
+
+hgroup h2 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+}
+
+input.form-control {
+    color: black;
+}
+.login-submit {
+    margin: 4rem 0 2.2rem;
+}
+.login-register {
+    font-size: 1.2rem;
+    color: black;
+    opacity: 0.87;
+}
+.login-register a{
+    color: #ff6352
+}
+.login-register a:hover {
+    color: #ff6352;
+}
+
+.register-submit {
+    margin: 4rem 0 2.2rem;
+}
+
+#login-box {
+    width: 300px;
+    top: 20px;
+    margin: 0 auto;
+}
+
+#login-form {
+    padding: 20px;
+    background-color: white;
+}
+
+#register-box {
+    width: 300px;
+    top: 20px;
+    margin: 0 auto;
+}
+
+#register-form {
+    padding: 20px;
+    background-color: white;
+}
+
+.auth-error {
+    color: #ff6352;
+    margin-bottom: 10px;
+}
+
