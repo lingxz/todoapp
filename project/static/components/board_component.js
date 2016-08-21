@@ -1,17 +1,18 @@
 function BoardController($scope, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
     var ctrl = this;
-    $scope.currentBoard = ctrl.board;
+    $scope.curBoard = ctrl.board;
     $scope.tasks = ctrl.tasks;
 
     // Pass in data
     this.$onChanges = function (changesObj) {
         if (changesObj.board) {
-            $scope.currentBoard = changesObj.board.currentValue;
+            $scope.curBoard = changesObj.board.currentValue;
         }
         if (changesObj.tasks) {
-            $scope.tasks = changesObj.tasks;
+            if (changesObj.tasks.currentValue !== null) {
+                $scope.tasks = changesObj.tasks.currentValue;
+            }
         }
-        console.log($scope.currentBoard, $scope.tasks.currentValue);
     };
 }
 

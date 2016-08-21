@@ -122,17 +122,18 @@ todoApp.controller("mainController", [
         // To pass the correct data to the board component
         $scope.filteredTasks = null;
         $scope.taskFilter = function () {
-            if ($scope.curBoardID === -1) {
-                $scope.filteredTasks = $scope.tasks;
-            } else {
-                var res = [];
-                for (var i in $scope.tasks) {
+            var res = [];
+
+            for (var i in $scope.tasks) {
+                if ($scope.curBoardID === -1) {
+                    if ($scope.tasks[i].depth > 0) res.push($scope.tasks[i]);
+                } else {
                     if ($scope.tasks[i].rgt < $scope.curBoard.rgt && $scope.tasks[i].lft > $scope.curBoard.lft) {
                         res.push($scope.tasks[i]);
                     }
                 }
-                $scope.filteredTasks = res;
             }
+            $scope.filteredTasks = res;
         };
 
         $scope.retrieveItems = function () {
