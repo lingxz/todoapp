@@ -14,6 +14,16 @@ function BoardController($scope, $timeout, AuthService, DatetimeService, TaskSer
             }
         }
     };
+
+    /*---scrollbar config-----*/
+    $scope.scrollBarsConfig = {
+        autoHideScrollbar: false,
+        theme: 'minimal-dark',
+        advanced: {
+            updateOnContentResize: true
+        },
+        scrollInertia: 50
+    };
 }
 
 angular.module('todoApp')
