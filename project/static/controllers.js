@@ -92,38 +92,15 @@ todoApp.controller("mainController", [
     function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.newtask = "";
 
-        /* ----- For the boards ----- */
-        $scope.taskGroup = -1;
-        $scope.greaterThan = function (prop, val) {
-            return function (item) {
-                return item[prop] > val;
-            }
-        };
-
-        $scope.taskGroupFilter = function () {
-            return function (item) {
-                if ($scope.taskGroup >= 0) {
-                    return item['group'] == $scope.taskGroup;
-                }
-                return true
-            }
-        };
-
-        $scope.changeBoard = function(val) {
-            if ($scope.taskGroup === val) {
-                $scope.taskGroup = -1
-            } else {
-                $scope.taskGroup = val;
-            }
-        };
-
-        /* ----- End boards ----- */
+        // For boards
+        $scope.curBoardID = -1;
+        $scope.curBoard = $scope.firstBoard;
 
         /* ----- Scrollbar config ----- */
         $scope.scrollBarsConfig = {
             autoHideScrollbar: false,
             theme: 'minimal',
-            advanced:{
+            advanced: {
                 updateOnContentResize: true
             },
             scrollInertia: 50
@@ -142,10 +119,39 @@ todoApp.controller("mainController", [
             }
         );
 
+        // To pass the correct data to the board component
+        $scope.filteredTasks = null;
+        $scope.taskFilter = function () {
+            var res = [];
+
+            for (var i in $scope.tasks) {
+                if ($scope.curBoardID === -1) {
+                    if ($scope.tasks[i].depth > 0) res.push($scope.tasks[i]);
+                } else {
+                    if ($scope.tasks[i].rgt < $scope.curBoard.rgt && $scope.tasks[i].lft > $scope.curBoard.lft) {
+                        res.push($scope.tasks[i]);
+                    }
+                }
+            }
+            $scope.filteredTasks = res;
+        };
+
         $scope.retrieveItems = function () {
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
                 $scope.tasks = response;
+                $scope.taskFilter();
+
+                // Find the very first board (for display)
+                $scope.firstBoard = $scope.tasks[0];
+
+                // Find the last board (for appending)
+                for (var i in $scope.tasks) {
+                    var curTask = $scope.tasks[i];
+                    if (curTask.depth == 0) {
+                        $scope.lastBoard = curTask;
+                    }
+                }
             });
         };
 
@@ -177,6 +183,66 @@ todoApp.controller("mainController", [
             })
         };
 
+        /* ----- For the boards ----- */
+        $scope.greaterThan = function (prop, val) {
+            return function (item) {
+                return item[prop] > val;
+            }
+        };
+
+        $scope.taskGroupFilter = function () {
+            return function (item) {
+                if ($scope.curBoardID >= 0) {
+                    return item['group'] == $scope.curBoardID;
+                }
+                return true
+            }
+        };
+
+        $scope.changeBoard = function (task) {
+            var val = task.group;
+            if ($scope.curBoardID === val) {
+                $scope.curBoardID = -1;
+                $scope.curBoard = null;
+            } else {
+                $scope.curBoardID = val;
+                $scope.curBoard = task;
+            }
+            $scope.taskFilter();
+        };
+
+        $scope.addTaskToBoard = function () {
+            var parent_id;
+            if ($scope.curBoard == null) {
+                parent_id = $scope.firstBoard.id;
+            } else {
+                parent_id = $scope.curBoard.id;
+            }
+            var promise = TaskService.addSubTask(parent_id);
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            })
+        };
+
+        $scope.addNewBoard = function () {
+            // console.log($scope.lastBoard);
+            var promise = TaskService.addTask($scope.lastBoard, "NEW BOARD");
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            })
+        };
+
+        $scope.deleteBoard = function () {
+            console.log("DELETE BOARD", $scope.curBoardID);
+            if ($scope.curBoardID == -1) return;
+            var promise = TaskService.deleteTask($scope.curBoard);
+            promise.then(function (response) {
+                $scope.$emit(TASK_EVENTS.refreshTaskList);
+            })
+        };
+        /* ----- End boards ----- */
+
+
         hotkeys.bindTo($scope)
             .add({
                 combo: 'ctrl+shift+backspace',
@@ -187,14 +253,14 @@ todoApp.controller("mainController", [
                 }
             });
 
-        hotkeys.bindTo($scope)
-            .add({
-                combo: 'tab',
-                description: 'make this a sub task',
-                allowIn: ['TEXTAREA'],
-                callback: function (event, keypress) {
-                    $scope.makeSubTask($scope.currentTask)
-                }
-            });
+        // hotkeys.bindTo($scope)
+        //     .add({
+        //         combo: 'tab',
+        //         description: 'make this a sub task',
+        //         allowIn: ['TEXTAREA'],
+        //         callback: function (event, keypress) {
+        //             $scope.makeSubTask($scope.currentTask)
+        //         }
+        //     });
     }
 ]);

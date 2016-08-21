@@ -68,6 +68,9 @@ class Task(db.Model):
         if not my_right:
             self.lft = 0
             self.rgt = 1
+            if parent_id:
+                self.lft = my_right + 1
+                self.rgt = my_right + 2
         else:
             self.lft = my_right + 1
             self.rgt = my_right + 2

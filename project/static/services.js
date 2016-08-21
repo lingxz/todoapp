@@ -357,7 +357,7 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         var deferred = $q.defer();
 
         $http({
-            url: '/add_subtask',
+            url: '/make_subtask',
             method: "POST",
             headers: headers,
             data: {
@@ -374,7 +374,30 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
 
         return deferred.promise
     }
-    
+
+    function addSubTask(parent_id) {
+        var headers = AuthService.getHeaders();
+        var deferred = $q.defer();
+
+        $http({
+            url: '/add_subtask',
+            method: "POST",
+            headers: headers,
+            data: {
+                user_id: AuthService.getCurrentUserID(),
+                parent_id: parent_id
+            }
+        }).then(function (response) {
+            deferred.resolve()
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+
+        return deferred.promise
+    }
+
+
     function markAsDone(task) {
         var headers = AuthService.getHeaders();
         var deferred = $q.defer();
@@ -416,7 +439,7 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
 
         return deferred.promise
     }
-    
+
     return ({
         setCurrentTask: setCurrentTask,
         getCurrentTask: getCurrentTask,
@@ -428,7 +451,8 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         getPrevSibling: getPrevSibling,
         makeSubTask: makeSubTask,
         markAsDone: markAsDone,
-        editDate: editDate
+        editDate: editDate,
+        addSubTask: addSubTask
     })
 
 }]);

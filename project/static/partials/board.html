@@ -1,0 +1,13 @@
+<div class="container-fluid col-md-9 col-md-offset-0 task-board"
+     ng-scrollbars
+     ng-scrollbars-config="scrollBarsConfig">
+    <!-- Content for each board-->
+    <div ng-show="curBoard.content">{{ curBoard.content }}</div>
+
+    <div class="active-with-click col-md-4 col-sm-6 col-xs-12 task-container"
+         ng-repeat="task in tasks.slice()"
+         ng-hide="task.done && !showCompleted">
+        <task task="task" style="cursor: auto;"></task>
+    </div>
+    <datetimebox></datetimebox>
+</div>
