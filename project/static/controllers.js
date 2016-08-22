@@ -94,7 +94,7 @@ todoApp.controller("mainController", [
 
         // For boards
         $scope.curBoardID = -1;
-        $scope.curBoard = $scope.firstBoard;
+        $scope.curBoard = null;
 
         /* ----- Scrollbar config ----- */
         $scope.scrollBarsConfig = {
@@ -140,7 +140,6 @@ todoApp.controller("mainController", [
             promise = TaskService.retrieveItems();
             promise.then(function (response) {
                 $scope.tasks = response;
-                $scope.taskFilter();
 
                 // Find the very first board (for display)
                 $scope.firstBoard = $scope.tasks[0];
@@ -150,8 +149,14 @@ todoApp.controller("mainController", [
                     var curTask = $scope.tasks[i];
                     if (curTask.depth == 0) {
                         $scope.lastBoard = curTask;
+                        console.log(curTask.group, $scope.curBoardID);
+                        if (curTask.group === $scope.curBoardID) {
+                            $scope.curBoard = curTask;
+                        }
                     }
                 }
+
+                $scope.taskFilter();
             });
         };
 
