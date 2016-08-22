@@ -234,7 +234,8 @@ todoApp.controller("mainController", [
             var promise = TaskService.addTask($scope.lastBoard, "NEW BOARD");
             promise.then(function (response) {
                 $scope.$emit(TASK_EVENTS.refreshTaskList);
-            })
+                // Basically need to delay the new board until the retrieve completes
+            });
         };
 
         $scope.deleteBoard = function () {
@@ -243,6 +244,7 @@ todoApp.controller("mainController", [
             var promise = TaskService.deleteTask($scope.curBoard);
             promise.then(function (response) {
                 $scope.$emit(TASK_EVENTS.refreshTaskList);
+                // Again, similar functionality is needed here
             })
         };
         /* ----- End boards ----- */
