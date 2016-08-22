@@ -68,6 +68,13 @@ function TaskController($scope, $timeout, AuthService, DatetimeService, TaskServ
         $scope.newtask = "";
     };
 
+    $scope.deleteTask = function () {
+        promise = TaskService.deleteTask(task);
+        promise.then(function (response) {
+            $scope.$emit(TASK_EVENTS.refreshTaskList)
+        })
+    };
+
     $scope.setCurrentTask = function () {
         TaskService.setCurrentTask(task)
     };

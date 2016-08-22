@@ -162,13 +162,6 @@ todoApp.controller("mainController", [
 
         $scope.retrieveItems();
 
-        $scope.deleteTask = function (task) {
-            promise = TaskService.deleteTask(task);
-            promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList)
-            })
-        };
-
         $scope.currentTask = TaskService.getCurrentTask();
         $scope.$watch(TaskService.getCurrentTask,
             function (new_task, old_task) {
