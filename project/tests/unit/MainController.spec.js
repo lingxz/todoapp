@@ -58,47 +58,7 @@ describe('mainController', function () {
             expect(scope.tasks).toBe('more_tasks')
         })
     });
-
-    describe('deleteTask function', function () {
-
-        it('should exist', function () {
-            var controller = createController();
-            expect(angular.isFunction(scope.deleteTask)).toBe(true)
-        });
-
-        it('should call the deleteTask function from TaskService with correct argument', function () {
-            var deferred = $q.defer();
-            spyOn(TaskService, 'deleteTask').and.returnValue(deferred.promise);
-            var controller = createController();
-            scope.deleteTask('some_task');
-            expect(TaskService.deleteTask).toHaveBeenCalled();
-            expect(TaskService.deleteTask).toHaveBeenCalledWith('some_task');
-        });
-        
-        it('should emit refreshTaskList event when promise is resolved', function () {
-            var deferred = $q.defer();
-            spyOn(TaskService, 'deleteTask').and.returnValue(deferred.promise);
-            var controller = createController();
-            spyOn(scope, '$emit');
-            scope.deleteTask('some_task');
-            deferred.resolve();
-            scope.$digest();
-            expect(scope.$emit).toHaveBeenCalled();
-            expect(scope.$emit).toHaveBeenCalledWith(TASK_EVENTS.refreshTaskList)
-        });
-
-        it('should not emit refreshTaskList event if promise is rejected', function () {
-            var deferred = $q.defer();
-            spyOn(TaskService, 'deleteTask').and.returnValue(deferred.promise);
-            var controller = createController();
-            spyOn(scope, '$emit');
-            scope.deleteTask('some_task');
-            deferred.reject();
-            scope.$digest();
-            expect(scope.$emit).not.toHaveBeenCalled();
-        })
-    });
-
+    
     describe('makeSubTask function', function () {
 
         it('should exist', function () {
