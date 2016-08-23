@@ -13,6 +13,7 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
     $scope.taskWidth = 100 - $scope.taskDepth;
 
     $scope.isCollapsed = false;
+    $scope.isFlipped = false;
 
     $scope.markAsDone = function () {
         promise = TaskService.markAsDone(task);
@@ -105,7 +106,13 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
             var content = task.content;
             $scope.deleteTask();
         })
-    }
+    };
+
+    /*for card flipping*/
+    $scope.flipCard = function () {
+        $scope.isFlipped = !$scope.isFlipped
+    };
+    /*end card flipping*/
 }
 
 angular.module('todoApp')
