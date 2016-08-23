@@ -61,3 +61,14 @@ button.btn:hover {
     background-color: #E5594A;
     color: white;
 }
+
+/*correct for materialize screwing up the modal*/
+.modal {
+    background-color: transparent;
+    box-shadow: none;
+    width: 100%;
+    font-weight: 400;
+}
+.modal .modal-footer {
+    background-color: white;
+}

@@ -241,26 +241,14 @@ todoApp.controller("mainController", [
             })
         };
         /* ----- End boards ----- */
-
-
-        hotkeys.bindTo($scope)
-            .add({
-                combo: 'ctrl+shift+backspace',
-                description: 'delete this task',
-                allowIn: ['TEXTAREA'],
-                callback: function (event, keypress) {
-                    $scope.deleteTask($scope.currentTask)
-                }
-            });
-
-        // hotkeys.bindTo($scope)
-        //     .add({
-        //         combo: 'tab',
-        //         description: 'make this a sub task',
-        //         allowIn: ['TEXTAREA'],
-        //         callback: function (event, keypress) {
-        //             $scope.makeSubTask($scope.currentTask)
-        //         }
-        //     });
     }
 ]);
+
+todoApp.controller('deleteTaskModalController', function ($scope, $uibModalInstance) {
+    $scope.yes = function () {
+        $uibModalInstance.close()
+    };
+    $scope.no = function () {
+        $uibModalInstance.dismiss()
+    }
+});

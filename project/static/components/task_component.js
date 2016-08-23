@@ -2,7 +2,7 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
+function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
     // Extract from controller
     var ctrl = this;
     $scope.task = ctrl.task;
@@ -92,7 +92,19 @@ function TaskController($scope, $timeout, AuthService, DatetimeService, TaskServ
             var dateWrapper = moment(dateObj);
             $scope.formattedDate = dateWrapper.format('MMM DD')
         }
-    })
+    });
+
+    $scope.openDeleteTaskModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'static/partials/delete_task_modal.html',
+            controller: 'deleteTaskModalController'
+        });
+
+        modalInstance.result.then(function () {
+            var content = task.content;
+            $scope.deleteTask()
+        })
+    }
 }
 
 angular.module('todoApp')
@@ -106,34 +118,4 @@ angular.module('todoApp')
         bindings: {
             task: '='
         }
-    });
-
-
-angular.module('todoApp')
-    .directive("contenteditable", function () {
-        return {
-            restrict: "A",
-            require: "ngModel",
-            link: function (scope, element, attrs, ngModel) {
-
-                ngModel.$render = function () {
-                    element.html(ngModel.$viewValue || "");
-                };
-
-                element.on("blur keyup change", function () {
-                    scope.$apply(read);
-                });
-                ngModel.$render();
-
-                function read() {
-                    var html = element.html();
-                    // When we clear the content editable the browser leaves a <br> behind
-                    // If strip-br attribute is provided then we strip this out
-                    if (attrs.stripBr && html == '<br>') {
-                        html = '';
-                    }
-                    ngModel.$setViewValue(html);
-                }
-            }
-        };
     });

@@ -10,6 +10,7 @@ var todoApp = angular.module("todoApp", [
     'Orbicular',
     'angular-svg-round-progressbar',
     'ngScrollbars'
+    // 'ui.materialize'
 ]);
 
 // todoApp.config(['$interpolateProvider', function ($interpolateProvider) {
