@@ -110,9 +110,6 @@ todoApp.controller("mainController", [
             $scope.retrieveItems()
         });
 
-        // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
-
-        // AuthService.getUserPreference();
         $scope.$watch(AuthService.retrieveShowTaskPref,
             function (newval, oldval) {
                 $scope.showCompleted = newval
