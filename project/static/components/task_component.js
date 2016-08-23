@@ -71,7 +71,8 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
     $scope.deleteTask = function () {
         promise = TaskService.deleteTask(task);
         promise.then(function (response) {
-            $scope.$emit(TASK_EVENTS.refreshTaskList)
+            $scope.$emit(TASK_EVENTS.refreshTaskList);
+            Materialize.toast('Task deleted', 1000);
         })
     };
 
@@ -102,7 +103,7 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
 
         modalInstance.result.then(function () {
             var content = task.content;
-            $scope.deleteTask()
+            $scope.deleteTask();
         })
     }
 }
