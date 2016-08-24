@@ -156,9 +156,13 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         return deferred.promise
     }
 
-    function addSubTask(parent_id) {
+    function addSubTask(parent_id, task_content) {
         var headers = AuthService.getHeaders();
         var deferred = $q.defer();
+
+
+        // for a default argument
+        task_content = task_content || "ASDF";
 
         $http({
             url: '/add_subtask',
@@ -166,7 +170,8 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
             headers: headers,
             data: {
                 user_id: AuthService.getCurrentUserID(),
-                parent_id: parent_id
+                parent_id: parent_id,
+                task_content: task_content
             }
         }).then(function (response) {
             deferred.resolve()
