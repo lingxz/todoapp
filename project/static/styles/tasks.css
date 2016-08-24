@@ -116,3 +116,26 @@
     transform: rotateY(180deg);
 }
 /*------end card flip-------*/
+
+.back p {
+    height: 23px;
+}
+
+.add-subtask-input {
+    border: solid;
+}
+
+.material-card .subtasks-container {
+    padding: 30px;
+}
+
+.input-field .prefix.active{
+    color: #3597d3;
+}
+
+.material-card .form-group {
+    margin-top: 0;
+}
+.material-card input.form-control {
+    height: 34px;
+}

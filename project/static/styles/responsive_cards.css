@@ -104,4 +104,8 @@
     transform: translateY(-50%);
 }
 
+.material-card .flow-text{
+    font-weight: 400;
+}
+
 
