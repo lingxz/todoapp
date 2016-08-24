@@ -107,12 +107,10 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
             $scope.deleteTask();
         })
     };
-
-    /*for card flipping*/
+    
     $scope.flipCard = function () {
         $scope.isFlipped = !$scope.isFlipped
     };
-    /*end card flipping*/
 }
 
 angular.module('todoApp')
