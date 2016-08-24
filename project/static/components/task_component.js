@@ -119,9 +119,23 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
         var promise = TaskService.addSubTask(task.id, $scope.newSubTask);
         promise.then(function (data) {
             console.log(data);
+            $scope.$emit('refresh');
             $scope.newSubTask = "";
         })
     };
+
+    $scope.getSubTask = function () {
+        var promise = TaskService.getDirectSubTasks(task.id);
+        promise.then(function (data) {
+            $scope.subtasks = data
+        })
+    };
+    $scope.getSubTask();
+
+    $scope.$on('refresh', function () {
+        $scope.getSubTask()
+    })
+
 }
 
 angular.module('todoApp')

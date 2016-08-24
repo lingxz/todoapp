@@ -238,7 +238,6 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
                 id: task_id
             }
         }).then(function (response) {
-            console.log(response.data);
             deferred.resolve(response.data)
         }, function (error) {
             console.log(error);
