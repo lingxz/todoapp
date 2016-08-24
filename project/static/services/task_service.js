@@ -174,7 +174,7 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
                 task_content: task_content
             }
         }).then(function (response) {
-            deferred.resolve()
+            deferred.resolve(response.data)
         }, function (error) {
             console.log(error);
             deferred.reject()
@@ -226,6 +226,28 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         return deferred.promise
     }
 
+    function getDirectSubTasks(task_id) {
+        var headers = AuthService.getHeaders();
+        var deferred = $q.defer();
+
+        $http({
+            method: 'POST',
+            url: '/get_direct_subtasks',
+            headers: headers,
+            data: {
+                id: task_id
+            }
+        }).then(function (response) {
+            console.log(response.data);
+            deferred.resolve(response.data)
+        }, function (error) {
+            console.log(error);
+            deferred.reject()
+        });
+
+        return deferred.promise
+    }
+
     return ({
         setCurrentTask: setCurrentTask,
         getCurrentTask: getCurrentTask,
@@ -238,7 +260,8 @@ angular.module('todoApp').factory('TaskService', ['$q', '$http', 'AuthService', 
         makeSubTask: makeSubTask,
         markAsDone: markAsDone,
         editDate: editDate,
-        addSubTask: addSubTask
+        addSubTask: addSubTask,
+        getDirectSubTasks: getDirectSubTasks
     })
 
 }]);

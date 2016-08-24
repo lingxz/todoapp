@@ -111,6 +111,17 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
     $scope.flipCard = function () {
         $scope.isFlipped = !$scope.isFlipped
     };
+
+    $scope.addSubTask = function () {
+        if ($scope.newSubTask === "" || $scope.newSubTask === undefined) {
+            return
+        }
+        var promise = TaskService.addSubTask(task.id, $scope.newSubTask);
+        promise.then(function (data) {
+            console.log(data);
+            $scope.newSubTask = "";
+        })
+    };
 }
 
 angular.module('todoApp')

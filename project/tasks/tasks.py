@@ -300,3 +300,17 @@ def delete_task():
         utils.delete_task_helper(task)
 
     return 'OK'
+
+
+@tasks.route('/get_direct_subtasks', methods=['POST'])
+@auth.login_required
+def get_direct_subtasks():
+    task_id = request.json['id']
+    parent = db.session.query(Task).get(task_id)
+    print(parent.content)
+    subtasks = utils.get_subtasks(parent)
+    subtasks_list = []
+    for subtask in subtasks:
+        subtask_dict = utils.task_to_dictionary(subtask)
+        subtasks_list.append(subtask_dict)
+    return json.dumps(subtasks_list)
