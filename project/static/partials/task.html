@@ -61,7 +61,9 @@
 
 
         <ul class="subtasks-container">
-            <li ng-repeat="subtask in subtasks">{{ subtask.content }}</li>
+            <li ng-repeat="subtask in subtasks">
+                <subtask subtask="subtask"></subtask>
+            </li>
 
 
             <form class="form" ng-submit="addSubTask()">
