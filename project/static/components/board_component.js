@@ -4,6 +4,13 @@ function BoardController($scope, $timeout, AuthService, DatetimeService, TaskSer
     $scope.tasks = ctrl.tasks;
     $scope.showBoard = false;
 
+    // Show completed
+    $scope.$watch(AuthService.retrieveShowTaskPref,
+        function (newval, oldval) {
+            $scope.showCompleted = newval
+        }
+    );
+
     // Pass in data
     this.$onChanges = function (changesObj) {
         if (changesObj.board) {

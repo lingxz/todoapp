@@ -86,15 +86,17 @@ todoApp.controller("mainController", [
     '$http',
     'AuthService',
     'TaskService',
+    'BoardService',
     'USER_PREFERENCES',
     'TASK_EVENTS',
     'hotkeys',
-    function ($scope, $rootScope, $http, AuthService, TaskService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
+    function ($scope, $rootScope, $http, AuthService, TaskService, BoardService, USER_PREFERENCES, TASK_EVENTS, hotkeys) {
         $scope.newtask = "";
 
         // For boards
-        $scope.curBoardID = -1;
+        $scope.currentBoardID = -1;
         $scope.curBoard = null;
+        $scope.filteredTasks = null;
 
         /* ----- Scrollbar config ----- */
         $scope.scrollBarsConfig = {
@@ -110,53 +112,25 @@ todoApp.controller("mainController", [
             $scope.retrieveItems()
         });
 
-        // $scope.showCompleted = AuthService.getUserPreference();  //TODO: need to change default
-
-        // AuthService.getUserPreference();
         $scope.$watch(AuthService.retrieveShowTaskPref,
             function (newval, oldval) {
                 $scope.showCompleted = newval
             }
         );
 
-        // To pass the correct data to the board component
-        $scope.filteredTasks = null;
-        $scope.taskFilter = function () {
-            var res = [];
-
-            for (var i in $scope.tasks) {
-                if ($scope.curBoardID === -1) {
-                    if ($scope.tasks[i].depth > 0) res.push($scope.tasks[i]);
-                } else {
-                    if ($scope.tasks[i].rgt < $scope.curBoard.rgt && $scope.tasks[i].lft > $scope.curBoard.lft) {
-                        res.push($scope.tasks[i]);
-                    }
-                }
-            }
-            $scope.filteredTasks = res;
+        $scope.processResponse = function (response) {
+            $scope.tasks = response.tasks;
+            $scope.firstBoard = response.firstBoard;
+            $scope.lastBoard = response.lastBoard;
+            $scope.curBoard = response.currentBoard;
+            $scope.filteredTasks = response.filteredTasks;
+            $scope.currentBoardID = response.currentBoardID;
         };
 
         $scope.retrieveItems = function () {
-            promise = TaskService.retrieveItems();
+            var promise = BoardService.retrieveItems();
             promise.then(function (response) {
-                $scope.tasks = response;
-
-                // Find the very first board (for display)
-                $scope.firstBoard = $scope.tasks[0];
-
-                // Find the last board (for appending)
-                for (var i in $scope.tasks) {
-                    var curTask = $scope.tasks[i];
-                    if (curTask.depth == 0) {
-                        $scope.lastBoard = curTask;
-                        console.log(curTask.group, $scope.curBoardID);
-                        if (curTask.group === $scope.curBoardID) {
-                            $scope.curBoard = curTask;
-                        }
-                    }
-                }
-
-                $scope.taskFilter();
+                $scope.processResponse(response);
             });
         };
 
@@ -182,63 +156,48 @@ todoApp.controller("mainController", [
         };
 
         /* ----- For the boards ----- */
+
+        // Used for display filtering
         $scope.greaterThan = function (prop, val) {
             return function (item) {
                 return item[prop] > val;
             }
         };
 
+        // Used for display filtering
         $scope.taskGroupFilter = function () {
             return function (item) {
-                if ($scope.curBoardID >= 0) {
-                    return item['group'] == $scope.curBoardID;
+                if ($scope.currentBoardID >= 0) {
+                    return item['group'] == $scope.currentBoardID;
                 }
                 return true
             }
         };
 
         $scope.changeBoard = function (task) {
-            var val = task.group;
-            if ($scope.curBoardID === val) {
-                $scope.curBoardID = -1;
-                $scope.curBoard = null;
-            } else {
-                $scope.curBoardID = val;
-                $scope.curBoard = task;
-            }
-            $scope.taskFilter();
+            var response = BoardService.changeBoard(task);
+            $scope.processResponse(response);
         };
 
         $scope.addTaskToBoard = function () {
-            var parent_id;
-            if ($scope.curBoard == null) {
-                parent_id = $scope.firstBoard.id;
-            } else {
-                parent_id = $scope.curBoard.id;
-            }
-            var promise = TaskService.addSubTask(parent_id);
+            var promise = BoardService.addTaskToBoard();
             promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-            })
+                $scope.processResponse(response);
+            });
         };
 
         $scope.addNewBoard = function () {
-            // console.log($scope.lastBoard);
-            var promise = TaskService.addTask($scope.lastBoard, "NEW BOARD");
+            var promise = BoardService.addNewBoard();
             promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-                // Basically need to delay the new board until the retrieve completes
+                $scope.processResponse(response);
             });
         };
 
         $scope.deleteBoard = function () {
-            console.log("DELETE BOARD", $scope.curBoardID);
-            if ($scope.curBoardID == -1) return;
-            var promise = TaskService.deleteTask($scope.curBoard);
+            var promise = BoardService.deleteBoard();
             promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-                // Again, similar functionality is needed here
-            })
+                $scope.processResponse(response);
+            });
         };
         /* ----- End boards ----- */
     }
