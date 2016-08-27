@@ -118,14 +118,19 @@ todoApp.controller("mainController", [
             }
         );
 
+        $scope.processResponse = function (response) {
+            $scope.tasks = response.tasks;
+            $scope.firstBoard = response.firstBoard;
+            $scope.lastBoard = response.lastBoard;
+            $scope.curBoard = response.currentBoard;
+            $scope.filteredTasks = response.filteredTasks;
+            $scope.currentBoardID = response.currentBoardID;
+        };
+
         $scope.retrieveItems = function () {
             var promise = BoardService.retrieveItems();
             promise.then(function (response) {
-                $scope.tasks = response.tasks;
-                $scope.firstBoard = response.firstBoard;
-                $scope.lastBoard = response.lastBoard;
-                $scope.curBoard = response.currentBoard;
-                $scope.filteredTasks = response.filteredTasks;
+                $scope.processResponse(response);
             });
         };
 
@@ -170,42 +175,29 @@ todoApp.controller("mainController", [
         };
 
         $scope.changeBoard = function (task) {
-            var res = BoardService.changeBoard(task);
-            $scope.curBoard = res.currentBoard;
-            $scope.currentBoardID = res.currentBoardID;
-            $scope.filteredTasks = res.filteredTasks;
+            var response = BoardService.changeBoard(task);
+            $scope.processResponse(response);
         };
 
         $scope.addTaskToBoard = function () {
-            var parent_id;
-            if ($scope.curBoard == null) {
-                parent_id = $scope.firstBoard.id;
-            } else {
-                parent_id = $scope.curBoard.id;
-            }
-            var promise = TaskService.addSubTask(parent_id);
+            var promise = BoardService.addTaskToBoard();
             promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-            })
+                $scope.processResponse(response);
+            });
         };
 
         $scope.addNewBoard = function () {
-            // console.log($scope.lastBoard);
-            var promise = TaskService.addTask($scope.lastBoard, "NEW BOARD");
+            var promise = BoardService.addNewBoard();
             promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-                // Basically need to delay the new board until the retrieve completes
+                $scope.processResponse(response);
             });
         };
 
         $scope.deleteBoard = function () {
-            console.log("DELETE BOARD", $scope.currentBoardID);
-            if ($scope.currentBoardID == -1) return;
-            var promise = TaskService.deleteTask($scope.curBoard);
+            var promise = BoardService.deleteBoard();
             promise.then(function (response) {
-                $scope.$emit(TASK_EVENTS.refreshTaskList);
-                // Again, similar functionality is needed here
-            })
+                $scope.processResponse(response);
+            });
         };
         /* ----- End boards ----- */
     }
