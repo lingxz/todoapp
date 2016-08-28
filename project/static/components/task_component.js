@@ -14,6 +14,7 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
 
     $scope.isCollapsed = false;
     $scope.isFlipped = false;
+    $scope.exists = true;
 
     $scope.markAsDone = function () {
         promise = TaskService.markAsDone(task);
@@ -72,7 +73,7 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
     $scope.deleteTask = function () {
         promise = TaskService.deleteTask(task);
         promise.then(function (response) {
-            $scope.$emit(TASK_EVENTS.refreshTaskList);
+            $scope.exists = false;
             Materialize.toast('Task deleted', 1000);
         })
     };
