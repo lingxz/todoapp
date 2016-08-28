@@ -29,17 +29,18 @@ angular.module('todoApp').factory('BoardService', ['$q', '$http', 'TaskService',
     }
 
     function taskFilter() {
-        var deferred = $q.defer();
-        var promise = TaskService.getDirectSubTasks(currentBoard.id);
-        promise.then(function (data) {
-            filteredTasks = data;
-            deferred.resolve(data)
-        }, function (error) {
-            console.log(error);
-            deferred.reject()
-        });
+        var res = [];
 
-        return deferred.promise
+        for (var i in tasks) {
+            if (currentBoardID === -1) {
+                if (tasks[i].depth > 0) res.push(tasks[i]);
+            } else {
+                if (tasks[i].rgt < currentBoard.rgt && tasks[i].lft > currentBoard.lft) {
+                    res.push(tasks[i]);
+                }
+            }
+        }
+        filteredTasks = res;
     }
 
     function retrieveItems() {
@@ -62,10 +63,8 @@ angular.module('todoApp').factory('BoardService', ['$q', '$http', 'TaskService',
                 }
             }
 
-            taskFilter().then(function () {
-                deferred.resolve(generateResponse());
-
-            })
+            taskFilter();
+            deferred.resolve(generateResponse());
         }, function (error) {
             console.log(error);
             deferred.reject()

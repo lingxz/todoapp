@@ -307,6 +307,7 @@ def delete_task():
 def get_direct_subtasks():
     task_id = request.json['id']
     parent = db.session.query(Task).get(task_id)
+    print(parent.content)
     subtasks = utils.get_subtasks(parent)
     subtasks_list = []
     for subtask in subtasks:
