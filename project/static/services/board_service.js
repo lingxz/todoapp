@@ -33,9 +33,9 @@ angular.module('todoApp').factory('BoardService', ['$q', '$http', 'TaskService',
 
         for (var i in tasks) {
             if (currentBoardID === -1) {
-                if (tasks[i].depth > 0) res.push(tasks[i]);
+                if (tasks[i].depth === 1) res.push(tasks[i]);
             } else {
-                if (tasks[i].rgt < currentBoard.rgt && tasks[i].lft > currentBoard.lft) {
+                if (tasks[i].rgt < currentBoard.rgt && tasks[i].lft > currentBoard.lft && tasks[i].depth === 1) {
                     res.push(tasks[i]);
                 }
             }
