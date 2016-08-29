@@ -30,6 +30,7 @@ module.exports = function (config) {
             'node_modules/moment/min/moment-with-locales.min.js',
             'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js',
             'node_modules/angular-svg-round-progressbar/build/roundProgress.min.js',
+            'node_modules/materialize-css/dist/js/materialize.min.js',
             'project/static/scrollbars.min.js',
             'project/**/*.js',
             'project/**/**/*.js',

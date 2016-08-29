@@ -1,0 +1,93 @@
+<article class="material-card Red flipper"
+    ng-class="{'flipToFront':!isFlipped, 'flipToBack':isFlipped}">
+    <div class="front">
+        <h2>
+            <span>
+                <textarea class="tc-textarea flow-text" rows="1" msd-elastic
+                          spellcheck="false"
+                          ng-model="task.content"
+                          ng-class="{'done-text':task.done}">
+                    {{ task.content }}
+                </textarea>
+                <i class="material-icons close-card-button" ng-click="close()">close</i>
+            </span>
+
+            <strong ng-show="task.due_date">by {{ formattedDate }}</strong>
+        </h2>
+
+        <div class="container-fluid col-xs-6 col-xs-offset-3 circle-container">
+            <round-progress
+                    max="50"
+                    current="40"
+                    color="#5DABDB"
+                    bgcolor="transparent"
+                    radius="100"
+                    stroke="20"
+                    semi="false"
+                    rounded="true"
+                    clockwise="false"
+                    responsive="true"
+                    duration="800"
+                    animation="easeInOutQuart"
+                    animation-delay="0"></round-progress>
+
+            <!--<orbicular total="100" progression="60" resize counterclockwise>-->
+                <!--bla-->
+            <!--</orbicular>-->
+        </div>
+        <a class="mc-btn-action modal-trigger" ng-click="flipCard()">
+            <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="back">
+
+        <h2>
+            <span>
+                <textarea class="tc-textarea flow-text" rows="1" msd-elastic
+                          spellcheck="false"
+                          ng-model="task.content"
+                          ng-class="{'done-text':task.done}">
+                    {{ task.content }}
+                </textarea>
+                <!--<span style="position:relative">-->
+                    <i class="material-icons"
+                       ng-hide="task.due_date"
+                       uib-tooltip="Add alarm"
+                       tooltip-placement="top"
+                       style="cursor: pointer"
+                       ng-click="callDateTimePicker($event)">alarm_add</i>
+
+                    <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done</i>
+                    <!--clear all subtasks button, do this when we actually have subtasks-->
+                    <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done_all</i>
+                <!--</span>-->
+
+
+                <i class="material-icons close-card-button" ng-click="close()">close</i>
+            </span>
+        </h2>
+
+        <ul class="subtasks-container">
+            <li ng-repeat="subtask in subtasks">
+                <subtask subtask="subtask"></subtask>
+            </li>
+
+
+            <form class="form" ng-submit="addSubTask()">
+                <div class="input-field form-group">
+                    <!--<i class="material-icons prefix">mode_edit</i>-->
+                    <input type="text" class="form-control" name="subtask"
+                           placeholder="Add a new subtask"
+                           ng-model="newSubTask">
+                </div>
+            </form>
+        </ul>
+
+        <a class="mc-btn-action" ng-click="flipCard()">
+            <i class="fa fa-arrow-left"></i>
+        </a>
+
+    </div>
+
+</article>

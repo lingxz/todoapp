@@ -4,26 +4,31 @@ describe('TaskController', function () {
         $controller,
         $rootScope,
         $q,
+        $httpBackend,
         TaskService,
         AuthService,
+        TASK_EVENTS,
         task,
         ctrl;
 
     beforeEach(module('templates'));
     beforeEach(module('todoApp'));
 
-    beforeEach(inject(function (_$controller_, _$rootScope_, _$q_, _TaskService_, _AuthService_) {
+    beforeEach(inject(function (_$controller_, _$rootScope_, _$q_, _$httpBackend_, _TaskService_, _AuthService_, _TASK_EVENTS_) {
         $controller = _$controller_;
         $rootScope = _$rootScope_;
         $q = _$q_;
+        $httpBackend = _$httpBackend_;
         TaskService = _TaskService_;
         AuthService = _AuthService_;
+        TASK_EVENTS = _TASK_EVENTS_;
         scope = $rootScope.$new();
 
         task = {content: 'content', done: false, due_date: 'some_date'};
         var bindings = {task: task};
 
         ctrl = $controller('TaskController as ctrl', {$scope: scope}, bindings);
+        $httpBackend.expectPOST('/get_direct_subtasks').respond(201, '');
     }));
 
     it('should expose the task', function () {
@@ -93,6 +98,31 @@ describe('TaskController', function () {
             deferred.reject();
             scope.$digest();
             expect(scope.ctrl.task.due_date).toBe(task.due_date)
+        })
+    });
+
+    describe('deleteTask function', function () {
+
+        it('should exist', function () {
+            expect(angular.isFunction(scope.deleteTask)).toBe(true)
+        });
+
+        it('should call the deleteTask function from TaskService with correct argument', function () {
+            var deferred = $q.defer();
+            spyOn(TaskService, 'deleteTask').and.returnValue(deferred.promise);
+            scope.deleteTask();
+            expect(TaskService.deleteTask).toHaveBeenCalled();
+            expect(TaskService.deleteTask).toHaveBeenCalledWith(task);
+        });
+
+        it('should not emit refreshTaskList event if promise is rejected', function () {
+            var deferred = $q.defer();
+            spyOn(TaskService, 'deleteTask').and.returnValue(deferred.promise);
+            spyOn(scope, '$emit');
+            scope.deleteTask('some_task');
+            deferred.reject();
+            scope.$digest();
+            expect(scope.$emit).not.toHaveBeenCalled();
         })
     });
 });

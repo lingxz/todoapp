@@ -2,7 +2,7 @@
  * Created by mark on 7/6/16.
  */
 
-function TaskController($scope, $timeout, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
+function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeService, TaskService, TASK_EVENTS) {
     // Extract from controller
     var ctrl = this;
     $scope.task = ctrl.task;
@@ -13,6 +13,8 @@ function TaskController($scope, $timeout, AuthService, DatetimeService, TaskServ
     $scope.taskWidth = 100 - $scope.taskDepth;
 
     $scope.isCollapsed = false;
+    $scope.isFlipped = false;
+    $scope.exists = true;
 
     $scope.markAsDone = function () {
         promise = TaskService.markAsDone(task);
@@ -68,6 +70,14 @@ function TaskController($scope, $timeout, AuthService, DatetimeService, TaskServ
         $scope.newtask = "";
     };
 
+    $scope.deleteTask = function () {
+        promise = TaskService.deleteTask(task);
+        promise.then(function (response) {
+            $scope.exists = false;
+            Materialize.toast('Task deleted', 1000);
+        })
+    };
+
     $scope.setCurrentTask = function () {
         TaskService.setCurrentTask(task)
     };
@@ -85,6 +95,63 @@ function TaskController($scope, $timeout, AuthService, DatetimeService, TaskServ
             var dateWrapper = moment(dateObj);
             $scope.formattedDate = dateWrapper.format('MMM DD')
         }
+    });
+
+    $scope.openDeleteTaskModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'static/partials/delete_task_modal.html',
+            controller: 'deleteTaskModalController',
+            windowClass: 'delete-task-modal'
+        });
+
+        modalInstance.result.then(function () {
+            var content = task.content;
+            $scope.deleteTask();
+        })
+    };
+    
+    $scope.flipCard = function () {
+        $scope.isFlipped = !$scope.isFlipped
+    };
+
+    $scope.openTaskDetailsModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'static/partials/task_details_modal.html',
+            controller: 'taskDetailsModalController',
+            windowClass: 'subtasks-modal',
+            resolve: {
+                task: function () { return $scope.task },
+                subtasks: function () { return $scope.subtasks }
+            }
+        });
+
+        modalInstance.result.then(function (response) {
+            $scope.subtasks = response;
+        })
+    };
+
+    $scope.addSubTask = function () {
+        if ($scope.newSubTask === "" || $scope.newSubTask === undefined) {
+            return
+        }
+        var promise = TaskService.addSubTask(task.id, $scope.newSubTask);
+        promise.then(function (data) {
+            console.log(data);
+            $scope.$emit('refresh');
+            $scope.newSubTask = "";
+        })
+    };
+
+    $scope.getSubTasks = function () {
+        var promise = TaskService.getDirectSubTasks(task.id);
+        promise.then(function (data) {
+            $scope.subtasks = data
+        })
+    };
+    $scope.getSubTasks();
+
+    $scope.$on('refresh', function () {
+        $scope.getSubTasks()
     })
 }
 
@@ -99,34 +166,4 @@ angular.module('todoApp')
         bindings: {
             task: '='
         }
-    });
-
-
-angular.module('todoApp')
-    .directive("contenteditable", function () {
-        return {
-            restrict: "A",
-            require: "ngModel",
-            link: function (scope, element, attrs, ngModel) {
-
-                ngModel.$render = function () {
-                    element.html(ngModel.$viewValue || "");
-                };
-
-                element.on("blur keyup change", function () {
-                    scope.$apply(read);
-                });
-                ngModel.$render();
-
-                function read() {
-                    var html = element.html();
-                    // When we clear the content editable the browser leaves a <br> behind
-                    // If strip-br attribute is provided then we strip this out
-                    if (attrs.stripBr && html == '<br>') {
-                        html = '';
-                    }
-                    ngModel.$setViewValue(html);
-                }
-            }
-        };
     });

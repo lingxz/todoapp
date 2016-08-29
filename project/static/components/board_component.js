@@ -2,6 +2,14 @@ function BoardController($scope, $timeout, AuthService, DatetimeService, TaskSer
     var ctrl = this;
     $scope.curBoard = ctrl.board;
     $scope.tasks = ctrl.tasks;
+    $scope.showBoard = false;
+
+    // Show completed
+    $scope.$watch(AuthService.retrieveShowTaskPref,
+        function (newval, oldval) {
+            $scope.showCompleted = newval
+        }
+    );
 
     // Pass in data
     this.$onChanges = function (changesObj) {
@@ -13,6 +21,7 @@ function BoardController($scope, $timeout, AuthService, DatetimeService, TaskSer
                 $scope.tasks = changesObj.tasks.currentValue;
             }
         }
+        $scope.showBoard = ($scope.curBoard !== null);
     };
 
     /*---scrollbar config-----*/
@@ -24,6 +33,24 @@ function BoardController($scope, $timeout, AuthService, DatetimeService, TaskSer
         },
         scrollInertia: 50
     };
+
+    // Edit the title
+    var timeout = null;
+    var saveTask = function (newVal) {
+        if ($scope.curBoard !== null) {
+            TaskService.editTask($scope.curBoard, newVal);
+        }
+    };
+
+    var debounceSaveUpdates = function (newVal, oldVal) {
+        if (newVal != oldVal) {
+            if (timeout) {
+                $timeout.cancel(timeout)
+            }
+            timeout = $timeout(saveTask(newVal), 1000); // saves updates every 1 second
+        }
+    };
+    $scope.$watch('curBoard.content', debounceSaveUpdates);
 }
 
 angular.module('todoApp')

@@ -27,6 +27,7 @@
     "karma-phantomjs-launcher": "^1.0.1",
     "karma-requirejs": "^1.0.0",
     "malihu-custom-scrollbar-plugin": "^3.1.5",
+    "materialize-css": "^0.97.7",
     "moment": "^2.14.1",
     "requirejs": "^2.2.0"
   },

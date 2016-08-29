@@ -1,4 +1,4 @@
-@import "http://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700";
+/*@import "http://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700";*/
 .material-card {
     position: relative;
     height: 0;
@@ -18,7 +18,7 @@
 }
 
 .material-card h2 {
-    position: absolute;
+    position: relative;
     /*top: calc(100% - 16px);*/
     font-weight: 400;
     left: 0;
@@ -43,56 +43,9 @@
     display: block;
     font-size: .8em;
 }
-.material-card h2:before,
-.material-card h2:after {
-    content: ' ';
-    position: absolute;
-    left: 0;
-    top: -16px;
-    width: 0;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-}
-.material-card h2:after {
-    top: auto;
-    bottom: 0;
-}
-@media screen and (max-width: 767px) {
-    .material-card.mc-active {
-        padding-bottom: 0;
-        height: auto;
-    }
-}
 
-.material-card.mc-active h2 {
-    display: none;
-}
-/*.material-card.mc-active h2 {*/
-    /*top: 0;*/
-    /*padding: 10px 16px 10px 90px;*/
-/*}*/
-/*.material-card.mc-active h2:before {*/
-    /*top: 0;*/
-/*}*/
-/*.material-card.mc-active h2:after {*/
-    /*bottom: -16px;*/
-/*}*/
-.material-card .mc-content {
-    /*position: absolute;*/
-    /*right: 0;*/
-    /*top: 0;*/
-    /*top: calc(100% - 200px);*/
-    /*bottom: 0;*/
-    /*left: 0;*/
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-}
+
+
 .material-card .mc-btn-action {
     position: absolute;
     right: 16px;
@@ -108,177 +61,39 @@
     color: #fff;
     cursor: pointer;
     z-index: 20;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-}
-.material-card.mc-active .mc-btn-action {
-    top: calc(100% - 80px);
-}
-.material-card .mc-description {
-    position: absolute;
-    top: 100%;
-    right: 30px;
-    left: 30px;
-    bottom: 54px;
-    overflow: hidden;
+    transition: all 0.3s ease 0s;
     opacity: 0;
-    filter: alpha(opacity=0);
-    -webkit-transition: all 1.2s;
-    -moz-transition: all 1.2s;
-    -ms-transition: all 1.2s;
-    -o-transition: all 1.2s;
-    transition: all 1.2s;
+    /*-webkit-transition: all 0.3s;*/
+    /*-moz-transition: all 0.3s;*/
+    /*-ms-transition: all 0.3s;*/
+    /*-o-transition: all 0.3s;*/
+    /*transition: all 0.3s;*/
 }
-.material-card .mc-footer {
-    height: 0;
-    overflow: hidden;
+
+.material-card:hover .mc-btn-action {
+    opacity: 1;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
 }
-.material-card .mc-footer h4 {
-    position: absolute;
-    top: 200px;
-    left: 30px;
-    padding: 0;
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    display: none;
-    -webkit-transition: all 1.4s;
-    -moz-transition: all 1.4s;
-    -ms-transition: all 1.4s;
-    -o-transition: all 1.4s;
-    transition: all 1.4s;
-}
-.material-card .mc-footer a {
-    display: block;
-    float: left;
-    position: relative;
-    width: 40px;
-    height: 40px;
-    margin-left: 5px;
-    margin-bottom: 15px;
-    font-size: 28px;
-    color: #fff;
-    line-height: 52px;
-    text-decoration: none;
-    top: 200px;
-}
-.material-card .mc-footer a:nth-child(1) {
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -ms-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    transition: all 0.5s;
-}
-.material-card .mc-footer a:nth-child(2) {
-    -webkit-transition: all 0.6s;
-    -moz-transition: all 0.6s;
-    -ms-transition: all 0.6s;
-    -o-transition: all 0.6s;
-    transition: all 0.6s;
-}
-.material-card .mc-footer a:nth-child(3) {
-    -webkit-transition: all 0.7s;
-    -moz-transition: all 0.7s;
-    -ms-transition: all 0.7s;
-    -o-transition: all 0.7s;
-    transition: all 0.7s;
-}
-.material-card .mc-footer a:nth-child(4) {
-    -webkit-transition: all 0.8s;
-    -moz-transition: all 0.8s;
-    -ms-transition: all 0.8s;
-    -o-transition: all 0.8s;
-    transition: all 0.8s;
-}
-.material-card .mc-footer a:nth-child(5) {
-    -webkit-transition: all 0.9s;
-    -moz-transition: all 0.9s;
-    -ms-transition: all 0.9s;
-    -o-transition: all 0.9s;
-    transition: all 0.9s;
-}
 
-.material-card.mc-active .mc-content {
-    display: none;
-    /*padding-top: 5.6em;*/
-}
-@media screen and (max-width: 767px) {
-    .material-card.mc-active .mc-content {
-        position: relative;
-        margin-right: 16px;
-    }
-}
-.material-card.mc-active .mc-description {
-    top: 0;
-    padding-top: 2em;
+.material-card:hover .close-card-button {
     opacity: 1;
-    filter: alpha(opacity=100);
-}
-@media screen and (max-width: 767px) {
-    .material-card.mc-active .mc-description {
-        position: relative;
-        top: auto;
-        right: auto;
-        left: auto;
-        padding: 50px 30px 70px 30px;
-        bottom: 0;
-    }
-}
-.material-card.mc-active .mc-footer {
-    overflow: visible;
-    position: absolute;
-    top: calc(100% - 50px);
-    left: 0;
-    right: 0;
-    height: 50px;
-    padding: 10px;
-}
-.material-card.mc-active .mc-footer i {
-    top: 0;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
 }
 
-/*.material-card.mc-active .mc-footer h4 {*/
-    /*top: -32px;*/
-/*}*/
-.material-card.Red h2 {
-    /*background-color: #F44336;*/
-}
+
 .material-card.Red .mc-btn-action {
     background-color: #F44336;
 }
 .material-card.Red .mc-btn-action:hover {
     background-color: #B71C1C;
-}
-.material-card.Red .mc-footer h4 {
-    color: #B71C1C;
-}
-.material-card.Red .mc-footer a {
-    background-color: #B71C1C;
-}
-.material-card.Red.mc-active .mc-content {
-    background-color: #FFEBEE;
-}
-.material-card.Red.mc-active .mc-footer {
-    background-color: #FFCDD2;
-}
-.material-card.Red.mc-active .mc-btn-action {
-    border-color: #FFEBEE;
-}
-
-h1,
-h2,
-h3 {
-    font-weight: 200;
 }
 
 .circle-container {
@@ -289,7 +104,8 @@ h3 {
     transform: translateY(-50%);
 }
 
-.material-card.mc-active .circle-container {
-    display: none;
+.material-card .flow-text{
+    font-weight: 400;
 }
+
 

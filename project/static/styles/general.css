@@ -22,6 +22,14 @@ body {
     display: none !important;
 }
 
+.material-icons {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
+    cursor: pointer;
+}
+
 .material-icons.md-18 { font-size: 18px; }
 .material-icons.md-24 { font-size: 24px; }
 .material-icons.md-36 { font-size: 36px; }
@@ -60,4 +68,21 @@ button.btn {
 button.btn:hover {
     background-color: #E5594A;
     color: white;
+}
+
+/*correct for materialize screwing up the modal*/
+.delete-task-modal {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+    width: auto;
+    font-weight: 400;
+}
+.delete-task-modal .modal-footer {
+    background-color: white;
+}
+
+.tc-textarea:focus {
+    background-color: #e6f2f7;
 }

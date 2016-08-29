@@ -168,6 +168,7 @@ def make_subtask():
 def add_subtask():
     user_id = request.json['user_id']
     parent_id = request.json['parent_id']
+    task_content = request.json['task_content']
     parent_task = Task.query.filter_by(id=parent_id).first()
 
     sub_tasks = utils.get_subtasks(parent_task)
@@ -180,7 +181,7 @@ def add_subtask():
         db.engine.execute(cmd, {'user_id': str(user_id), 'parent_left': str(parent_left)})
         db.engine.execute(cmd2, {'user_id': str(user_id), 'parent_left': str(parent_left)})
         task = Task(
-            content="ASDF",
+            content=task_content,
             user_id=user_id,
             parent_id=parent_id,
             my_right=parent_left
@@ -197,7 +198,7 @@ def add_subtask():
         cmd2 = "UPDATE tasks SET lft = lft + 2 WHERE user_id = :user_id AND lft > :prev_right"
         db.engine.execute(cmd2, {'user_id': str(user_id), 'prev_right': str(prev_right)})
         task = Task(
-            content="ASDF",
+            content=task_content,
             user_id=user_id,
             parent_id=parent_id,
             my_right=prev_right
@@ -299,3 +300,17 @@ def delete_task():
         utils.delete_task_helper(task)
 
     return 'OK'
+
+
+@tasks.route('/get_direct_subtasks', methods=['POST'])
+@auth.login_required
+def get_direct_subtasks():
+    task_id = request.json['id']
+    parent = db.session.query(Task).get(task_id)
+    print(parent.content)
+    subtasks = utils.get_subtasks(parent)
+    subtasks_list = []
+    for subtask in subtasks:
+        subtask_dict = utils.task_to_dictionary(subtask)
+        subtasks_list.append(subtask_dict)
+    return json.dumps(subtasks_list)
