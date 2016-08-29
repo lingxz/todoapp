@@ -82,3 +82,7 @@ button.btn:hover {
 .delete-task-modal .modal-footer {
     background-color: white;
 }
+
+.tc-textarea:focus {
+    background-color: #e6f2f7;
+}

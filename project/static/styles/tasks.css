@@ -166,20 +166,6 @@
     opacity: 1
 }
 
-/*.subtasks-modal article, .subtasks-modal .front {*/
-    /*height: 400px;*/
-    /*padding: 0;*/
-/*}*/
-
-/*.modal-open .modal.subtasks-modal {*/
-    /*margin: 0;*/
-    /*padding: 0;*/
-/*}*/
-
-/*.subtasks-modal .modal-content article {*/
-    /*height：400px;*/
-/*}*/
-
-/*.subtasks-modal .modal-dialog{*/
-    /*height: 200px;*/
-/*}*/
+.subtasks-modal .mc-btn-action {
+    opacity: 1;
+}
