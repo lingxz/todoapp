@@ -41,7 +41,33 @@
     </div>
 
     <div class="back">
-        <i class="material-icons close-card-button" ng-click="close()">close</i>
+
+        <h2>
+            <span>
+                <textarea class="tc-textarea flow-text" rows="1" msd-elastic
+                          spellcheck="false"
+                          ng-model="task.content"
+                          ng-class="{'done-text':task.done}">
+                    {{ task.content }}
+                </textarea>
+                <!--<span style="position:relative">-->
+                    <i class="material-icons"
+                       ng-hide="task.due_date"
+                       uib-tooltip="Add alarm"
+                       tooltip-placement="top"
+                       style="cursor: pointer"
+                       ng-click="callDateTimePicker($event)">alarm_add</i>
+
+                    <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done</i>
+                    <!--clear all subtasks button, do this when we actually have subtasks-->
+                    <i class="material-icons" ng-click="markAsDone()" style="cursor: pointer">done_all</i>
+                <!--</span>-->
+
+
+                <i class="material-icons close-card-button" ng-click="close()">close</i>
+            </span>
+        </h2>
+
         <ul class="subtasks-container">
             <li ng-repeat="subtask in subtasks">
                 <subtask subtask="subtask"></subtask>
