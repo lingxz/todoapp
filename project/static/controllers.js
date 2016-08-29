@@ -211,3 +211,4 @@ todoApp.controller('deleteTaskModalController', function ($scope, $uibModalInsta
         $uibModalInstance.dismiss()
     }
 });
+

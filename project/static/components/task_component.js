@@ -100,7 +100,8 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
     $scope.openDeleteTaskModal = function () {
         var modalInstance = $uibModal.open({
             templateUrl: 'static/partials/delete_task_modal.html',
-            controller: 'deleteTaskModalController'
+            controller: 'deleteTaskModalController',
+            windowClass: 'delete-task-modal'
         });
 
         modalInstance.result.then(function () {
@@ -111,6 +112,22 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
     
     $scope.flipCard = function () {
         $scope.isFlipped = !$scope.isFlipped
+    };
+
+    $scope.openTaskDetailsModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'static/partials/task_details_modal.html',
+            controller: 'taskDetailsModalController',
+            windowClass: 'subtasks-modal',
+            resolve: {
+                task: function () { return $scope.task },
+                subtasks: function () { return $scope.subtasks }
+            }
+        });
+
+        modalInstance.result.then(function (response) {
+            $scope.subtasks = response;
+        })
     };
 
     $scope.addSubTask = function () {
@@ -125,18 +142,17 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
         })
     };
 
-    $scope.getSubTask = function () {
+    $scope.getSubTasks = function () {
         var promise = TaskService.getDirectSubTasks(task.id);
         promise.then(function (data) {
             $scope.subtasks = data
         })
     };
-    $scope.getSubTask();
+    $scope.getSubTasks();
 
     $scope.$on('refresh', function () {
-        $scope.getSubTask()
+        $scope.getSubTasks()
     })
-
 }
 
 angular.module('todoApp')

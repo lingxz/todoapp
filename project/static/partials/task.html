@@ -8,8 +8,7 @@
                           spellcheck="false"
                           ng-model="task.content"
                           ng-class="{'done-text':task.done}"
-                          ng-focus="setCurrentTask()"
-                          ng-enter="newTask()">
+                          ng-focus="setCurrentTask()">
                     {{ task.content }}
                 </textarea>
                 <i class="material-icons close-card-button" ng-click="openDeleteTaskModal()">close</i>
@@ -38,7 +37,7 @@
                 <!--bla-->
             <!--</orbicular>-->
         </div>
-        <a class="mc-btn-action" ng-click="flipCard()">
+        <a class="mc-btn-action" ng-click="openTaskDetailsModal()">
             <i class="fa fa-arrow-right"></i>
         </a>
 
@@ -84,8 +83,6 @@
 
     </div>
 </article>
-
-
 
 
 

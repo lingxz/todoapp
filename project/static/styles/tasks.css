@@ -139,3 +139,47 @@
 .material-card input.form-control {
     height: 34px;
 }
+
+
+.subtasks-modal {
+    max-height: 90%;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.subtasks-modal .modal-content{
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+    margin: 0;
+}
+
+.subtasks-modal .modal-dialog {
+    width: auto;
+    padding: 0;
+    margin: 0;
+}
+
+.subtasks-modal .close-card-button {
+    opacity: 1
+}
+
+/*.subtasks-modal article, .subtasks-modal .front {*/
+    /*height: 400px;*/
+    /*padding: 0;*/
+/*}*/
+
+/*.modal-open .modal.subtasks-modal {*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+/*}*/
+
+/*.subtasks-modal .modal-content article {*/
+    /*height：400px;*/
+/*}*/
+
+/*.subtasks-modal .modal-dialog{*/
+    /*height: 200px;*/
+/*}*/
