@@ -70,7 +70,7 @@ todoApp.controller('taskDetailsModalController', function ($scope,
 
     $scope.$on('refresh', function () {
         $scope.getSubTasks()
-    })
+    });
 
 });
 

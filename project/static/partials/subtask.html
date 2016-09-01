@@ -1,2 +1,2 @@
-<input type="checkbox" id="{{ctrl.subtask.id}}" />
+<input type="checkbox" id="{{ctrl.subtask.id}}" ng-model="ctrl.subtask.done" ng-change="markAsDone()"/>
 <label for="{{ctrl.subtask.id}}"> {{ ctrl.subtask.content }} </label>
