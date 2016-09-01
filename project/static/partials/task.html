@@ -19,8 +19,8 @@
 
         <div class="container-fluid col-xs-6 col-xs-offset-3 circle-container">
             <round-progress
-                    max="50"
-                    current="40"
+                    max="subtasks.length"
+                    current="getCompletedSubtasks()"
                     color="#5DABDB"
                     bgcolor="transparent"
                     radius="100"

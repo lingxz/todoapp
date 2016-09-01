@@ -142,6 +142,19 @@ function TaskController($scope, $timeout, $uibModal, AuthService, DatetimeServic
         })
     };
 
+    $scope.getCompletedSubtasks = function () {
+        var completed = 0;
+        if ($scope.subtasks) {
+            $scope.subtasks.forEach(function (subtask) {
+                if (subtask.done) {
+                    completed += 1
+                }
+            });
+        }
+
+        return completed
+    };
+
     $scope.getSubTasks = function () {
         var promise = TaskService.getDirectSubTasks(task.id);
         promise.then(function (data) {
